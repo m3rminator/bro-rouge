@@ -1,0 +1,14 @@
+# Palette set for the extraction flag: steel pole, sandbag base, red (locked) / green (open) flag.
+symbols:
+  o: outline
+  g: steel_light
+  G: steel
+  y: fire_yellow
+  r: red_light
+  R: red
+  f: grass_light
+  F: grass
+  w: white
+  s: khaki_light
+  S: khaki
+  T: khaki_dark

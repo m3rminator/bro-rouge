@@ -1,0 +1,32 @@
+# Entity: bullet sprayed by the Brute's miniguns.
+id: minigun_bullet
+name: Minigun bullet
+kind: projectile
+order: 7
+description: Smaller orange slug sprayed by the Brute in a wide fan (spread_angle on the Brute). Each one hurts the Bro and chips blocks and barrels, so a long burst chews through cover.
+sprite: projectiles
+files:
+  - game/scripts/bullet.gd
+spawned_by: [brute]
+
+stats:
+  speed:
+    value: 230.0
+    unit: px/s
+    description: Flight speed.
+  lifetime:
+    value: 1.3
+    unit: s
+    description: Disappears after this long (range ≈ 300 px ≈ 19 blocks).
+  damage:
+    value: 1
+    unit: hp
+    description: Hearts taken from the Bro per hit.
+  size:
+    value: [7, 4]
+    unit: px
+    description: Hit box, length × height.
+
+animations:
+  minigun_shot: The bullet in flight.
+  impact: Spark where it hits something.

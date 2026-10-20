@@ -1,10 +1,43 @@
 class_name Hud
 extends CanvasLayer
-## Top-left hearts showing the Bro's hit points. See design/entities/hud.yaml.
+## On-screen HUD (design/entities/hud.yaml). Top-left: hearts + lives. Top-center: level.
+## Top-right: kills / quota. Center: big messages. Under the top line: the Brute's health bar.
 
 const FX_FRAMES := preload("res://assets/sprites/fx_frames.tres")
+const VIEW_W := 480
+# master palette
+const WHITE := Color("f4f2e8")
+const YELLOW := Color("ffd23e")
+const RED := Color("e85a50")
+const GREEN := Color("7cc04e")
+const OUTLINE := Color("14101e")
+const BAR_BACK := Color("4a4858")
 
 var _hearts: Array[AnimatedSprite2D] = []
+var _lives := PixelText.make(Vector2(6, 17), PixelText.Align.LEFT)
+var _level := PixelText.make(Vector2(VIEW_W / 2.0, 4), PixelText.Align.CENTER)
+var _kills := PixelText.make(Vector2(VIEW_W - 6, 4), PixelText.Align.RIGHT)
+var _message := PixelText.make(Vector2(VIEW_W / 2.0, 92), PixelText.Align.CENTER, 2)
+var _sub := PixelText.make(Vector2(VIEW_W / 2.0, 110), PixelText.Align.CENTER)
+var _boss_name := PixelText.make(Vector2(VIEW_W / 2.0, 14), PixelText.Align.CENTER)
+var _boss_back := ColorRect.new()
+var _boss_fill := ColorRect.new()
+var _message_time := 0.0
+
+
+func _ready() -> void:
+	layer = 10
+	for t in [_lives, _level, _kills, _message, _sub, _boss_name]:
+		add_child(t)
+	_boss_back.position = Vector2(VIEW_W / 2.0 - 60, 22)
+	_boss_back.size = Vector2(120, 5)
+	_boss_back.color = OUTLINE
+	_boss_fill.position = _boss_back.position + Vector2(1, 1)
+	_boss_fill.size = Vector2(118, 3)
+	_boss_fill.color = RED
+	add_child(_boss_back)
+	add_child(_boss_fill)
+	_show_boss(false)
 
 
 func track(player: Node) -> void:
@@ -18,6 +51,54 @@ func track(player: Node) -> void:
 	player.hp_changed.connect(_on_hp_changed)
 
 
+func show_level(number: int, loop: int, title: String) -> void:
+	_level.text = ("LOOP %d  " % loop if loop > 1 else "") + "LEVEL %d  %s" % [number, title]
+
+
+func set_lives(lives: int) -> void:
+	_lives.text = "LIVES %d" % lives
+	_lives.color = RED if lives <= 1 else WHITE
+
+
+func set_kills(kills: int, quota: int) -> void:
+	_kills.text = "KILLS %d/%d" % [kills, quota]
+	_kills.color = GREEN if kills >= quota else WHITE
+
+
+## Big center message. seconds = 0 keeps it until the next message.
+func message(text: String, color: Color, seconds := 2.0, sub := "") -> void:
+	_message.text = text
+	_message.color = color
+	_sub.text = sub
+	_message_time = seconds if seconds > 0.0 else INF
+
+
+func track_boss(boss: Node) -> void:
+	_boss_name.text = "BRUTE"
+	_boss_name.color = RED
+	_show_boss(true)
+	boss.health_changed.connect(_on_boss_health)
+
+
+func _process(delta: float) -> void:
+	_message_time -= delta
+	if _message_time <= 0.0 and _message.text != "":
+		_message.text = ""
+		_sub.text = ""
+
+
 func _on_hp_changed(hp: int, _max_hp: int) -> void:
 	for i in _hearts.size():
 		_hearts[i].animation = "heart_full" if i < hp else "heart_empty"
+
+
+func _on_boss_health(hp: int, max_hp: int) -> void:
+	_boss_fill.size.x = 118.0 * hp / max_hp
+	if hp <= 0:
+		get_tree().create_timer(1.5).timeout.connect(_show_boss.bind(false))
+
+
+func _show_boss(on: bool) -> void:
+	_boss_name.visible = on
+	_boss_back.visible = on
+	_boss_fill.visible = on

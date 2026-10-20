@@ -1,0 +1,17 @@
+# Palette set for the suicide bomber: red headband, olive tank top, dynamite vest, grey pants.
+symbols:
+  o: outline
+  s: skin
+  S: skin_shadow
+  r: red
+  R: red_dark
+  l: steel_light
+  t: olive_light
+  T: olive
+  d: red_light
+  D: red
+  k: leather
+  p: grey
+  P: grey_dark
+  y: fire_yellow
+  w: fire_white

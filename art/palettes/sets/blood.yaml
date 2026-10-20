@@ -1,0 +1,5 @@
+# Palette set for blood sprays, bursts and pools.
+symbols:
+  b: blood_bright
+  B: blood
+  D: blood_dark

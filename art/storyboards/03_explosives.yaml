@@ -1,0 +1,31 @@
+# Storyboard: barrels and explosions. "shot" = sprite/animation/frame.
+title: Barrels & explosions
+description: How blasts must read on screen — every size has its own look, and bigger piles must feel bigger.
+panels:
+  - title: Spot the barrel
+    shot: barrel/idle/0
+    caption: Red drum with a skull, always placed near enemies. One block — you can stand on it.
+  - title: Light it
+    shot: barrel/burning/1
+    caption: One bullet sets it burning — flames on the lid, the drum flashes hot. Under half a second to get clear.
+    sfx: barrel_ignite
+  - title: Single blast
+    shot: explosion/blast_a/2
+    caption: One barrel = one small blast (fireball, starburst or plume — the same barrel always looks the same). Opens a hole about 2 blocks wide.
+    sfx: explosion_small
+  - title: Starburst
+    shot: explosion/blast_b/0
+    caption: The second small look — white rays first, then a ring of fire with sparks.
+  - title: Plume
+    shot: explosion/blast_c/2
+    caption: The third small look — a tall column that throws fire upward.
+  - title: Cluster blast
+    shot: explosion_big/inferno/4
+    caption: Barrels touching each other go off as ONE blast — a mushroom fireball, bigger with every barrel, a small blast on each drum, more smoke, harder shake.
+    sfx: explosion_big
+  - title: Shockwave
+    shot: explosion_big/shockwave/2
+    caption: A ring races along the ground out to the cluster's full radius — that is exactly how far the damage reaches.
+  - title: Chain reaction
+    shot: explosion/smoke_0/3
+    caption: Barrels further away that sit inside a blast catch fire and go off a moment later — piles ripple.

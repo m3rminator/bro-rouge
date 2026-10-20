@@ -1,0 +1,41 @@
+# Storyboard: the enemy roster and what killing them looks like.
+title: Enemies & blood
+description: Each enemy has one job and one tell. Every kill is loud and messy, and the bodies stay.
+panels:
+  - title: Hit
+    shot: blood/spray_1/1
+    caption: Every bullet that lands sprays blood the way the bullet was flying (three different sprays, used in turn).
+  - title: Kill
+    shot: blood/burst_0/2
+    caption: A death bursts (two kinds) and the body is thrown back.
+    sfx: blood_splat
+  - title: Bodies stay
+    shot: blood/pool_1/3
+    caption: Where a body lands, a pool spreads under it and stays all level (three kinds). Blasts still toss bodies around.
+  - title: Kamikaze spots you
+    shot: kamikaze/idle/0
+    caption: Dynamite vest, lit stick. Same eyes as a mook — he only sees forward.
+    flip: true
+  - title: The charge
+    shot: kamikaze/run/0
+    caption: He screams and sprints at you, hopping walls. Up close he blows you both up — three hearts, a full-health Bro dies.
+    sfx: kamikaze_scream
+    flip: true
+  - title: Shoot him early
+    shot: kamikaze/hurt/0
+    caption: One bullet kills him — but his vest still goes off a third of a second later. Kill him far away, or next to his friends.
+  - title: The Brute
+    shot: brute/idle/0
+    caption: Mini-boss, two blocks tall, two miniguns. Sees twice as far as a mook and spots you on platforms; hears you behind him.
+    sfx: brute_alert
+    flip: true
+  - title: Spin up
+    shot: brute/spin/0
+    caption: The barrels whine for most of a second before he fires — your cue to get behind something solid.
+    sfx: minigun_spinup
+    flip: true
+  - title: Spray
+    shot: brute/shoot/0
+    caption: Long alternating bursts in a wide fan. They chew through cover and set off barrels — so lure him next to some.
+    sfx: minigun_fire
+    flip: true

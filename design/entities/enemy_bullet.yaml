@@ -1,10 +1,10 @@
-# Entity: bullet fired by enemies.
+# Entity: bullet fired by mooks.
 id: enemy_bullet
-name: Enemy bullet
+name: Enemy rifle bullet
 kind: projectile
 order: 4
-description: Red bullet fired straight ahead by enemies. Slower than the Bro's, so it can be jumped over. Hurts the Bro and chips blocks; passes through other enemies.
-sprite: fx
+description: Yellow slug with a red-orange halo, fired straight ahead by mooks. Slower than the Bro's, so it can be jumped over. Hurts the Bro and chips blocks and barrels; passes through other enemies.
+sprite: projectiles
 files:
   - game/scripts/bullet.gd
 spawned_by: [mook]
@@ -22,7 +22,11 @@ stats:
     value: 1
     unit: hp
     description: Hearts taken from the Bro per hit.
+  size:
+    value: [9, 5]
+    unit: px
+    description: Hit box, length × height.
 
 animations:
-  enemy_bullet: The bullet in flight.
-  alert: The "!" bubble shown above an enemy that just spotted the Bro.
+  enemy_shot: The bullet in flight (halo pulses).
+  impact: Spark where it hits something.

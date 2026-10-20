@@ -1,0 +1,12 @@
+# Palette set for the explosive barrel: red drum, steel rims, white skull, flames.
+symbols:
+  o: outline
+  r: red_light
+  R: red
+  D: red_dark
+  g: steel_light
+  G: steel
+  w: white
+  W: fire_white
+  Y: fire_yellow
+  O: fire_orange

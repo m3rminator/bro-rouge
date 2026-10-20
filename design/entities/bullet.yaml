@@ -3,8 +3,8 @@ id: bullet
 name: Bro rifle bullet
 kind: projectile
 order: 2
-description: Spawned at the Bro's "muzzle" anchor every shot. Flies straight, damages the first block or enemy it touches, then disappears.
-sprite: fx
+description: Spawned at the Bro's "muzzle" anchor every shot. A big glowing yellow slug (about half a Bro tall) that flies straight, damages the first block, barrel or enemy it touches, sparks, then disappears.
+sprite: projectiles
 files:
   - game/scripts/bullet.gd
 spawned_by: [bro]
@@ -22,7 +22,12 @@ stats:
     value: 1
     unit: hp
     description: Damage dealt to whatever it hits.
+  size:
+    value: [10, 6]
+    unit: px
+    description: Hit box, length × height (the glow around it is bigger but harmless).
 
 animations:
-  bullet: The bullet in flight.
-  muzzle: Flash at the gun tip on every shot (plays once).
+  bro_shot: The bullet in flight (halo pulses).
+  impact: Spark where it hits something.
+  fx/muzzle: Flash at the gun tip on every shot (plays once).

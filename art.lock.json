@@ -1,18 +1,63 @@
 {
+  "barrel": {
+    "docs/previews/barrel.png": "81737f02e7e9235d070ea5d0fd979d0d73e927400eedd6a48f78b22ec694848c",
+    "game/assets/sprites/barrel.png": "217980b64e111b45cbac2cf8500f4fa8f51af787fbed46c445377951baca702e",
+    "game/assets/sprites/barrel_frames.tres": "dc8d7a84115cf8bc432ad9cc0b7b960f606df8ba74959b01eb7a15efd4b5dc46"
+  },
+  "blood": {
+    "docs/previews/blood.png": "d82cef3d724685a4edfa000d8aff5c748b35651ceb886d6820ac04796c59c8a9",
+    "game/assets/sprites/blood.png": "0578f2f97626216aee434f073901cf0c232158f98664659c9ab54ca8499bc662",
+    "game/assets/sprites/blood_frames.tres": "34ae4822738da8b0429e9dd00db41331bafe78268b02cdf0f5c5a93ff4df2202"
+  },
   "bro": {
     "docs/previews/bro.png": "c85550008719db15d1079e9a6cbab366b836f598c9a8d78c96f2b883ffc3105c",
     "game/assets/sprites/bro.png": "c7d2a33588790c3694a9dd4000ee0bd7e6a0ffb531f426ae1b773e7e2baa4fcc",
     "game/assets/sprites/bro_frames.tres": "12d19bb5e6a457c9e0cab9694dff7b5666e3187c3d5f4c93fe509ec23db55a33"
+  },
+  "brute": {
+    "docs/previews/brute.png": "4c83b197e53285f21f258a706221c8daea3b66b1adaca76b1d200acd3a51fd7e",
+    "game/assets/sprites/brute.png": "5723ce076f6d599a583699daa489b33c05be3ea0df9ffa2a156b344982af5981",
+    "game/assets/sprites/brute_frames.tres": "f377e7878d8946389e610d379d203c72c63e7d5bc58be48631da75189ece97ff"
+  },
+  "exit": {
+    "docs/previews/exit.png": "7ad656ef27ce1828eb95f559e6e758a6fce1c8f4992c916816f1c8f9ead1d6ea",
+    "game/assets/sprites/exit.png": "9f99eef6d2e3cdb6adc7958b4db4e5b3c8787362cacfd01178180905b3833f02",
+    "game/assets/sprites/exit_frames.tres": "e17f91702711ab30d1c4768c42b1a19e3b42b0b4aa6235ffa005a50904e77fb5"
+  },
+  "explosion": {
+    "docs/previews/explosion.png": "7c65a625bc001922cd599dd68987bd8d74673f290fb56649124cbf6befadae84",
+    "game/assets/sprites/explosion.png": "771027a24b704df46bf17cc7844a05d003264b74ec197daf3f6e0ee577d555c4",
+    "game/assets/sprites/explosion_frames.tres": "907f12439a2f2ce25929ff0bfc03d4ec0b99f97bc05cc3816f81816dd2f715bd"
+  },
+  "explosion_big": {
+    "docs/previews/explosion_big.png": "ffcc0c47d4d49fe31cda7b7ac5fcbe065561826ed65ab5ec457135c3c8000038",
+    "game/assets/sprites/explosion_big.png": "61265098e5b6ca087e58ef2920e7b1b1faeda8c4d67a4284e141468675b30138",
+    "game/assets/sprites/explosion_big_frames.tres": "0e274573725995d8dfae3ffa8e7c1453354d7cd3ad52399f4d4a458689696200"
+  },
+  "font": {
+    "docs/previews/font.png": "00b31aca16d65837d1c844aa1f930a669c372954c1d5f3f4636842187363e51c",
+    "game/assets/sprites/font.png": "d330eef9aae34c144062bf54891b5b903fa543263c17f1af6ab1297567fed895",
+    "game/assets/sprites/font_frames.tres": "c9e8ba05405932badaf66cfde2540f24ccd01de2c8a23a5904ac32741029a77d"
   },
   "fx": {
     "docs/previews/fx.png": "51b16b9543692fa638705a86d037b078b13e0fe64b04de827c66bdc752d26286",
     "game/assets/sprites/fx.png": "cfc89fd5a2787700414c4f1d5a9e80346411f9d2dad14a5d91367e1bbfa2bdce",
     "game/assets/sprites/fx_frames.tres": "dd4d435619bace4af8e9e97e101b55208b6f43dc902e95db50b1cee84650d015"
   },
+  "kamikaze": {
+    "docs/previews/kamikaze.png": "6be9e5ec415064f064cd5de32ad267e2c04dcffde1bee29db0a6957660637744",
+    "game/assets/sprites/kamikaze.png": "03c26e676d353bc52913675a84fd38f766d49f2560345b33d7da8a117d19e3bb",
+    "game/assets/sprites/kamikaze_frames.tres": "b381c5f8cfd11fc6a9a637f5eac03591503858ce9030eaf673c89cc9d802cee8"
+  },
   "mook": {
     "docs/previews/mook.png": "a4e5b140a4e7586943d48c95f7cbd8292710b4e71f25c367c67c39dec12818ca",
     "game/assets/sprites/mook.png": "d3114efd8d9855fd2205520891436d29ebfe8de7a307c2c03fda5d0af652fc71",
     "game/assets/sprites/mook_frames.tres": "e62b6cd282940282710fe41968dee850a2e32090d3687e0344006399c2af60d7"
+  },
+  "projectiles": {
+    "docs/previews/projectiles.png": "7062df0bfa79ca54e25abc8fa62eb6d58ad066e930141d2d31245843899e4d7f",
+    "game/assets/sprites/projectiles.png": "16954e2c6e79a39351f18fe0023664daf3eb5d5c12631a0de292fd4e8b77f3d6",
+    "game/assets/sprites/projectiles_frames.tres": "e261eb29ce4ea8374c34dfdb19731e00e5ef0e61bc29659e30351048fedbfd92"
   },
   "terrain": {
     "docs/previews/terrain.png": "90c5fab340ad889c753a2f4ba077b415206578aef4c718903c813b36f84cc1ca",

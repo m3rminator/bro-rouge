@@ -1,0 +1,10 @@
+# Palette set for explosions: fire ramp (hot -> cool) then smoke ramp, plus a halo glow.
+symbols:
+  W: fire_white
+  Y: fire_yellow
+  O: fire_orange
+  R: fire_red
+  s: smoke_light
+  m: smoke
+  d: smoke_dark
+  a: glow_yellow

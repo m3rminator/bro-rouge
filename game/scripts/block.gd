@@ -1,7 +1,8 @@
 class_name Block
 extends StaticBody2D
-## Destructible 16x16 terrain tile. Breaks into debris after GameData.BLOCK.hp hits.
-## A grass block also carries the strands that hang over the tile below it.
+## Destructible 16x16 terrain tile. Breaks into debris after GameData.BLOCK.hp hits, or at
+## once when an explosion's radius covers its center. A grass block also carries the strands
+## that hang over the tile below it.
 
 const SIZE := 16
 const FRAMES := preload("res://assets/sprites/terrain_frames.tres")
@@ -42,6 +43,18 @@ func hit(damage: int, _direction := 0) -> void:
 		create_tween().tween_property(_sprite, "modulate", Color.WHITE, 0.08)
 		return
 	Sfx.play(self, "block_break", -4.0)
+	destroy()
+
+
+## Explosions: destroyed if the blast covers the block's center (the explosion plays the sound).
+func on_blast(center: Vector2, power: Dictionary) -> void:
+	if global_position.distance_to(center) <= power.radius:
+		destroy()
+
+
+func destroy() -> void:
+	if is_queued_for_deletion():
+		return
 	var debris := CPUParticles2D.new()
 	debris.one_shot = true
 	debris.amount = GameData.BLOCK.debris_amount

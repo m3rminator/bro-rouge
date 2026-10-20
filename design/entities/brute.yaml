@@ -1,0 +1,88 @@
+# Entity: Brute mini-boss.
+id: brute
+name: Brute (mini-boss)
+kind: enemy
+order: 6
+description: Two blocks tall, gas mask, armor vest, a minigun in each hand. Walks slowly. He sees much further than a mook and much higher and lower, and also notices the Bro behind him when he is close (he turns around). When he spots the Bro his guns spin up, then he sprays long bursts from both guns in a wide fan (spread_angle), alternating guns. His bullets chew through blocks and barrels. A health bar appears at the top of the screen while you fight him. When he dies he stays down in a big pool of blood.
+sprite: brute
+files:
+  - game/scenes/brute.tscn
+  - game/scripts/brute.gd
+  - game/scripts/enemy.gd
+level_symbols:
+  "B": Brute start position (bottom tile of his 2-block body; the tiles around and above must be air)
+level_preview:
+  "B": {anim: idle, flip: true}
+spawns: [minigun_bullet, blood]
+
+stats:
+  hp:
+    value: 30
+    unit: hp
+    description: Bro bullet hits needed to kill him (explosions deal their blast damage).
+  walk_speed:
+    value: 16.0
+    unit: px/s
+    description: Patrol speed.
+  turn_pause:
+    value: 1.2
+    unit: s
+    description: Pause at walls and ledges while patrolling.
+  gravity:
+    value: 800.0
+    unit: px/s²
+    description: Downward acceleration while falling.
+  vision_range:
+    value: 270.0
+    unit: px
+    description: How far ahead he can see (≈ 17 blocks — almost twice a mook).
+  vision_height:
+    value: 56.0
+    unit: px
+    description: How far above/below his eyes the Bro can be and still be seen (≈ 3.5 blocks — he spots you on platforms).
+  hearing_range:
+    value: 90.0
+    unit: px
+    description: If the Bro is behind him and this close (with a clear line), he turns around.
+  spin_up:
+    value: 0.7
+    unit: s
+    description: Guns spin before the first burst — the player's window to take cover.
+  fire_interval:
+    value: 0.07
+    unit: s
+    description: Time between bullets during a burst (≈ 14 per second, alternating guns).
+  burst_time:
+    value: 1.4
+    unit: s
+    description: Length of one burst.
+  burst_pause:
+    value: 1.3
+    unit: s
+    description: Pause between bursts (guns keep spinning).
+  spread_angle:
+    value: 36.0
+    unit: degrees
+    description: Total width of the fan his bullets spray in (each bullet gets a random angle inside it).
+  forget_time:
+    value: 3.0
+    unit: s
+    description: How long he keeps firing at the last spot after losing sight of the Bro.
+  hitbox:
+    value: [20, 30]
+    unit: px
+    description: Collision box, width × height (two blocks tall).
+
+animations:
+  idle: Standing guard.
+  walk: Patrolling, slow and heavy.
+  spin: Barrels spinning up (and between bursts).
+  shoot: Firing, guns alternating recoil.
+  hurt: Dead — slumps over; the body stays.
+  fx/alert: The "!" bubble when he spots the Bro.
+
+sounds:
+  brute_alert: He spots the Bro (deep roar).
+  minigun_spinup: Guns start spinning.
+  minigun_fire: Each burst.
+  brute_death: He dies.

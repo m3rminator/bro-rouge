@@ -1,0 +1,94 @@
+# Entity: suicide bomber enemy.
+id: kamikaze
+name: Kamikaze (suicide bomber)
+kind: enemy
+order: 5
+description: Wears a dynamite vest and holds a lit stick. Patrols like a mook and sees the same way (forward only, no blocks in between). When he spots the Bro he screams and sprints straight at him, jumping over low walls. When he gets within trigger_range he blows up — killing himself and, at full blast, the Bro too. Shooting him is the answer, but he also explodes when he dies (after death_fuse), so kill him far away. His blast breaks blocks, sets off barrels and kills other enemies too. Leaves no body — only blood.
+sprite: kamikaze
+files:
+  - game/scenes/kamikaze.tscn
+  - game/scripts/kamikaze.gd
+  - game/scripts/enemy.gd
+level_symbols:
+  "K": kamikaze start position (air tile)
+level_preview:
+  "K": {anim: idle, flip: true}
+spawns: [explosion, blood]
+
+stats:
+  hp:
+    value: 1
+    unit: hp
+    description: Bro bullet hits needed to kill him (one).
+  walk_speed:
+    value: 28.0
+    unit: px/s
+    description: Patrol speed before he has seen the Bro.
+  run_speed:
+    value: 105.0
+    unit: px/s
+    description: Charge speed once he has spotted the Bro (the Bro runs 120, so you can only just outrun him).
+  jump_velocity:
+    value: -250.0
+    unit: px/s
+    description: Jump used to hop over a wall while charging (about 2 blocks high).
+  turn_pause:
+    value: 0.8
+    unit: s
+    description: Pause at walls and ledges while patrolling.
+  gravity:
+    value: 800.0
+    unit: px/s²
+    description: Downward acceleration while falling.
+  vision_range:
+    value: 150.0
+    unit: px
+    description: How far ahead he can see (same as a mook).
+  vision_height:
+    value: 24.0
+    unit: px
+    description: How far above/below his eyes the Bro can be and still be seen.
+  reaction_time:
+    value: 0.35
+    unit: s
+    description: Scream ("!") before he starts running.
+  chase_range:
+    value: 260.0
+    unit: px
+    description: Once charging he keeps chasing until the Bro is this far away (he does not need to see him).
+  trigger_range:
+    value: 14.0
+    unit: px
+    description: He detonates when the Bro is this close.
+  death_fuse:
+    value: 0.35
+    unit: s
+    description: Delay between being killed and his vest going off.
+  blast_radius:
+    value: 34.0
+    unit: px
+    description: Explosion radius (≈ 2 blocks). Blocks whose center is inside are destroyed.
+  blast_damage:
+    value: 4
+    unit: hp
+    description: Damage his blast deals to enemies (kills mooks and other kamikazes outright).
+  blast_player_damage:
+    value: 3
+    unit: hearts
+    description: Hearts his blast takes from the Bro — a full-health Bro dies.
+  hitbox:
+    value: [10, 14]
+    unit: px
+    description: Collision box, width × height.
+
+animations:
+  idle: Standing at a patrol turn.
+  walk: Patrolling.
+  run: Charging the Bro, dynamite raised, fuse sparking.
+  fall: In the air.
+  hurt: Killed — staggers with the fuse fizzing until the vest goes off.
+  fx/alert: The "!" bubble when he spots the Bro.
+
+sounds:
+  kamikaze_scream: He spots the Bro and starts the charge.
+  enemy_death: He is shot (just before the blast).

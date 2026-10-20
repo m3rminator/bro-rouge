@@ -1,0 +1,100 @@
+# Bullets: big glowing slugs, about half a character tall, so every shot reads clearly.
+# Hot white/yellow core + semi-transparent halo (glow colors have alpha). Point right;
+# the game flips/rotates them. 2 frames each: the halo pulses while flying.
+name: projectiles
+description: Glowing bullets — Bro (yellow), enemy rifle (yellow core, red-orange halo), minigun (smaller, orange) — and the spark when a bullet hits.
+palette: projectiles
+frame: [16, 10]
+anchors:
+  center: [8, 5]
+
+parts:
+  bro_core: |
+    ...aaaaaaaa...
+    .aaOYYYYYYYYa.
+    aOYYYWWWWWYYYa
+    aOYYWWWWWWWWYa
+    aOYYWWWWWWWWYa
+    aOYYYWWWWWYYYa
+    .aaOYYYYYYYYa.
+    ...aaaaaaaa...
+  bro_halo: |
+    ....ffffffff....
+    ..ff........ff..
+    .f............f.
+    f..............f
+    f..............f
+    f..............f
+    f..............f
+    .f............f.
+    ..ff........ff..
+    ....ffffffff....
+  enemy_core: |
+    ...eeeeeee..
+    .eeRYYYYYYe.
+    eROYYWWWYYYe
+    eROYWWWWWWYe
+    eROYYWWWYYYe
+    .eeRYYYYYYe.
+    ...eeeeeee..
+  enemy_halo: |
+    ...cccccccc...
+    .cc........cc.
+    c............c
+    c............c
+    c............c
+    c............c
+    c............c
+    .cc........cc.
+    ...cccccccc...
+  minigun_core: |
+    ..ccccc..
+    cROOYYYYc
+    cROYWWWYc
+    cROOYYYYc
+    ..ccccc..
+  impact_a: |
+    ..W..
+    .WYW.
+    WYWYW
+    .WYW.
+    ..W..
+  impact_b: |
+    Y.Y.Y
+    .O.O.
+    Y.a.Y
+    .O.O.
+    Y.Y.Y
+  impact_c: |
+    R...R
+    .....
+    ..f..
+    .....
+    R...R
+
+animations:
+  bro_shot:
+    fps: 12
+    loop: true
+    frames:
+      - [[bro_core, 1, 1]]
+      - [[bro_halo, 0, 0], [bro_core, 1, 1]]
+  enemy_shot:
+    fps: 12
+    loop: true
+    frames:
+      - [[enemy_core, 2, 2]]
+      - [[enemy_halo, 1, 1], [enemy_core, 2, 2]]
+  minigun_shot:
+    fps: 12
+    loop: true
+    frames:
+      - [[minigun_core, 4, 3]]
+      - [[minigun_core, 4, 3]]
+  impact:
+    fps: 20
+    loop: false
+    frames:
+      - [[impact_a, 6, 3]]
+      - [[impact_b, 6, 3]]
+      - [[impact_c, 6, 3]]

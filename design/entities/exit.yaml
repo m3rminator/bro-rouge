@@ -1,0 +1,22 @@
+# Entity: level exit (extraction flag).
+id: exit
+name: Extraction flag
+kind: objective
+order: 14
+description: The end of every level. Locked (red flag at the bottom) until the level's kill quota is met (design/run.yaml); then the flag runs up green and the HUD says EXIT OPEN. Touching the open flag clears the level. Touching it while locked shows how many kills are still missing.
+sprite: exit
+files:
+  - game/scripts/level_exit.gd
+level_symbols:
+  "X": extraction flag (bottom tile of the 2-block pole)
+level_preview:
+  "X": {anim: locked}
+
+animations:
+  locked: Kill quota not met yet.
+  open: Quota met — touch it to clear the level.
+
+sounds:
+  exit_locked: You touch it while it is still locked.
+  quota_reached: The last required kill — the flag opens.
+  level_clear: You touch the open flag.

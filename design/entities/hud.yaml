@@ -3,11 +3,13 @@ id: hud
 name: HUD
 kind: ui
 order: 20
-description: Fixed on screen, top-left. One heart per Bro hit point; hearts turn grey as he takes damage.
+description: Fixed on screen. Top-left — one heart per Bro hit point (grey when lost) and the lives left. Top-center — level number, loop and level name. Top-right — kills / kill quota (turns green when met). Center — big messages (KILL N MORE, EXIT OPEN, LEVEL CLEAR, YOU DIED, RUN OVER). While the Brute is fighting, his health bar is shown under the top line. Text uses the pixel font (sprite "font") with a dark outline.
 sprite: fx
 files:
   - game/scripts/hud.gd
+  - game/scripts/pixel_text.gd
 
 animations:
   heart_full: A remaining hit point.
   heart_empty: A lost hit point.
+  font/g_A: "Pixel font glyph (A-Z, 0-9 and the signs / ! : - . + > <), all in the sprite font."

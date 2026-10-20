@@ -1,0 +1,60 @@
+# Entity: explosive barrel.
+id: barrel
+name: Explosive barrel
+kind: hazard
+order: 11
+description: Red drum, one block. A hit from any bullet (or a nearby blast) sets it burning; after fuse_time it explodes. Barrels that touch each other (side by side, stacked or diagonal) explode together as ONE bigger blast — radius and damage grow with every extra barrel, and it looks different (mushroom fireball + shockwave instead of a small blast). Barrels further away that are inside the blast catch fire and go off a moment later (chain reaction). Solid — you can stand on it, and it falls if the ground under it is destroyed.
+sprite: barrel
+files:
+  - game/scripts/barrel.gd
+  - game/scripts/explosion.gd
+level_symbols:
+  "O": explosive barrel
+level_preview:
+  "O": {anim: idle}
+spawns: [explosion]
+
+stats:
+  fuse_time:
+    value: 0.45
+    unit: s
+    description: Burning time between being hit and exploding.
+  chain_fuse:
+    value: 0.15
+    unit: s
+    description: Burning time when set off by another explosion (makes chain reactions ripple).
+  blast_radius:
+    value: 30.0
+    unit: px
+    description: Blast radius of a single barrel (≈ 2 blocks).
+  radius_per_extra:
+    value: 10.0
+    unit: px
+    description: Extra radius for every other barrel in the same touching cluster.
+  max_radius:
+    value: 80.0
+    unit: px
+    description: Cap on the blast radius, however many barrels (5 blocks).
+  blast_damage:
+    value: 4
+    unit: hp
+    description: Damage a single barrel's blast deals to enemies.
+  damage_per_extra:
+    value: 3
+    unit: hp
+    description: Extra enemy damage for every other barrel in the cluster.
+  blast_player_damage:
+    value: 2
+    unit: hearts
+    description: Hearts the blast takes from the Bro (any cluster size).
+  gravity:
+    value: 800.0
+    unit: px/s²
+    description: Falls when the ground under it is destroyed.
+
+animations:
+  idle: Untouched.
+  burning: Hit — flames on the lid, drum flashing hot, about to blow.
+
+sounds:
+  barrel_ignite: It catches fire.

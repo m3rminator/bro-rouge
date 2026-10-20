@@ -1,0 +1,10 @@
+# Palette set for bullets: hot core + semi-transparent halo (glow_* colors have alpha).
+symbols:
+  W: fire_white
+  Y: fire_yellow
+  O: fire_orange
+  R: fire_red
+  a: glow_yellow
+  f: glow_soft
+  c: glow_orange
+  e: glow_red

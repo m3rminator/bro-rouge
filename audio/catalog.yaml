@@ -35,6 +35,42 @@ sfx:
   player_death:
     prompt: "Dramatic male death yell of an action hero, short, retro 80s action video game"
     duration: 1.0
+  explosion_small:
+    prompt: "Punchy retro 16-bit video game explosion, a single barrel blowing up, crunchy boom with short debris rattle, no music"
+    duration: 1.2
+  explosion_big:
+    prompt: "Huge deep retro 16-bit video game explosion, several fuel barrels blowing up at once, heavy rumbling boom with long debris tail, no music"
+    duration: 2.0
+  barrel_ignite:
+    prompt: "Short whoosh of a fuel barrel catching fire with a sizzling fuse hiss, video game"
+    duration: 0.6
+  blood_splat:
+    prompt: "Short wet comic gore splat, cartoony retro action video game, no voice"
+    duration: 0.5
+  kamikaze_scream:
+    prompt: "Crazed enemy soldier yelling a wordless battle cry 'aaaaah!' while charging, retro action video game voice"
+    duration: 1.0
+  brute_alert:
+    prompt: "Deep menacing roar of a huge armored soldier through a gas mask, short, retro action video game"
+    duration: 1.0
+  minigun_spinup:
+    prompt: "Electric minigun barrels spinning up, rising mechanical whine, short, video game"
+    duration: 0.8
+  minigun_fire:
+    prompt: "Retro 16-bit minigun firing a continuous rapid burst, brrrrt, mechanical, no reverb"
+    duration: 1.4
+  brute_death:
+    prompt: "Big heavy man's death groan followed by a heavy body and metal guns crashing to the ground, retro action video game"
+    duration: 1.5
+  quota_reached:
+    prompt: "Short triumphant retro 16-bit video game jingle, objective complete, two rising notes"
+    duration: 1.0
+  level_clear:
+    prompt: "Short victorious retro 16-bit video game fanfare, level complete, bright synth brass"
+    duration: 2.0
+  exit_locked:
+    prompt: "Short negative error buzz, retro 16-bit video game, access denied"
+    duration: 0.5
 
 music:
   level_jungle:

@@ -1,0 +1,53 @@
+# Entity: explosion (shared by barrels and kamikazes).
+id: explosion
+name: Explosion
+kind: effect
+order: 12
+description: Everything inside the radius is hit at once — blocks are destroyed (so a blast always opens a hole several blocks wide), enemies take blast damage, the Bro loses hearts, barrels catch fire, and bodies are tossed. One source (a single barrel or a kamikaze) uses one of three small blasts (picked from its map position, so the same barrel always looks the same). A cluster of touching barrels instead plays a mushroom fireball plus a ground shockwave scaled to the cluster, with a small blast on every barrel in it, more smoke, more fire and a harder screen shake.
+sprite: explosion
+files:
+  - game/scripts/explosion.gd
+spawned_by: [barrel, kamikaze]
+
+stats:
+  big_scale_per_extra:
+    value: 0.18
+    unit: ×
+    description: The mushroom fireball grows by this much for every barrel beyond two.
+  secondary_delay:
+    value: 0.06
+    unit: s
+    description: In a cluster, delay between the small blasts on each barrel (they ripple through the pile).
+  smoke_puffs:
+    value: 2
+    unit: puffs
+    description: Smoke puffs left by a small blast (a cluster leaves this many per barrel).
+  fire_particles:
+    value: 24
+    unit: particles
+    description: Burning sparks thrown by a small blast (doubled for a cluster, plus 8 per extra barrel).
+  fling_speed:
+    value: 220.0
+    unit: px/s
+    description: How hard bodies and the Bro are thrown away from the center.
+  shake:
+    value: 3.0
+    unit: px
+    description: Screen shake for a small blast.
+  shake_per_extra:
+    value: 1.5
+    unit: px
+    description: Extra screen shake for every other barrel in a cluster (max 9 px).
+
+animations:
+  blast_a: Small blast — round fireball cluster.
+  blast_b: Small blast — white starburst with sparks.
+  blast_c: Small blast — tall plume.
+  smoke_0: Smoke puff left behind.
+  smoke_1: Smoke puff left behind (other shape).
+  explosion_big/inferno: Cluster blast — ground fireball, rising stem, mushroom cap.
+  explosion_big/shockwave: Cluster blast — flattened ring racing outward along the ground.
+
+sounds:
+  explosion_small: A single barrel or a kamikaze.
+  explosion_big: A cluster of barrels.

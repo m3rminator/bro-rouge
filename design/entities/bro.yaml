@@ -5,7 +5,7 @@ id: bro
 name: Bro (default)
 kind: player
 order: 1
-description: The player character, exactly one block tall so he fits through a single destroyed block. Runs, jumps, sprays rifle fire; dies after max_hp enemy hits and the level restarts. Every future Bro copies this file and changes what makes them unique.
+description: The player character, exactly one block tall so he fits through a single destroyed block. Runs, jumps, sprays rifle fire; dies after max_hp hits (bullets, or blasts which take several hearts at once). Each death costs one run life and restarts the current level (design/run.yaml). Every future Bro copies this file and changes what makes them unique.
 sprite: bro
 files:
   - game/scenes/player.tscn
@@ -13,6 +13,8 @@ files:
 controls: [move_left, move_right, jump, shoot]
 level_symbols:
   "P": player start position (air tile)
+level_preview:
+  "P": {anim: idle}
 spawns: [bullet]
 
 stats:

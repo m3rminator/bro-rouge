@@ -31,5 +31,5 @@ panels:
     sfx: enemy_shoot
   - title: Hit
     shot: bro/hurt/0
-    caption: Each enemy hit costs a heart and makes the Bro blink (briefly invulnerable). Lose all three and the level restarts.
+    caption: Each enemy hit costs a heart and makes the Bro blink (briefly invulnerable). Lose all three and you lose a life; the level restarts. Blasts take two or three hearts at once and throw you.
     sfx: player_hurt

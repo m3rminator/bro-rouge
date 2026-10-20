@@ -1,0 +1,495 @@
+# HUD pixel font. Each glyph is 3x5 inside a 4x6 cell (1 px spacing). The game draws it
+# with a dark outline and tints it (white, yellow, red). Punctuation glyphs use names: slash, bang,
+# colon, dash, dot, plus, gt, lt.
+name: font
+description: "3x5 pixel font for the HUD (A-Z, 0-9, / ! : - . + > <). One animation per glyph: g_<char>."
+palette: font
+frame: [4, 6]
+
+parts:
+  g_A: |
+    .w.
+    w.w
+    www
+    w.w
+    w.w
+  g_B: |
+    ww.
+    w.w
+    ww.
+    w.w
+    ww.
+  g_C: |
+    .ww
+    w..
+    w..
+    w..
+    .ww
+  g_D: |
+    ww.
+    w.w
+    w.w
+    w.w
+    ww.
+  g_E: |
+    www
+    w..
+    ww.
+    w..
+    www
+  g_F: |
+    www
+    w..
+    ww.
+    w..
+    w..
+  g_G: |
+    .ww
+    w..
+    w.w
+    w.w
+    .ww
+  g_H: |
+    w.w
+    w.w
+    www
+    w.w
+    w.w
+  g_I: |
+    www
+    .w.
+    .w.
+    .w.
+    www
+  g_J: |
+    ..w
+    ..w
+    ..w
+    w.w
+    .w.
+  g_K: |
+    w.w
+    w.w
+    ww.
+    w.w
+    w.w
+  g_L: |
+    w..
+    w..
+    w..
+    w..
+    www
+  g_M: |
+    w.w
+    www
+    www
+    w.w
+    w.w
+  g_N: |
+    ww.
+    w.w
+    w.w
+    w.w
+    w.w
+  g_O: |
+    .w.
+    w.w
+    w.w
+    w.w
+    .w.
+  g_P: |
+    ww.
+    w.w
+    ww.
+    w..
+    w..
+  g_Q: |
+    .w.
+    w.w
+    w.w
+    ww.
+    .ww
+  g_R: |
+    ww.
+    w.w
+    ww.
+    w.w
+    w.w
+  g_S: |
+    .ww
+    w..
+    .w.
+    ..w
+    ww.
+  g_T: |
+    www
+    .w.
+    .w.
+    .w.
+    .w.
+  g_U: |
+    w.w
+    w.w
+    w.w
+    w.w
+    www
+  g_V: |
+    w.w
+    w.w
+    w.w
+    w.w
+    .w.
+  g_W: |
+    w.w
+    w.w
+    www
+    www
+    w.w
+  g_X: |
+    w.w
+    w.w
+    .w.
+    w.w
+    w.w
+  g_Y: |
+    w.w
+    w.w
+    .w.
+    .w.
+    .w.
+  g_Z: |
+    www
+    ..w
+    .w.
+    w..
+    www
+  g_0: |
+    www
+    w.w
+    w.w
+    w.w
+    www
+  g_1: |
+    .w.
+    ww.
+    .w.
+    .w.
+    www
+  g_2: |
+    ww.
+    ..w
+    .w.
+    w..
+    www
+  g_3: |
+    ww.
+    ..w
+    .w.
+    ..w
+    ww.
+  g_4: |
+    w.w
+    w.w
+    www
+    ..w
+    ..w
+  g_5: |
+    www
+    w..
+    ww.
+    ..w
+    ww.
+  g_6: |
+    .ww
+    w..
+    www
+    w.w
+    www
+  g_7: |
+    www
+    ..w
+    .w.
+    .w.
+    .w.
+  g_8: |
+    www
+    w.w
+    www
+    w.w
+    www
+  g_9: |
+    www
+    w.w
+    www
+    ..w
+    ww.
+  g_slash: |
+    ..w
+    ..w
+    .w.
+    w..
+    w..
+  g_bang: |
+    .w.
+    .w.
+    .w.
+    ...
+    .w.
+  g_colon: |
+    ...
+    .w.
+    ...
+    .w.
+    ...
+  g_dash: |
+    ...
+    ...
+    www
+    ...
+    ...
+  g_dot: |
+    ...
+    ...
+    ...
+    ...
+    .w.
+  g_plus: |
+    ...
+    .w.
+    www
+    .w.
+    ...
+  g_gt: |
+    w..
+    .w.
+    ..w
+    .w.
+    w..
+  g_lt: |
+    ..w
+    .w.
+    w..
+    .w.
+    ..w
+
+animations:
+  g_A:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_A, 0, 0]]
+  g_B:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_B, 0, 0]]
+  g_C:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_C, 0, 0]]
+  g_D:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_D, 0, 0]]
+  g_E:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_E, 0, 0]]
+  g_F:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_F, 0, 0]]
+  g_G:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_G, 0, 0]]
+  g_H:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_H, 0, 0]]
+  g_I:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_I, 0, 0]]
+  g_J:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_J, 0, 0]]
+  g_K:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_K, 0, 0]]
+  g_L:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_L, 0, 0]]
+  g_M:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_M, 0, 0]]
+  g_N:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_N, 0, 0]]
+  g_O:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_O, 0, 0]]
+  g_P:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_P, 0, 0]]
+  g_Q:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_Q, 0, 0]]
+  g_R:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_R, 0, 0]]
+  g_S:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_S, 0, 0]]
+  g_T:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_T, 0, 0]]
+  g_U:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_U, 0, 0]]
+  g_V:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_V, 0, 0]]
+  g_W:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_W, 0, 0]]
+  g_X:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_X, 0, 0]]
+  g_Y:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_Y, 0, 0]]
+  g_Z:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_Z, 0, 0]]
+  g_0:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_0, 0, 0]]
+  g_1:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_1, 0, 0]]
+  g_2:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_2, 0, 0]]
+  g_3:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_3, 0, 0]]
+  g_4:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_4, 0, 0]]
+  g_5:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_5, 0, 0]]
+  g_6:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_6, 0, 0]]
+  g_7:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_7, 0, 0]]
+  g_8:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_8, 0, 0]]
+  g_9:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_9, 0, 0]]
+  g_slash:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_slash, 0, 0]]
+  g_bang:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_bang, 0, 0]]
+  g_colon:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_colon, 0, 0]]
+  g_dash:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_dash, 0, 0]]
+  g_dot:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_dot, 0, 0]]
+  g_plus:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_plus, 0, 0]]
+  g_gt:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_gt, 0, 0]]
+  g_lt:
+    fps: 1
+    loop: false
+    frames:
+      - [[g_lt, 0, 0]]

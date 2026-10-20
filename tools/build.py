@@ -1,7 +1,8 @@
 """Deterministic build for art, game data and the catalog.
 
 - art/sprites/*.yaml + art/palettes -> sprite sheets, Godot SpriteFrames, previews
-- design/controls.yaml + design/entities/*.yaml -> game/scripts/generated/game_data.gd
+- design/controls.yaml + design/entities/*.yaml + design/levels + design/run.yaml
+  -> game/scripts/generated/game_data.gd
 - everything above + storyboards + audio -> docs/catalog.html
 
 Same specs always produce the same bytes. Already-approved sprites are locked in
@@ -44,8 +45,10 @@ def load_yaml(path):
 
 
 def hex_to_rgba(value):
+    """#rrggbb (opaque) or #rrggbbaa (semi-transparent, e.g. glows)."""
     value = value.lstrip("#")
-    return tuple(int(value[i:i + 2], 16) for i in (0, 2, 4)) + (255,)
+    alpha = int(value[6:8], 16) if len(value) == 8 else 255
+    return tuple(int(value[i:i + 2], 16) for i in (0, 2, 4)) + (alpha,)
 
 
 def load_palettes():
@@ -168,6 +171,10 @@ KEY_NAMES = {**{c: f"KEY_{c}" for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"}, **{d: f"KE
              "Ctrl": "KEY_CTRL", "Alt": "KEY_ALT"}
 
 
+def split_anim(default_sprite, key):
+    return tuple(key.split("/", 1)) if "/" in key else (default_sprite, key)
+
+
 def load_design(sprites, audio):
     """Load controls + entities and cross-check every reference, so the catalog can't lie."""
     controls = load_yaml(DESIGN / "controls.yaml")["actions"]
@@ -183,9 +190,15 @@ def load_design(sprites, audio):
         eid = ent["id"]
         if ent["sprite"] not in sprite_anims:
             raise SpecError(f"entity {eid}: unknown sprite {ent['sprite']!r}")
-        for anim in ent.get("animations", {}):
-            if anim not in sprite_anims[ent["sprite"]]:
-                raise SpecError(f"entity {eid}: sprite {ent['sprite']!r} has no animation {anim!r}")
+        for anim in ent.get("animations", {}):  # "anim" (entity's own sprite) or "sprite/anim"
+            sname, aname = split_anim(ent["sprite"], anim)
+            if sname not in sprite_anims or aname not in sprite_anims[sname]:
+                raise SpecError(f"entity {eid}: sprite {sname!r} has no animation {aname!r}")
+        for sym, prev in ent.get("level_preview", {}).items():
+            if sym not in ent.get("level_symbols", {}):
+                raise SpecError(f"entity {eid}: level_preview {sym!r} is not one of its level_symbols")
+            if prev["anim"] not in sprite_anims[ent["sprite"]]:
+                raise SpecError(f"entity {eid}: level_preview anim {prev['anim']!r} not in sprite {ent['sprite']!r}")
         for sound in ent.get("sounds", {}):
             if sound not in sfx:
                 raise SpecError(f"entity {eid}: sound {sound!r} is not in audio/catalog.yaml")
@@ -218,8 +231,38 @@ def load_levels(entities):
                     raise SpecError(f"{path.name}: unknown symbol {ch!r} at ({x},{y}); known: {''.join(sorted(symbols))}")
         if sum(r.count("P") for r in rows) != 1:
             raise SpecError(f"{path.name}: needs exactly one 'P' (player start)")
+        for y, row in enumerate(rows):
+            for x, ch in enumerate(row):
+                if ch in TALL_SYMBOLS:  # 2-block-tall things: their upper tile (and the Brute's sides) must be free
+                    around = [(x, y - 1)] + ([(x - 1, y), (x + 1, y), (x - 1, y - 1), (x + 1, y - 1)] if ch == "B" else [])
+                    for ax, ay in around:
+                        if ay < 0 or not (0 <= ax < len(row)) or rows[ay][ax] == "#":
+                            raise SpecError(f"{path.name}: {ch!r} at ({x},{y}) needs air at ({ax},{ay})")
         levels[path.stem] = rows
     return levels
+
+
+TALL_SYMBOLS = "BX"
+
+
+def enemy_symbols(entities):
+    return {s for ent in entities.values() if ent["kind"] == "enemy" for s in ent.get("level_symbols", {})}
+
+
+def load_run(levels, entities):
+    """design/run.yaml: level order and kill quotas. Every map must exist, have one exit and enough enemies."""
+    run = load_yaml(DESIGN / "run.yaml")
+    foes = enemy_symbols(entities)
+    for i, lv in enumerate(run["levels"], 1):
+        if lv["map"] not in levels:
+            raise SpecError(f"run.yaml level {i}: map {lv['map']!r} not found in design/levels")
+        rows = levels[lv["map"]]
+        if sum(r.count("X") for r in rows) != 1:
+            raise SpecError(f"run.yaml level {i}: {lv['map']} needs exactly one 'X' (exit)")
+        count = sum(r.count(c) for r in rows for c in foes)
+        if not 0 < lv["kill_quota"] <= count:
+            raise SpecError(f"run.yaml level {i}: kill_quota {lv['kill_quota']} but {lv['map']} has {count} enemies")
+    return run
 
 
 def load_storyboards(sprites, audio):
@@ -269,8 +312,10 @@ def level_tiles(rows, variants, clearance):
                 yield x, y, f"earth_{tile_variant(x, y, variants['earth'])}"
 
 
-def render_level(rows, sprites, clearance):
+def render_level(rows, sprites, clearance, entities):
     index = {sp["name"]: (sp, img, {l[0]: l[1] for l in lay}) for sp, img, lay in sprites}
+    previews = {sym: (ent["sprite"], prev["anim"], prev.get("flip", False))
+                for ent in entities.values() for sym, prev in ent.get("level_preview", {}).items()}
     variants = tile_variants(sprites)
 
     def frame(sname, anim):
@@ -284,9 +329,13 @@ def render_level(rows, sprites, clearance):
         out.alpha_composite(frame("terrain", anim), (x * 16, y * 16))
     for y, row in enumerate(rows):
         for x, ch in enumerate(row):
-            if ch in "PE":
-                sprite = frame("bro", "idle") if ch == "P" else frame("mook", "idle").transpose(Image.FLIP_LEFT_RIGHT)
-                out.alpha_composite(sprite, (x * 16 - 4, y * 16))  # mooks start facing left, like in the game
+            if ch in previews:  # bottom-centered on its tile, like in the game; enemies start facing left
+                sname, anim, flip = previews[ch]
+                sprite = frame(sname, anim)
+                if flip:
+                    sprite = sprite.transpose(Image.FLIP_LEFT_RIGHT)
+                px, py = x * 16 + 8 - sprite.width // 2, y * 16 + 16 - sprite.height
+                out.alpha_composite(sprite, (max(px, 0), max(py, 0)))
     return out
 
 
@@ -298,7 +347,7 @@ def gd_value(v):
     return json.dumps(v)
 
 
-def game_data_gd(controls, entities, sprites, levels):
+def game_data_gd(controls, entities, sprites, levels, run):
     lines = ["# GENERATED by tools/build.py from design/*.yaml and art/sprites/*.yaml — do not edit by hand.",
              "# Change the YAML, then run: py tools/build.py", "class_name GameData", "",
              "## Input action -> keys (design/controls.yaml)", "const CONTROLS := {"]
@@ -327,7 +376,13 @@ def game_data_gd(controls, entities, sprites, levels):
         lines.append(f'\t"{name}": [')
         lines += [f'\t\t"{r}",' for r in rows]
         lines.append("\t],")
-    lines += ["}", ""]
+    lines += ["}", "", "## Run loop: level order and kill quotas (design/run.yaml)", "const RUN := {"]
+    for stat, spec in run["stats"].items():
+        lines.append(f'\t"{stat}": {gd_value(spec["value"])},')
+    lines.append('\t"levels": [')
+    for lv in run["levels"]:
+        lines.append(f'\t\t{{"map": {gd_value(lv["map"])}, "title": {gd_value(lv["title"])}, "kill_quota": {lv["kill_quota"]}}},')
+    lines += ["\t],", "}", ""]
     return "\n".join(lines).encode("utf-8")
 
 
@@ -337,7 +392,7 @@ def keycaps(keys):
     return " ".join(f"<kbd>{html.escape(k)}</kbd>" for k in keys)
 
 
-def catalog_html(master, sets, sprites, storyboards, audio, controls, entities, levels):
+def catalog_html(master, sets, sprites, storyboards, audio, controls, entities, levels, run):
     e = html.escape
     uri = {sp["name"]: "data:image/png;base64," + base64.b64encode(png_bytes(img)).decode() for sp, img, _ in sprites}
     css = """
@@ -387,7 +442,7 @@ def catalog_html(master, sets, sprites, storyboards, audio, controls, entities, 
             "Everything here is read from the same spec files the game is built from, so it is always exactly what is in the game.</p>",
             "<nav><a href='#controls'>Controls</a><a href='#entities'>Entities</a>"
             + "".join(f"<a href='#ent-{e(i)}'>· {e(x['name'])}</a>" for i, x in entities.items())
-            + "<a href='#levels'>Levels</a><a href='#palette'>Palettes</a><a href='#sprites'>Sprites</a><a href='#storyboards'>Storyboards</a><a href='#audio'>Audio</a></nav>"]
+            + "<a href='#run'>Run loop</a><a href='#levels'>Levels</a><a href='#palette'>Palettes</a><a href='#sprites'>Sprites</a><a href='#storyboards'>Storyboards</a><a href='#audio'>Audio</a></nav>"]
 
     # Controls
     used_by = {a: [x["name"] for x in entities.values() if a in x.get("controls", [])] for a in controls}
@@ -419,9 +474,12 @@ def catalog_html(master, sets, sprites, storyboards, audio, controls, entities, 
         if ent.get("animations"):
             body.append(f"<h4>Animations <span class='mute'>— sprite <code>{e(ent['sprite'])}</code></span></h4>"
                         "<div class='tbl'><table><tr><th>Preview</th><th>Plays when</th><th>Frames</th></tr>")
-            for aname, when in ent["animations"].items():
-                _, _, count, fps, loop = sprite_index[ent["sprite"]][2][aname]
-                body.append(f"<tr><td>{anim_box(ent['sprite'], aname, 3, e(aname))}</td><td>{e(when)}</td>"
+            for key, when in ent["animations"].items():
+                sname, aname = split_anim(ent["sprite"], key)
+                _, _, count, fps, loop = sprite_index[sname][2][aname]
+                fw, fh = sprite_index[sname][0]["frame"]
+                scale = 3 if max(fw, fh) <= 32 else 2
+                body.append(f"<tr><td>{anim_box(sname, aname, scale, e(key))}</td><td>{e(when)}</td>"
                             f"<td class='mute'>{count} @ {fps} fps{'' if loop else ', once'}</td></tr>")
             body.append("</table></div>")
         if ent.get("sounds"):
@@ -439,16 +497,36 @@ def catalog_html(master, sets, sprites, storyboards, audio, controls, entities, 
         files = ", ".join(f"<code>{e(f)}</code>" for f in [f"design/entities/{eid}.yaml"] + ent.get("files", []))
         body.append(f"<p class='mute'>{' · '.join(links + ['Files: ' + files])}</p></div>")
 
+    # Run loop
+    foes = enemy_symbols(entities)
+    body.append(f"<h2 id='run'>Run loop</h2><p class='mute'>Source: <code>design/run.yaml</code> — in code: "
+                f"<code>GameData.RUN</code></p><p>{e(run['description'])}</p><div class='tbl'><table>"
+                "<tr><th>Name</th><th>Value</th><th>Meaning</th></tr>")
+    for stat, spec in run["stats"].items():
+        body.append(f"<tr><td><code>{e(stat)}</code></td><td class='num'>{spec['value']} {e(spec.get('unit', ''))}</td>"
+                    f"<td>{e(spec['description'])}</td></tr>")
+    body.append("</table></div><h4>Level order</h4><div class='tbl'><table><tr><th>#</th><th>Level</th><th>Map</th>"
+                "<th>Kill quota</th><th>Enemies in map</th><th>Notes</th></tr>")
+    for i, lv in enumerate(run["levels"], 1):
+        count = sum(r.count(c) for r in levels[lv["map"]] for c in foes)
+        body.append(f"<tr><td class='num'>{i}</td><td><b>{e(lv['title'])}</b></td><td><a href='#map-{e(lv['map'])}'>"
+                    f"<code>{e(lv['map'])}</code></a></td><td class='num'>{lv['kill_quota']}</td><td class='num'>{count}</td>"
+                    f"<td>{e(lv.get('note', ''))}</td></tr>")
+    body.append("</table></div>")
+
     body.append("<h2 id='levels'>Levels</h2><p class='mute'>Source: <code>design/levels/*.txt</code> — one character per "
                 "16×16 block. Rendered with the exact tiles and variant formula the game uses.</p>")
     legend = {sym: (ent["name"], what) for ent in entities.values() for sym, what in ent.get("level_symbols", {}).items()}
+    in_run = {lv["map"]: (i, lv) for i, lv in enumerate(run["levels"], 1)}
     for name, rows in levels.items():
-        preview = render_level(rows, sprites, entities["block"]["stats"]["grass_clearance"]["value"])
+        preview = render_level(rows, sprites, entities["block"]["stats"]["grass_clearance"]["value"], entities)
         data = "data:image/png;base64," + base64.b64encode(png_bytes(preview)).decode()
         counts = {sym: sum(r.count(sym) for r in rows) for sym in legend}
-        body.append(f"<div class='card'><h3 style='margin-top:0'>{e(name)}</h3>"
+        title = f"Level {in_run[name][0]}: {in_run[name][1]['title']} — {name}" if name in in_run else f"{name} (not in the run)"
+        quota = f" · kill quota {in_run[name][1]['kill_quota']}" if name in in_run else ""
+        body.append(f"<div class='card' id='map-{e(name)}'><h3 style='margin-top:0'>{e(title)}</h3>"
                     f"<p class='mute'>{len(rows[0])} × {len(rows)} blocks ({len(rows[0]) * 16} × {len(rows) * 16} px) · "
-                    f"{counts.get('E', 0)} enemies</p><div class='tbl'><img class='px' src='{data}' "
+                    f"{sum(counts.get(c, 0) for c in foes)} enemies{quota}</p><div class='tbl'><img class='px' src='{data}' "
                     f"style='width:{preview.width * 2}px;max-width:none;border-radius:6px'></div><p>"
                     + " · ".join(f"<kbd>{e(sym)}</kbd> {e(what)} <span class='mute'>×{counts[sym]}</span>"
                                  for sym, (_, what) in legend.items()) + "</p></div>")
@@ -491,7 +569,7 @@ def catalog_html(master, sets, sprites, storyboards, audio, controls, entities, 
                 sname, aname, fidx = shot.split("/")
                 sp, img, lay = sprite_index[sname]
                 fw, fh = sp["frame"]
-                s = 5
+                s = 5 if max(fw, fh) <= 24 else (4 if max(fw, fh) <= 32 else 2)
                 row = lay[aname][1]
                 flip = "transform:scaleX(-1);" if panel.get("flip") else ""
                 stage = (f"<div class='stage'><div class='px' style='{flip}width:{fw * s}px;height:{fh * s}px;"
@@ -533,8 +611,9 @@ def main():
         audio_spec = load_yaml(ROOT / "audio" / "catalog.yaml")
         controls, entities = load_design(sprites, audio_spec)
         levels = load_levels(entities)
+        run = load_run(levels, entities)
         storyboards = load_storyboards(sprites, audio_spec)
-        game_data = game_data_gd(controls, entities, sprites, levels)
+        game_data = game_data_gd(controls, entities, sprites, levels, run)
     except SpecError as err:
         sys.exit(f"SPEC ERROR: {err}")
 
@@ -595,7 +674,7 @@ def main():
 
     DOCS.mkdir(exist_ok=True)
     (DOCS / "catalog.html").write_bytes(
-        catalog_html(master, sets, sprites, storyboards, audio_spec, controls, entities, levels).encode("utf-8"))
+        catalog_html(master, sets, sprites, storyboards, audio_spec, controls, entities, levels, run).encode("utf-8"))
 
     print(f"Built {len(outputs)} sprites ({', '.join(outputs)}), {len(entities)} entities, {len(controls)} controls, "
           f"{len(levels)} levels. "

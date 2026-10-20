@@ -54,3 +54,16 @@ colors:
   # sky
   sky:          "#5ab4e8"
   sky_dark:     "#2e6ea8"
+  # smoke (explosions)
+  smoke_light:  "#a29eae"
+  smoke:        "#6c6878"
+  smoke_dark:   "#3c3846"
+  # blood
+  blood_bright: "#d4283a"
+  blood:        "#96142a"
+  blood_dark:   "#5a0c1c"
+  # glow — semi-transparent (#rrggbbaa), for bullet halos and flashes
+  glow_yellow:  "#ffd23e99"
+  glow_soft:    "#ffe68a4d"
+  glow_orange:  "#f07c2299"
+  glow_red:     "#e0401c80"

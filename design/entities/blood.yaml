@@ -1,0 +1,33 @@
+# Entity: blood effects.
+id: blood
+name: Blood
+kind: effect
+order: 13
+description: Every bullet hit on an enemy sprays blood in the bullet's direction (one of three sprays, cycling, plus loose droplets). A death adds a radial burst (one of two). When a body comes to rest, a pool (one of three) spreads under it and stays for the rest of the level; it is stuck to the block underneath, so it disappears if that block is destroyed. A kamikaze leaves only a burst and a pool — no body.
+sprite: blood
+files:
+  - game/scripts/blood.gd
+spawned_by: [mook, kamikaze, brute]
+
+stats:
+  droplets_hit:
+    value: 8
+    unit: particles
+    description: Loose droplets per bullet hit (on top of the spray sprite).
+  droplets_death:
+    value: 22
+    unit: particles
+    description: Loose droplets per death.
+
+animations:
+  spray_0: Hit spray — fine mist.
+  spray_1: Hit spray — thick gush.
+  spray_2: Hit spray — two streams.
+  burst_0: Death burst — ring of droplets.
+  burst_1: Death burst — chunky.
+  pool_0: Pool under a body — round.
+  pool_1: Pool under a body — wide splatter.
+  pool_2: Pool under a body — two puddles.
+
+sounds:
+  blood_splat: A death burst.

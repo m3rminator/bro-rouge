@@ -1,0 +1,3 @@
+# Palette set for the HUD pixel font. Glyphs are white; the game tints and outlines them.
+symbols:
+  w: white

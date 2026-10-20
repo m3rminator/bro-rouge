@@ -1,0 +1,33 @@
+# The run loop: which levels are played, in what order, and what clears each one.
+# Generated into GameData.RUN. The build checks that every map exists, has an exit
+# ("X") and enough enemies to meet its kill quota.
+name: Run loop
+description: A run is the levels below played in order. Each level ends at the extraction flag (X), but the flag only opens after you have killed the level's kill_quota enemies (any enemy, any way — bullets, barrels, kamikaze blasts all count). Touch the open flag to clear the level. After the last level the run loops back to level 1 and the loop counter goes up. Dying costs one life and restarts the current level (kills reset); losing the last life ends the run and you start again from level 1 with full lives.
+
+stats:
+  lives:
+    value: 3
+    unit: lives
+    description: Lives at the start of a run. Each death costs one and restarts the current level.
+  clear_delay:
+    value: 2.0
+    unit: s
+    description: How long "LEVEL CLEAR" shows before the next level loads.
+  run_over_delay:
+    value: 3.0
+    unit: s
+    description: How long "RUN OVER" shows after the last life is lost, before a new run starts.
+
+levels:
+  - map: level_01
+    title: Jungle Outpost
+    kill_quota: 8
+    note: The test level. Single barrels, 3- and 5-barrel clusters, two kamikazes, mooks everywhere.
+  - map: level_02
+    title: The Tunnels
+    kill_quota: 10
+    note: Underground. Kamikaze packs in tight spaces, barrel stacks, a sunken chamber.
+  - map: level_03
+    title: Brute Arena
+    kill_quota: 7
+    note: Mini-boss level. The Brute guards an open arena; use the barrels against him.

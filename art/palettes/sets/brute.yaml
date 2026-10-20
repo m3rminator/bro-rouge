@@ -1,0 +1,21 @@
+# Palette set for the Brute mini-boss: steel helmet, gas mask with red lenses,
+# olive armor vest with ammo belt, khaki pants, two miniguns.
+symbols:
+  o: outline
+  s: skin
+  S: skin_shadow
+  H: steel_dark
+  h: steel
+  m: grey
+  M: grey_dark
+  r: red_light
+  v: olive_dark
+  V: olive
+  y: fire_yellow
+  Y: fire_orange
+  p: khaki_dark
+  P: leather
+  k: hair
+  g: steel
+  G: steel_dark
+  l: steel_light

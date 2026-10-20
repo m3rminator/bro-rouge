@@ -1,0 +1,69 @@
+# Explosive barrel: one block. Red drum with steel rims and a white skull.
+# idle = untouched. burning = hit once: flames on the lid and the drum flashes hot
+# until it blows (fuse_time in design/entities/barrel.yaml).
+name: barrel
+description: Red explosive barrel. Shoot it (or blast it) and it starts burning, then explodes. Barrels touching each other explode together as one bigger blast.
+palette: barrel
+frame: [16, 16]
+anchors:
+  center: [8, 9]
+
+parts:
+  drum: |
+    .oooooooooooo.
+    oGgggggggggGGo
+    oGGGGGGGGGGGGo
+    orRRRRRRRRRRDo
+    orRRRwwwwRRRDo
+    orRRwwwwwwRRDo
+    orRRwoowowRRDo
+    orRRwwwwwwRRDo
+    orRRRwowwRRRDo
+    oGgggggggggGGo
+    orRRRRRRRRRRDo
+    oGGGGGGGGGGGGo
+    .oooooooooooo.
+  drum_hot: |
+    .oooooooooooo.
+    oGgggggggggGGo
+    oGGGGGGGGGGGGo
+    oYrrrrrrrrrrRo
+    oYrrrwwwwrrrRo
+    oYrrwwwwwwrrRo
+    oYrrwoowowrrRo
+    oYrrwwwwwwrrRo
+    oYrrrwowwrrrRo
+    oGgggggggggGGo
+    oYrrrrrrrrrrRo
+    oGGGGGGGGGGGGo
+    .oooooooooooo.
+  flame_a: |
+    ...Y......
+    ..YOY..Y..
+    .YOWOY.OY.
+    YOWWWOYOOY
+  flame_b: |
+    ......Y...
+    .Y...YOY..
+    YOY.YOWOY.
+    YOOYOWWWOY
+  flame_c: |
+    ..Y...Y...
+    .YOY.YOY..
+    .OWOYOWOY.
+    YOWWOWWOOY
+
+animations:
+  idle:
+    fps: 1
+    loop: false
+    frames:
+      - [[drum, 1, 3]]
+  burning:
+    fps: 12
+    loop: true
+    frames:
+      - [[drum, 1, 3], [flame_a, 3, 0]]
+      - [[drum_hot, 1, 3], [flame_b, 3, 0]]
+      - [[drum, 1, 3], [flame_c, 3, 0]]
+      - [[drum_hot, 1, 3], [flame_b, 3, 0]]

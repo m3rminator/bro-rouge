@@ -3,7 +3,7 @@ id: block
 name: Terrain block
 kind: terrain
 order: 10
-description: 16×16 solid tile that levels are built from. Bullets (player and enemy) chip it; at 0 HP it bursts into debris and is gone for good. Blocks with open sky above (grass_clearance air tiles) automatically become grass with hanging strands; tunnel and cave floors stay bare earth. Each block's variant is picked from its map position, so the same level always looks the same.
+description: 16×16 solid tile that levels are built from. Bullets (player and enemy) chip it; at 0 HP it bursts into debris and is gone for good. Any block whose center is inside an explosion is destroyed at once. Blocks with open sky above (grass_clearance air tiles) automatically become grass with hanging strands; tunnel and cave floors stay bare earth. Each block's variant is picked from its map position, so the same level always looks the same.
 sprite: terrain
 files:
   - game/scripts/block.gd

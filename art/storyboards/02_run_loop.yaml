@@ -8,6 +8,10 @@ panels:
   - title: Blast through
     shot: bro/shoot/0
     caption: Run right, shoot everything. Terrain and enemies break apart.
+  - title: Meet the quota
+    shot: exit/open/0
+    caption: "Built: every level has a kill quota. Kill enough (bullets, barrels, kamikaze blasts all count) and the extraction flag opens; touch it to move on. Three levels, then the run loops."
+    sfx: quota_reached
   - title: Rescue a prisoner
     icon: "⛓"
     caption: Free a caged Bro — you instantly swap to them (new weapon, new special). Also +1 life.
@@ -19,4 +23,4 @@ panels:
     caption: Every 3rd level ends in a boss arena that can be torn apart.
   - title: Die → start over
     icon: "↺"
-    caption: Lose all lives and the run ends. Unlocked Bros and meta-currency carry over to the next run.
+    caption: "Built: three lives per run; a death restarts the level. Lose all lives and the run ends. Planned: unlocked Bros and meta-currency carry over to the next run."
