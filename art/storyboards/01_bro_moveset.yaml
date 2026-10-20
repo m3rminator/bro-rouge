@@ -1,0 +1,23 @@
+# Storyboard: how the default Bro moves and fights. "shot" = sprite/animation/frame.
+title: Bro — moveset
+description: The beats every Bro must sell. New Bros copy this board and change only what is unique to them.
+panels:
+  - title: Ready
+    shot: bro/idle/0
+    caption: Stands his ground, rifle up, bandana fluttering. Always looks ready to fight.
+  - title: Run
+    shot: bro/run/0
+    caption: Fast, forward-leaning sprint. Body bobs on each step, gun never lowers.
+    sfx: footstep
+  - title: Jump
+    shot: bro/jump/0
+    caption: Tucked legs, bandana flips up. Jump is high and snappy, not floaty.
+    sfx: jump
+  - title: Shoot
+    shot: bro/shoot/0
+    caption: Gun kicks back 1px each shot, muzzle flash at the tip. Hold to spray.
+    sfx: shoot
+  - title: Destroy
+    shot: terrain/grass/0
+    caption: Bullets chew through dirt. Three hits and a block bursts into debris.
+    sfx: block_break

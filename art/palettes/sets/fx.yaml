@@ -1,0 +1,9 @@
+# Palette set for muzzle flashes, bullets and explosions.
+symbols:
+  o: outline
+  W: fire_white
+  Y: fire_yellow
+  O: fire_orange
+  R: fire_red
+  g: grey
+  G: grey_dark

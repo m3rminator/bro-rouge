@@ -1,0 +1,27 @@
+# Every sound in the game. Generated once by tools/audio_build.py (ElevenLabs),
+# then locked in audio.lock.json — rebuilding never re-rolls an approved sound.
+# To change one: edit its prompt, then run with --regen NAME.
+sfx:
+  shoot:
+    prompt: "Single retro 16-bit arcade machine gun shot, punchy and short, no reverb"
+    duration: 0.5
+  jump:
+    prompt: "Quick retro video game jump sound, short upward whoosh, 16-bit"
+    duration: 0.5
+  land:
+    prompt: "Soft thud of boots landing on dirt, short, video game"
+    duration: 0.5
+  footstep:
+    prompt: "Single boot footstep on dirt, short and dry, video game"
+    duration: 0.5
+  block_break:
+    prompt: "Dirt block exploding into debris, crunchy retro 16-bit explosion, short"
+    duration: 0.8
+  block_hit:
+    prompt: "Bullet impact on packed dirt, short crunchy thump, video game"
+    duration: 0.5
+
+music:
+  level_jungle:
+    prompt: "Upbeat 80s action movie synth rock loop for a retro pixel-art run and gun video game, driving drums, electric guitar riffs, heroic, instrumental"
+    duration: 60

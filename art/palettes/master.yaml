@@ -1,0 +1,46 @@
+# Master palette — every pixel in the game must come from one of these colors.
+# Sets in art/palettes/sets/ map single-character symbols to these names.
+# Rule: add new colors here (never edit an existing hex unless you mean to
+# recolor the whole game — the lock file will flag every affected asset).
+colors:
+  # neutrals
+  outline:      "#14101e"
+  white:        "#f4f2e8"
+  grey_light:   "#b8b6c4"
+  grey:         "#7c7a8c"
+  grey_dark:    "#4a4858"
+  # skin
+  skin_light:   "#f6c89a"
+  skin:         "#d99a6c"
+  skin_shadow:  "#a8664a"
+  # hair / leather
+  hair:         "#4a2e22"
+  hair_light:   "#6e4632"
+  leather:      "#5a3a28"
+  # red (bandana, blood, danger)
+  red_light:    "#e85a50"
+  red:          "#b82e3a"
+  red_dark:     "#6e1c2c"
+  # olive (camo, military)
+  olive_light:  "#8a9a4a"
+  olive:        "#5e6e34"
+  olive_dark:   "#3a4622"
+  # metal
+  steel_light:  "#a2acbc"
+  steel:        "#5e6878"
+  steel_dark:   "#323a48"
+  # terrain
+  dirt_light:   "#a06e44"
+  dirt:         "#6e4628"
+  dirt_dark:    "#452a1a"
+  grass_light:  "#7cc04e"
+  grass:        "#3e8034"
+  grass_dark:   "#24502a"
+  # fire / explosions
+  fire_white:   "#fff6c8"
+  fire_yellow:  "#ffd23e"
+  fire_orange:  "#f07c22"
+  fire_red:     "#c43a1a"
+  # sky
+  sky:          "#5ab4e8"
+  sky_dark:     "#2e6ea8"

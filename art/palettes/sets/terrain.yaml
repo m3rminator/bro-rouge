@@ -1,0 +1,9 @@
+# Palette set for terrain tiles.
+symbols:
+  o: outline
+  d: dirt
+  D: dirt_dark
+  L: dirt_light
+  g: grass
+  G: grass_dark
+  q: grass_light

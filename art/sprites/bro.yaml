@@ -1,0 +1,123 @@
+# The default Bro — the player character.
+# Built from parts so the head/torso/gun stay pixel-identical across frames.
+# Frame layers: [part, x, y] drawn in order (later layers on top).
+# Base rig: tail(4,3) legs(5,15) torso(7,8) head(7,2) gun(12,9) arm(10,10)
+name: bro
+description: Default player character. Bandana, tank top, rifle. Faces right; the game flips it.
+palette: bro
+frame: [24, 24]
+anchors:
+  muzzle: [23, 11]   # gun tip in frame pixels — bullets/flash spawn here
+  feet: [11, 23]
+
+parts:
+  head: |
+    ..oooooo.
+    .ohhhhhho
+    obbbbbbbo
+    oBhsssoso
+    ohsssssso
+    .ossshhho
+    ..ooooo..
+  tail_a: |
+    .ooo
+    oBbb
+    .ooo
+  tail_b: |
+    .ooo
+    oBbb
+    oBo.
+    oo..
+  torso: |
+    .oooooo.
+    osttttso
+    osttttTo
+    oSttttTo
+    oTTttTTo
+    okkkkkko
+    oppppppo
+  gun: |
+    ..ooooooo...
+    oooggggggooo
+    oGgllllllllo
+    oGGGggGoooo.
+    .ooooGGo....
+  arm: |
+    ooo....
+    osSooo.
+    .oSssso
+    ..ooooo
+  legs_stand: |
+    ..oppppppo..
+    ..opPppPpo..
+    .opPo..oPpo.
+    .opPo..oPpo.
+    .opPo..oPpo.
+    .oPPo..oPPo.
+    .okko..okko.
+    .okkko.okkko
+    .ooooo.ooooo
+  legs_run1: |
+    ..oppppppo..
+    .opPpppPppo.
+    opPo...oPppo
+    oPo.....oPpo
+    okko....oPpo
+    .okko...oPPo
+    ..oo....okko
+    .......okkko
+    .......ooooo
+  legs_run2: |
+    ..oppppppo..
+    ..opPppPpo..
+    ...oPpPpo...
+    ...oPpkko...
+    ...oPokkko..
+    ...oPpoooo..
+    ...okko.....
+    ...okkko....
+    ...ooooo....
+  legs_run3: |
+    ..oppppppo..
+    .opPpppPppo.
+    opPo...oPppo
+    oPo.....oPpo
+    oPo.....oPpo
+    okko....oPPo
+    okkko...okko
+    ooooo..okkko
+    .......ooooo
+  legs_jump: |
+    ..oppppppo..
+    .opPppppPpo.
+    .oPpo..oPpko
+    .okko..okkko
+    .okkko.ooooo
+    .ooooo......
+
+animations:
+  idle:
+    fps: 3
+    loop: true
+    frames:
+      - [[tail_a, 4, 3], [legs_stand, 5, 15], [torso, 7, 8], [head, 7, 2], [gun, 12, 9], [arm, 10, 10]]
+      - [[tail_b, 4, 4], [legs_stand, 5, 15], [torso, 7, 8], [head, 7, 3], [gun, 12, 10], [arm, 10, 11]]
+  run:
+    fps: 10
+    loop: true
+    frames:
+      - [[tail_a, 4, 4], [legs_run1, 5, 15], [torso, 7, 9], [head, 7, 3], [gun, 12, 10], [arm, 10, 11]]
+      - [[tail_b, 4, 3], [legs_run2, 5, 15], [torso, 7, 8], [head, 7, 2], [gun, 12, 9], [arm, 10, 10]]
+      - [[tail_a, 4, 4], [legs_run3, 5, 15], [torso, 7, 9], [head, 7, 3], [gun, 12, 10], [arm, 10, 11]]
+      - [[tail_b, 4, 3], [legs_run2, 5, 15], [torso, 7, 8], [head, 7, 2], [gun, 12, 9], [arm, 10, 10]]
+  jump:
+    fps: 1
+    loop: false
+    frames:
+      - [[tail_b, 4, 2], [legs_jump, 5, 15], [torso, 7, 8], [head, 7, 2], [gun, 12, 9], [arm, 10, 10]]
+  shoot:
+    fps: 16
+    loop: true
+    frames:
+      - [[tail_a, 4, 3], [legs_stand, 5, 15], [torso, 7, 8], [head, 7, 2], [gun, 11, 9], [arm, 9, 10]]
+      - [[tail_a, 4, 3], [legs_stand, 5, 15], [torso, 7, 8], [head, 7, 2], [gun, 12, 9], [arm, 10, 10]]

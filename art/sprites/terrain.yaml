@@ -1,0 +1,37 @@
+# Destructible terrain tiles, 16x16, no outline so they tile seamlessly.
+name: terrain
+description: Dirt block and grass-topped dirt block. Both destructible.
+palette: terrain
+frame: [16, 16]
+
+parts:
+  dirt: |
+    dLdddddddDddddLd
+    ddddDddLddddDddd
+    dDddddddddLddddd
+    ddddLdDddddddDdd
+    dLddddddDdddddLd
+    ddddDddLdddLdddd
+    ddLddddddDdddDdd
+    dddddDddddddLddd
+    dDddLdddLddDdddd
+    ddddddDddddddLdd
+    dLdDdddddDdddddd
+    ddddddLddddLdDdd
+    ddDddddddDdddddL
+    dddddLdDdddddLdd
+    dLddddddddDddddd
+    DDDDDDDDDDDDDDDD
+  grass_top: |
+    qqgqqqgqqqqgqqgq
+    ggggqgggggqggggg
+    gGggggGggGgggGgg
+    GdGGdGGdGGGdGdGG
+
+animations:
+  dirt:
+    frames:
+      - [[dirt, 0, 0]]
+  grass:
+    frames:
+      - [[dirt, 0, 0], [grass_top, 0, 0]]

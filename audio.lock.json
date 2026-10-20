@@ -1,0 +1,32 @@
+{
+  "sfx/block_break": {
+    "file": "game/assets/sfx/block_break.mp3",
+    "file_sha": "50a3988badbea646af7bf9c38be5e32fdf09fbd22abbc53c9517c3680279083f",
+    "spec_sha": "5ebfe2df84a63e11c005e65473c6b7024b2f2fadcf13d56199de8010e8ccaa53"
+  },
+  "sfx/block_hit": {
+    "file": "game/assets/sfx/block_hit.mp3",
+    "file_sha": "3965ac07699466c35972e0dcd3d584147cf44cf2b589e71af0b64d1433ff3b21",
+    "spec_sha": "83332d0468593ca5c3b4771a8ae2ac318d99205af5cc680601b144bde9ed3173"
+  },
+  "sfx/footstep": {
+    "file": "game/assets/sfx/footstep.mp3",
+    "file_sha": "c98364e2d12a45371282227dd61e3179ffa535057244662832ef10d08ebc5c3a",
+    "spec_sha": "357b138b2e6867a7340f3c22a0967013bf1e6609a58437229c09a66cee81b5bc"
+  },
+  "sfx/jump": {
+    "file": "game/assets/sfx/jump.mp3",
+    "file_sha": "bd4e130755c91fe243383f8448defa59b141d5a43c04ce0d405546f4982d89e3",
+    "spec_sha": "34c2786455c765b37c17bb65898498914b492a1a94dd40b33606c227ffb6dbbb"
+  },
+  "sfx/land": {
+    "file": "game/assets/sfx/land.mp3",
+    "file_sha": "a2bfee140c039818ef79f94f9896e4b7dd7d03488a58e87e8d944180dc448ced",
+    "spec_sha": "0b14389604fdc17d9292efe1592036caeb78091f5d78b14c49967778b35b930e"
+  },
+  "sfx/shoot": {
+    "file": "game/assets/sfx/shoot.mp3",
+    "file_sha": "6619a6b320da2b91eb88d86226578baba91b193e1430ab6ac3e5411cf3e817ce",
+    "spec_sha": "b29ecba56251e460f60aebe5d1261ad008f553c8f7304d07d1f72b1b9dc433b5"
+  }
+}

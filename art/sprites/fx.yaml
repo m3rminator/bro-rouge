@@ -1,0 +1,35 @@
+# Muzzle flash and bullet. Spawned by the game at the bro's "muzzle" anchor.
+name: fx
+description: Muzzle flash (2 frames, plays once) and rifle bullet.
+palette: fx
+frame: [8, 8]
+anchors:
+  center: [4, 4]
+
+parts:
+  flash_big: |
+    ..Y.....
+    .YWY.Y..
+    YWWWWWYO
+    .YWY.Y..
+    ..Y.....
+  flash_small: |
+    .Y....
+    YWWYO.
+    .Y....
+  bullet: |
+    RYWWW
+    RYWWW
+
+animations:
+  muzzle:
+    fps: 20
+    loop: false
+    frames:
+      - [[flash_big, 0, 2]]
+      - [[flash_small, 0, 3]]
+  bullet:
+    fps: 1
+    loop: false
+    frames:
+      - [[bullet, 2, 3]]

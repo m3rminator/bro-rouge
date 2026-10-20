@@ -1,0 +1,4 @@
+game/.godot/
+docs/diff/
+__pycache__/
+*.import.tmp

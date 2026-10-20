@@ -1,0 +1,22 @@
+# Storyboard: the roguelike loop — one full run, start to finish.
+title: Run loop (roguelike)
+description: What one run of the game feels like. This is the design target every feature serves.
+panels:
+  - title: Drop in
+    icon: "🚁"
+    caption: Helicopter drops a random Bro into a procedurally built jungle level.
+  - title: Blast through
+    shot: bro/shoot/0
+    caption: Run right, shoot everything. Terrain and enemies break apart.
+  - title: Rescue a prisoner
+    icon: "⛓"
+    caption: Free a caged Bro — you instantly swap to them (new weapon, new special). Also +1 life.
+  - title: Pick an upgrade
+    icon: "⬆"
+    caption: End of level — choose 1 of 3 random perks (fire rate, double jump, bigger blasts...).
+  - title: Boss
+    icon: "💀"
+    caption: Every 3rd level ends in a boss arena that can be torn apart.
+  - title: Die → start over
+    icon: "↺"
+    caption: Lose all lives and the run ends. Unlocked Bros and meta-currency carry over to the next run.

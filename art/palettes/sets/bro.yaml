@@ -1,0 +1,17 @@
+# Palette set for the default Bro. "." is always transparent.
+# Recolor a character (e.g. a new Bro) by copying this file and swapping names.
+symbols:
+  o: outline
+  s: skin
+  S: skin_shadow
+  h: hair
+  b: red
+  B: red_dark
+  t: white
+  T: grey_light
+  p: olive
+  P: olive_dark
+  k: leather
+  g: steel
+  G: steel_dark
+  l: steel_light
