@@ -1,0 +1,22 @@
+# Every input action in the game — the single source of truth.
+# tools/build.py turns this into game/scripts/generated/game_data.gd (used by
+# game/scripts/controls.gd) and the "Controls" section of docs/catalog.html.
+# Key names: letters (A-Z), digits (0-9), Left/Right/Up/Down, Space, Enter,
+# Escape, Tab, Shift, Ctrl, Alt.
+actions:
+  move_left:
+    label: Move left
+    keys: [A, Left]
+    description: Run left. The Bro turns to face left, so he also shoots left.
+  move_right:
+    label: Move right
+    keys: [D, Right]
+    description: Run right. The Bro turns to face right, so he also shoots right.
+  jump:
+    label: Jump
+    keys: [W, Up, Space]
+    description: Jump. Only works while standing on the ground (no double jump yet).
+  shoot:
+    label: Shoot
+    keys: [J, X]
+    description: Hold to fire continuously in the direction the Bro faces. Bullets break dirt blocks.

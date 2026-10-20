@@ -2,8 +2,8 @@ class_name Bullet
 extends Area2D
 ## Rifle bullet. Hits anything on the "world" layer that has a hit() method.
 
-const SPEED := 420.0
-const LIFETIME := 0.8
+## Tuning numbers live in design/entities/bullet.yaml (generated into GameData.BULLET).
+const STATS := GameData.BULLET
 const FX_FRAMES := preload("res://assets/sprites/fx_frames.tres")
 
 var direction := 1
@@ -27,13 +27,13 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	position.x += SPEED * direction * delta
+	position.x += STATS.speed * direction * delta
 	_age += delta
-	if _age > LIFETIME:
+	if _age > STATS.lifetime:
 		queue_free()
 
 
 func _on_body_entered(body: Node) -> void:
 	if body.has_method("hit"):
-		body.hit(1)
+		body.hit(STATS.damage)
 	queue_free()

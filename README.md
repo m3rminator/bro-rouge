@@ -10,6 +10,8 @@
 | `art/palettes/sets/*.yaml` | پالت هر شخصیت یا شیء (نماد → نام رنگ) |
 | `art/sprites/*.yaml` | مشخصات هر اسپرایت: قطعه‌ها (پیکسل‌به‌پیکسل) و انیمیشن‌ها |
 | `art/storyboards/*.yaml` | استوری‌بوردها |
+| `design/controls.yaml` | همه‌ی دکمه‌ها و کاری که هر کدام انجام می‌دهد |
+| `design/entities/*.yaml` | کاتالوگ هر شخصیت یا شیء: اعداد گیم‌پلی، انیمیشن‌ها، صداها، فایل‌ها |
 | `audio/catalog.yaml` | کاتالوگ همه‌ی صداها و موسیقی‌ها (پرامپت ElevenLabs) |
 | `tools/` | ابزارهای ساخت |
 | `docs/catalog.html` | کاتالوگ بصری همه‌ی دارایی‌ها (ساخته‌شده‌ی خودکار) |
@@ -25,13 +27,13 @@
 ## دستورها
 
 ```bash
-py tools/art_build.py
+py tools/build.py
 ```
 ```bash
-py tools/art_build.py --accept bro
+py tools/build.py --accept bro
 ```
 ```bash
-py tools/art_build.py --check
+py tools/build.py --check
 ```
 ```bash
 py tools/audio_build.py
@@ -44,6 +46,8 @@ py tools/audio_build.py --music
 
 ## کنترل‌ها
 
-- حرکت: A/D یا جهت‌ها
-- پرش: W، بالا یا Space
-- شلیک (نگه‌داشتن): J یا X
+فهرست کامل و همیشه‌به‌روز در بخش Controls فایل `docs/catalog.html` است (از `design/controls.yaml` ساخته می‌شود).
+
+## تغییر اعداد بازی
+
+سرعت، پرش، نرخ شلیک، جان بلوک و... در `design/entities/*.yaml` هستند. عدد را آنجا عوض کن و `py tools/build.py` را اجرا کن. بازی و کاتالوگ هر دو به‌روز می‌شوند. فایل `game/scripts/generated/game_data.gd` را دستی ویرایش نکن.

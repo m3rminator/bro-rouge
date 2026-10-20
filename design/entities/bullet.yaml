@@ -1,0 +1,28 @@
+# Entity: rifle bullet fired by the Bro, plus its muzzle flash.
+id: bullet
+name: Rifle bullet
+kind: projectile
+order: 2
+description: Spawned at the Bro's "muzzle" anchor every shot. Flies straight, damages the first world object it touches, then disappears.
+sprite: fx
+files:
+  - game/scripts/bullet.gd
+spawned_by: [bro]
+
+stats:
+  speed:
+    value: 420.0
+    unit: px/s
+    description: Flight speed.
+  lifetime:
+    value: 0.8
+    unit: s
+    description: Disappears after this long if it hits nothing (range ≈ speed × lifetime ≈ 336 px ≈ 21 tiles).
+  damage:
+    value: 1
+    unit: hp
+    description: Damage dealt to whatever it hits.
+
+animations:
+  bullet: The bullet in flight.
+  muzzle: Flash at the gun tip on every shot (plays once).

@@ -1,19 +1,12 @@
 extends Node
-## Registers input actions at startup (autoload), so key bindings live in one readable place.
-
-const BINDINGS := {
-	"move_left": [KEY_A, KEY_LEFT],
-	"move_right": [KEY_D, KEY_RIGHT],
-	"jump": [KEY_W, KEY_UP, KEY_SPACE],
-	"shoot": [KEY_J, KEY_X],
-}
+## Registers input actions at startup (autoload). Bindings come from design/controls.yaml via GameData.
 
 
 func _ready() -> void:
-	for action in BINDINGS:
+	for action in GameData.CONTROLS:
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)
-		for key in BINDINGS[action]:
+		for key in GameData.CONTROLS[action]:
 			var ev := InputEventKey.new()
 			ev.physical_keycode = key
 			InputMap.action_add_event(action, ev)

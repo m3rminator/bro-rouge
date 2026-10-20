@@ -1,12 +1,9 @@
 extends CharacterBody2D
 ## The Bro: run, jump, hold to shoot.
 
-const SPEED := 120.0
-const JUMP_VELOCITY := -290.0
-const GRAVITY := 800.0
-const FIRE_INTERVAL := 0.11
-## art/sprites/bro.yaml anchor "muzzle" (23, 11), relative to the 24x24 frame's center.
-const MUZZLE := Vector2(12, -1)
+## Tuning numbers live in design/entities/bro.yaml (generated into GameData.BRO).
+const STATS := GameData.BRO
+const MUZZLE: Vector2 = GameData.ANCHORS["bro"]["muzzle"]
 const FX_FRAMES := preload("res://assets/sprites/fx_frames.tres")
 
 @onready var sprite: AnimatedSprite2D = $Sprite
@@ -28,16 +25,16 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
-		velocity.y += GRAVITY * delta
+		velocity.y += STATS.gravity * delta
 
 	var dir := Input.get_axis("move_left", "move_right")
-	velocity.x = dir * SPEED
+	velocity.x = dir * STATS.speed
 	if dir != 0:
 		facing = 1 if dir > 0 else -1
 		sprite.flip_h = facing < 0
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+		velocity.y = STATS.jump_velocity
 		Sfx.play(self, "jump", -4.0)
 
 	var was_on_floor := is_on_floor()
@@ -54,7 +51,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _shoot() -> void:
-	fire_cooldown = FIRE_INTERVAL
+	fire_cooldown = STATS.fire_interval
 	shooting = 0.15
 	var muzzle := Vector2(MUZZLE.x * facing, MUZZLE.y)
 	var bullet := Bullet.new()

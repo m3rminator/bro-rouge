@@ -6,7 +6,8 @@ const SIZE := 16
 const FRAMES := preload("res://assets/sprites/terrain_frames.tres")
 const DEBRIS_COLOR := Color("6e4628")  # master palette: dirt
 
-var hp := 3
+## Tuning numbers live in design/entities/block.yaml (generated into GameData.BLOCK).
+var hp: int = GameData.BLOCK.hp
 var _sprite: AnimatedSprite2D
 
 
@@ -35,7 +36,7 @@ func hit(damage: int) -> void:
 	Sfx.play(self, "block_break", -4.0)
 	var debris := CPUParticles2D.new()
 	debris.one_shot = true
-	debris.amount = 14
+	debris.amount = GameData.BLOCK.debris_amount
 	debris.lifetime = 0.6
 	debris.explosiveness = 1.0
 	debris.direction = Vector2.UP

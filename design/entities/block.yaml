@@ -1,0 +1,33 @@
+# Entity: destructible terrain block.
+id: block
+name: Terrain block
+kind: terrain
+order: 3
+description: 16×16 solid tile that levels are built from. Bullets chip it; at 0 HP it bursts into debris and is gone for good.
+sprite: terrain
+files:
+  - game/scripts/block.gd
+  - game/scripts/main.gd
+level_symbols:
+  "#": dirt block
+  "G": grass-topped dirt block
+  "P": player start (not a block)
+  ".": empty air
+
+stats:
+  hp:
+    value: 3
+    unit: hits
+    description: Bullet hits needed to destroy one block.
+  debris_amount:
+    value: 14
+    unit: particles
+    description: Dirt chunks thrown when the block breaks.
+
+animations:
+  dirt: Plain dirt block (level symbol "#").
+  grass: Grass-topped dirt block (level symbol "G").
+
+sounds:
+  block_hit: A bullet hits the block but it survives (it also flashes white).
+  block_break: The block is destroyed.
