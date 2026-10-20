@@ -1,9 +1,9 @@
-# Basic enemy soldier ("mook"). One block (16 px) tall, same rig as the Bro so
-# the two read as the same scale. Faces right; the game flips it.
-# Base rig: legs(7,9) torso(8,4) head(8,0) gun(13,5) arm(11,6)
+# Basic enemy soldier ("mook"), look: refrences/enemies/default. One block (16 px) tall. Faces right; the game flips it.
+# Base rig: legs(7,9) torso(7,4) head(8,0) gun(13,5) arm(11,6)
 name: mook
 description: Masked enemy soldier with an AK. Patrols, spots the player in front of him, shoots in bursts.
 palette: mook
+reference: "refrences/enemies/default/f9b0ee49-eef8-433a-a46d-bce462496112.jpg"
 frame: [24, 16]
 anchors:
   muzzle: [23, 6]
@@ -11,17 +11,17 @@ anchors:
 
 parts:
   head: |
-    .ooooo.
-    ohhhhho
-    ohssoso
-    ohhhhHo
-    .ohhHo.
+    .ooooooo.
+    ohhhhhhho
+    ohhssosho
+    ohhhhhhHo
+    .ohhhHHo.
   torso: |
-    .oooooo.
-    oLttttto
-    oLtTttTo
-    otttttTo
-    oPPPPPPo
+    .oooooooo.
+    oLttttttTo
+    oLttttTTTo
+    otttttTTTo
+    oppppppppo
   gun: |
     ..ooooooo..
     oowggggggo.
@@ -69,29 +69,29 @@ animations:
     fps: 2
     loop: true
     frames:
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 1], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_stand, 7, 9], [torso, 7, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_stand, 7, 9], [torso, 7, 4], [head, 8, 1], [gun, 13, 5], [arm, 11, 6]]
   walk:
     fps: 6
     loop: true
     frames:
-      - [[legs_walk1, 7, 9], [torso, 8, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
-      - [[legs_walk2, 7, 9], [torso, 8, 4], [head, 8, 1], [gun, 13, 6], [arm, 11, 7]]
-      - [[legs_walk1, 7, 9], [torso, 8, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
-      - [[legs_walk2, 7, 9], [torso, 8, 4], [head, 8, 1], [gun, 13, 6], [arm, 11, 7]]
+      - [[legs_walk1, 7, 9], [torso, 7, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_walk2, 7, 9], [torso, 7, 4], [head, 8, 1], [gun, 13, 6], [arm, 11, 7]]
+      - [[legs_walk1, 7, 9], [torso, 7, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_walk2, 7, 9], [torso, 7, 4], [head, 8, 1], [gun, 13, 6], [arm, 11, 7]]
   shoot:
     fps: 16
     loop: true
     frames:
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 0], [gun, 12, 5], [arm, 10, 6]]
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_stand, 7, 9], [torso, 7, 4], [head, 8, 0], [gun, 12, 5], [arm, 10, 6]]
+      - [[legs_stand, 7, 9], [torso, 7, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
   fall:
     fps: 1
     loop: false
     frames:
-      - [[legs_fall, 7, 9], [torso, 8, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_fall, 7, 9], [torso, 7, 4], [head, 8, 0], [gun, 13, 5], [arm, 11, 6]]
   hurt:
     fps: 1
     loop: false
     frames:
-      - [[legs_fall, 7, 9], [torso, 7, 4], [head, 6, 1], [gun, 11, 3], [arm, 9, 5]]
+      - [[legs_fall, 7, 9], [torso, 6, 4], [head, 6, 1], [gun, 11, 3], [arm, 9, 5]]

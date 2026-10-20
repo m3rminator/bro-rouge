@@ -10,9 +10,9 @@
     "game/assets/sprites/blood_frames.tres": "34ae4822738da8b0429e9dd00db41331bafe78268b02cdf0f5c5a93ff4df2202"
   },
   "bro": {
-    "docs/previews/bro.png": "c85550008719db15d1079e9a6cbab366b836f598c9a8d78c96f2b883ffc3105c",
-    "game/assets/sprites/bro.png": "c7d2a33588790c3694a9dd4000ee0bd7e6a0ffb531f426ae1b773e7e2baa4fcc",
-    "game/assets/sprites/bro_frames.tres": "12d19bb5e6a457c9e0cab9694dff7b5666e3187c3d5f4c93fe509ec23db55a33"
+    "docs/previews/bro.png": "e0115d9d84aecbd2b485ca2edd16890b98f08104104de95b41bd70d7587d4640",
+    "game/assets/sprites/bro.png": "df36e5936ba63202a86283d3a0908a564652426697687374d77555227aed1471",
+    "game/assets/sprites/bro_frames.tres": "965912088c024ce693d6ced06ed8efa3ca23d36d8c0e99d60cfbac81342c20f7"
   },
   "brute": {
     "docs/previews/brute.png": "4c83b197e53285f21f258a706221c8daea3b66b1adaca76b1d200acd3a51fd7e",
@@ -50,8 +50,8 @@
     "game/assets/sprites/kamikaze_frames.tres": "b381c5f8cfd11fc6a9a637f5eac03591503858ce9030eaf673c89cc9d802cee8"
   },
   "mook": {
-    "docs/previews/mook.png": "a4e5b140a4e7586943d48c95f7cbd8292710b4e71f25c367c67c39dec12818ca",
-    "game/assets/sprites/mook.png": "d3114efd8d9855fd2205520891436d29ebfe8de7a307c2c03fda5d0af652fc71",
+    "docs/previews/mook.png": "49ae297d06e8ce35fb30bbfdef4df0b41c6d930c37bf3728fe5ee30332856392",
+    "game/assets/sprites/mook.png": "9cd7c2bf059b0ab2db083cd0c029f46720d1f4d586f27eeae0115eee490622b9",
     "game/assets/sprites/mook_frames.tres": "e62b6cd282940282710fe41968dee850a2e32090d3687e0344006399c2af60d7"
   },
   "projectiles": {

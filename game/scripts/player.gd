@@ -1,5 +1,5 @@
 extends CharacterBody2D
-## The Bro: run, jump, hold to shoot. Enemy bullets take one heart, explosions several (and
+## The Bro: run, jump, crouch, hold to shoot. Enemy bullets take one heart, explosions several (and
 ## knock him back). At 0 he dies and emits `died` — main.gd decides what happens next (run
 ## lives, design/run.yaml). Numbers: design/entities/bro.yaml (GameData.BRO).
 
@@ -8,6 +8,8 @@ signal died
 
 const STATS := GameData.BRO
 const MUZZLE: Vector2 = GameData.ANCHORS["bro"]["muzzle"]
+const MUZZLE_CROUCH: Vector2 = GameData.ANCHORS["bro"]["muzzle_crouch"]
+const SPRITE_Y := -4.0  # the 24 px frame is centered on the node; this puts the feet on the tile bottom (+8)
 const BULLET_MASK := 1 | 4  # world (blocks, barrels) + enemies
 
 @onready var sprite: AnimatedSprite2D = $Sprite
@@ -18,6 +20,7 @@ var hp: int = STATS.max_hp
 var dead := false
 var frozen := false  # level clear: no control, cannot be hurt
 var facing := 1
+var crouching := false
 var fire_cooldown := 0.0
 var shooting := 0.0
 var _invulnerable := 0.0
@@ -28,9 +31,8 @@ var _shake := 0.0
 func _ready() -> void:
 	add_to_group("player")
 	z_index = 2
-	var box: RectangleShape2D = $Collision.shape
-	box.size = Vector2(STATS.hitbox[0], STATS.hitbox[1])
-	$Collision.position.y = 8 - STATS.hitbox[1] / 2.0  # feet on the bottom of the 16 px frame
+	sprite.position.y = SPRITE_Y
+	_set_stance(false)
 	sprite.frame_changed.connect(_on_frame_changed)
 
 
@@ -50,16 +52,17 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var dir := Input.get_axis("move_left", "move_right")
+	_update_stance()
 	if _stagger > 0.0:
 		_stagger -= delta
 		velocity.x = move_toward(velocity.x, 0.0, 400.0 * delta)
 	else:
-		velocity.x = dir * STATS.speed
+		velocity.x = dir * (STATS.speed_crouch if crouching else STATS.speed)
 		if dir != 0:
 			facing = 1 if dir > 0 else -1
 			sprite.flip_h = facing < 0
 
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if Input.is_action_just_pressed("jump") and is_on_floor() and not crouching:
 		velocity.y = STATS.jump_velocity
 		Sfx.play(self, "jump", -4.0)
 
@@ -131,14 +134,15 @@ func _die(direction: int) -> void:
 	velocity = Vector2(push * 90.0, -160.0)
 	var tween := create_tween().set_parallel()
 	tween.tween_property(sprite, "rotation", PI / 2 * push, 0.35)
-	tween.tween_property(sprite, "position:y", 3.0, 0.35)
+	tween.tween_property(sprite, "position:y", SPRITE_Y + 3.0, 0.35)
 	died.emit()
 
 
 func _shoot() -> void:
 	fire_cooldown = STATS.fire_interval
 	shooting = 0.15
-	var muzzle := Vector2(MUZZLE.x * facing, MUZZLE.y)
+	var tip := MUZZLE_CROUCH if crouching else MUZZLE
+	var muzzle := Vector2(tip.x * facing, tip.y + SPRITE_Y)
 	Bullet.spawn(get_parent(), position + muzzle, facing, GameData.BULLET, "bro_shot", BULLET_MASK)
 	flash.fire(muzzle, facing)
 	Sfx.play(self, "shoot", -8.0)
@@ -148,12 +152,44 @@ func _update_animation(dir: float) -> void:
 	var anim := "idle"
 	if not is_on_floor():
 		anim = "jump"
+	elif crouching:
+		anim = "crouch_walk" if dir != 0 else ("crouch_shoot" if shooting > 0.0 else "crouch")
 	elif dir != 0:
 		anim = "run"
 	elif shooting > 0.0:
 		anim = "shoot"
 	if sprite.animation != anim:
 		sprite.play(anim)
+
+
+## Hold Crouch on the ground to shrink to one block. Letting go only stands up when there is
+## room above; otherwise he stays crouched under the low ceiling.
+func _update_stance() -> void:
+	var want := Input.is_action_pressed("crouch") and is_on_floor()
+	if want == crouching:
+		return
+	if want or not _ceiling_above():
+		_set_stance(want)
+
+
+func _set_stance(crouch: bool) -> void:
+	crouching = crouch
+	var size: Array = STATS.hitbox_crouch if crouch else STATS.hitbox
+	var box: RectangleShape2D = $Collision.shape
+	box.size = Vector2(size[0], size[1])
+	$Collision.position.y = 8 - size[1] / 2.0  # feet always on the bottom of the start tile
+
+
+## Is there a block where the standing body would be? (Probed slightly smaller than the
+## standing box so the floor under his feet does not count.)
+func _ceiling_above() -> bool:
+	var probe := RectangleShape2D.new()
+	probe.size = Vector2(STATS.hitbox[0] - 2, STATS.hitbox[1] - 2)
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = probe
+	query.transform = Transform2D(0.0, global_position + Vector2(0, 8 - STATS.hitbox[1] / 2.0 - 1.0))
+	query.collision_mask = 1
+	return not get_world_2d().direct_space_state.intersect_shape(query, 1).is_empty()
 
 
 func _on_frame_changed() -> void:

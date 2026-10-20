@@ -1,37 +1,55 @@
-# The default Bro — the player character. Exactly one block (16 px) tall, so he
-# fits through a single destroyed block. The frame is wider (24) only for the gun.
+# The default Bro — the player character (look: refrences/bros/bro rambo). One and a half
+# blocks tall when standing (24 px) and exactly one block (16 px) when crouched, so he
+# fits through a single destroyed block only while crouching. The frame is 24 x 24: the
+# feet are always on its bottom row, and the crouch poses use only the bottom 16 rows.
 # Built from parts so the head/torso/gun stay pixel-identical across frames.
 # Frame layers: [part, x, y] drawn in order (later layers on top).
-# Base rig: tail(5,0) legs(7,9) torso(8,4) head(8,0) gun(13,5) arm(11,6)
+# Standing rig: legs(7,15) torso(7,8) head(8,0) tail(5,2) gun(13,10) arm(11,11)
+# Crouch rig:   legs(7,19) torso(7,15) head(9,8) tail(6,10) gun(13,17) arm(11,18)
 name: bro
-description: Default player character. Bandana, tank top, rifle. Faces right; the game flips it.
+description: Default player character (Rambo style). Red headband, green tank top, rifle. Stands 1.5 blocks tall, crouches to 1 block. Faces right; the game flips it.
 palette: bro
-frame: [24, 16]
+reference: "refrences/bros/bro rambo/20c5f76e-3c54-41ff-9f0e-52b5f1bb19e9.jpg"
+frame: [24, 24]
 anchors:
-  muzzle: [23, 6]   # gun tip in frame pixels — bullets/flash spawn here
-  feet: [12, 15]
+  muzzle: [23, 11]         # gun tip while standing — bullets/flash spawn here
+  muzzle_crouch: [23, 18]  # gun tip while crouched
+  feet: [12, 23]
 
 parts:
   head: |
-    .ooooo.
-    obbbbbo
-    oBssoso
-    ohsssso
-    .ohhho.
+    ..ooooo..
+    .ohhhHho.
+    ohhhhhhho
+    obbbbbbbo
+    ohhhssoso
+    .ohhsssSo
+    ..osssSo.
   tail_a: |
     .oo.
     oBbb
-    .oo.
+    .oBo
+    ..oo
   tail_b: |
-    oobb
+    oo..
+    oBbb
     oBo.
     oo..
   torso: |
-    .oooooo.
-    osttttso
-    osttttTo
-    oTttttTo
-    okkkkkko
+    .oooooooo.
+    osstttttso
+    ossttttTso
+    oSsttttTso
+    oSsttTTTso
+    .oStttTTo.
+    .ottttTTo.
+    .okkkkkko.
+  torso_crouch: |
+    .oooooooo.
+    osstttttso
+    ossttttTso
+    oSsttTTtso
+    .okkkkkko.
   gun: |
     ..ooooooo..
     ooggggllllo
@@ -46,69 +64,108 @@ parts:
     .oppppppo.
     .opPooPpo.
     .opPooPpo.
+    .opPooPpo.
     .oPPooPPo.
-    .okkookko.
-    .okkkokkko
+    .oPPooPPo.
+    .ommoommo.
+    .ommmommmo
     .ooooooooo
   legs_run1: |
     .oppppppo.
     opPppppPpo
     oPPo..oPpo
-    okko...oPo
+    oPo....oPo
+    ommo...oPo
     .oo....oPo
-    ......okko
-    ......oooo
+    ......ommo
+    .....ommmo
+    .....ooooo
   legs_run2: |
     .oppppppo.
     ..oPpPpo..
-    ..oPpokko.
-    ..oPpoooo.
-    ..oPpo....
-    ..okkko...
-    ..ooooo...
+    ..oPpPpo..
+    ..oPpPpo..
+    ..oPpPpo..
+    ..oPpPpo..
+    ..ommmmo..
+    ..ommmmmo.
+    ..ooooooo.
   legs_run3: |
     .oppppppo.
     opPppppPpo
     oPPo..oPpo
     oPo....oPo
-    okko...oPo
-    okkko.okko
+    oPo....oPo
+    oPo....oPo
+    ommo..ommo
+    ommmo.ommo
     ooooo.oooo
   legs_jump: |
     .oppppppo.
     opPppppPpo
-    oPpo.oPpko
-    okko.okkko
-    oooo.oooo.
+    oPPo..oPpo
+    oPpo.oPpmo
+    ommo.ommmo
+    oooo.ooooo
+  legs_crouch_a: |
+    .opppppppo
+    .oPppppPpo
+    .ommoommmo
+    .ommmommmo
+    .ooooooooo
+  legs_crouch_b: |
+    .opppppppo
+    .oPppppPpo
+    .oPpooPpmo
+    ..ommoommo
+    ..ooooooo.
 
 animations:
   idle:
     fps: 3
     loop: true
     frames:
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_a, 5, 0], [gun, 13, 5], [arm, 11, 6]]
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 1], [tail_b, 5, 2], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_stand, 7, 15], [torso, 7, 8], [head, 8, 0], [tail_a, 5, 2], [gun, 13, 10], [arm, 11, 11]]
+      - [[legs_stand, 7, 15], [torso, 7, 8], [head, 8, 1], [tail_b, 5, 3], [gun, 13, 10], [arm, 11, 11]]
   run:
     fps: 10
     loop: true
     frames:
-      - [[legs_run1, 7, 9], [torso, 8, 5], [head, 8, 1], [tail_a, 5, 1], [gun, 13, 6], [arm, 11, 7]]
-      - [[legs_run2, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_b, 5, 1], [gun, 13, 5], [arm, 11, 6]]
-      - [[legs_run3, 7, 9], [torso, 8, 5], [head, 8, 1], [tail_a, 5, 1], [gun, 13, 6], [arm, 11, 7]]
-      - [[legs_run2, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_b, 5, 1], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_run1, 7, 15], [torso, 7, 9], [head, 8, 2], [tail_a, 5, 4], [gun, 13, 11], [arm, 11, 12]]
+      - [[legs_run2, 7, 15], [torso, 7, 8], [head, 8, 1], [tail_b, 5, 3], [gun, 13, 10], [arm, 11, 11]]
+      - [[legs_run3, 7, 15], [torso, 7, 9], [head, 8, 2], [tail_a, 5, 4], [gun, 13, 11], [arm, 11, 12]]
+      - [[legs_run2, 7, 15], [torso, 7, 8], [head, 8, 1], [tail_b, 5, 3], [gun, 13, 10], [arm, 11, 11]]
   jump:
     fps: 1
     loop: false
     frames:
-      - [[legs_jump, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_b, 5, 0], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_jump, 7, 15], [torso, 7, 8], [head, 8, 0], [tail_b, 5, 2], [gun, 13, 10], [arm, 11, 11]]
   shoot:
     fps: 16
     loop: true
     frames:
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_a, 5, 0], [gun, 12, 5], [arm, 10, 6]]
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_a, 5, 0], [gun, 13, 5], [arm, 11, 6]]
+      - [[legs_stand, 7, 15], [torso, 7, 8], [head, 8, 0], [tail_a, 5, 2], [gun, 12, 10], [arm, 10, 11]]
+      - [[legs_stand, 7, 15], [torso, 7, 8], [head, 8, 0], [tail_a, 5, 2], [gun, 13, 10], [arm, 11, 11]]
+  crouch:
+    fps: 2
+    loop: true
+    frames:
+      - [[legs_crouch_a, 7, 19], [torso_crouch, 7, 15], [head, 9, 8], [tail_a, 6, 10], [gun, 13, 17], [arm, 11, 18]]
+      - [[legs_crouch_a, 7, 19], [torso_crouch, 7, 15], [head, 9, 9], [tail_b, 6, 11], [gun, 13, 17], [arm, 11, 18]]
+  crouch_walk:
+    fps: 6
+    loop: true
+    frames:
+      - [[legs_crouch_a, 7, 19], [torso_crouch, 7, 15], [head, 9, 8], [tail_a, 6, 10], [gun, 13, 17], [arm, 11, 18]]
+      - [[legs_crouch_b, 7, 19], [torso_crouch, 7, 15], [head, 9, 9], [tail_b, 6, 11], [gun, 13, 17], [arm, 11, 18]]
+  crouch_shoot:
+    fps: 16
+    loop: true
+    frames:
+      - [[legs_crouch_a, 7, 19], [torso_crouch, 7, 15], [head, 9, 8], [tail_a, 6, 10], [gun, 12, 17], [arm, 10, 18]]
+      - [[legs_crouch_a, 7, 19], [torso_crouch, 7, 15], [head, 9, 8], [tail_a, 6, 10], [gun, 13, 17], [arm, 11, 18]]
   hurt:
     fps: 1
     loop: false
     frames:
-      - [[legs_jump, 7, 9], [torso, 7, 4], [head, 6, 1], [tail_b, 3, 1], [gun, 11, 3], [arm, 9, 5]]
+      - [[legs_jump, 7, 16], [torso, 6, 9], [head, 6, 2], [tail_b, 3, 4], [gun, 11, 8], [arm, 9, 10]]

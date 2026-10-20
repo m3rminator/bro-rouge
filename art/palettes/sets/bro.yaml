@@ -1,17 +1,23 @@
-# Palette set for the default Bro. "." is always transparent.
-# Recolor a character (e.g. a new Bro) by copying this file and swapping names.
+# Palette set for the default Bro (Rambo look from refrences/bros/bro rambo): black hair,
+# red headband, bare arms, green tank top, brown pants, black boots, dark rifle.
+# "." is always transparent. Recolor a character by copying this file and swapping names.
 symbols:
   o: outline
   s: skin
   S: skin_shadow
-  h: hair
+  L: skin_light
+  h: smoke_dark
+  H: grey_dark
   b: red
   B: red_dark
-  t: white
-  T: grey_light
-  p: olive
-  P: olive_dark
+  t: olive
+  T: olive_dark
+  u: olive_light
+  p: dirt_light
+  P: dirt
   k: leather
+  m: steel_dark
+  n: grey_dark
   g: steel
   G: steel_dark
   l: steel_light

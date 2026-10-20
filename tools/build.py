@@ -547,6 +547,10 @@ def catalog_html(master, sets, sprites, storyboards, audio, controls, entities, 
         s = spec.get("preview_scale", 6)
         body.append(f"<div class='card'><h3 style='margin-top:0'>{e(name)}</h3><p class='mute'>{e(spec.get('description', ''))}</p>"
                     f"<p class='mute'>frame {fw}×{fh} · palette <b>{e(spec['palette'])}</b> · sheet {img.width}×{img.height}</p>")
+        if spec.get("reference"):
+            ref_name = f"{name}{Path(spec['reference']).suffix}"
+            body.append(f"<p class='mute'>Look reference (art style source):<br><img src='references/{e(ref_name)}' "
+                        "style='max-height:220px;border-radius:6px;border:1px solid #0003'></p>")
         for aname, row, count, fps, loop in layout:
             kf = f"k_{name}_{aname}"
             keyframes.append(f"@keyframes {kf}{{from{{background-position-x:0}}to{{background-position-x:-{count * fw * s}px}}}}")
@@ -608,6 +612,9 @@ def main():
     try:
         master, sets = load_palettes()
         sprites = [build_sprite(p, master, sets) for p in sorted((ART / "sprites").glob("*.yaml"))]
+        for spec, _img, _layout in sprites:
+            if spec.get("reference") and not (ROOT / spec["reference"]).is_file():
+                raise SpecError(f"{spec['name']}: reference image {spec['reference']!r} not found")
         audio_spec = load_yaml(ROOT / "audio" / "catalog.yaml")
         controls, entities = load_design(sprites, audio_spec)
         levels = load_levels(entities)
@@ -673,6 +680,11 @@ def main():
     (ROOT / GAME_DATA).write_bytes(game_data)
 
     DOCS.mkdir(exist_ok=True)
+    for spec, _img, _layout in sprites:
+        if spec.get("reference"):
+            ref = ROOT / spec["reference"]
+            (DOCS / "references").mkdir(exist_ok=True)
+            (DOCS / "references" / f"{spec['name']}{ref.suffix}").write_bytes(ref.read_bytes())
     (DOCS / "catalog.html").write_bytes(
         catalog_html(master, sets, sprites, storyboards, audio_spec, controls, entities, levels, run).encode("utf-8"))
 

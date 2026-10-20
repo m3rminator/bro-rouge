@@ -8,6 +8,7 @@ const CONTROLS := {
 	"move_right": [KEY_D, KEY_RIGHT],
 	"jump": [KEY_W, KEY_UP, KEY_SPACE],
 	"shoot": [KEY_J, KEY_X],
+	"crouch": [KEY_S, KEY_DOWN],
 }
 
 ## Bro (default) (design/entities/bro.yaml)
@@ -19,7 +20,9 @@ const BRO := {
 	"max_hp": 3,
 	"invulnerable_time": 1.0,
 	"respawn_delay": 2.0,
-	"hitbox": [10, 14],
+	"speed_crouch": 55.0,
+	"hitbox": [10, 22],
+	"hitbox_crouch": [10, 14],
 }
 
 ## Bro rifle bullet (design/entities/bullet.yaml)
@@ -149,7 +152,7 @@ const HUD := {
 const ANCHORS := {
 	"barrel": {"center": Vector2(0.5, 1.5)},
 	"blood": {"spray_origin": Vector2(-8.5, 0.5), "center": Vector2(0.5, 0.5)},
-	"bro": {"muzzle": Vector2(11.5, -1.5), "feet": Vector2(0.5, 7.5)},
+	"bro": {"muzzle": Vector2(11.5, -0.5), "muzzle_crouch": Vector2(11.5, 6.5), "feet": Vector2(0.5, 11.5)},
 	"brute": {"muzzle_top": Vector2(17.5, -2.5), "muzzle_bottom": Vector2(15.5, 4.5), "eye": Vector2(-5.5, -9.5)},
 	"explosion": {"center": Vector2(0.5, 1.5)},
 	"explosion_big": {"ground": Vector2(0.5, 16.5)},

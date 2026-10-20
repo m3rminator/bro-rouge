@@ -17,9 +17,12 @@ panels:
     shot: bro/shoot/0
     caption: Gun kicks back 1px each shot, muzzle flash at the tip. Hold to spray.
     sfx: shoot
+  - title: Crouch
+    shot: bro/crouch/0
+    caption: Hold Crouch (S / Down) and the Bro drops from one and a half blocks to exactly one. He moves slower but can still shoot, and he fits through a one-block tunnel. Under a low ceiling he stays down until there is room to stand.
   - title: Destroy
     shot: terrain/grass_1/0
-    caption: Bullets chew through dirt. Three hits and a block bursts into debris. The Bro is one block tall, so a single destroyed block is a tunnel he fits through.
+    caption: Bullets chew through dirt. Three hits and a block bursts into debris. Standing he is 1.5 blocks tall, so a single destroyed block is a tunnel only a crouching Bro fits through.
     sfx: block_break
   - title: Spotted
     shot: mook/idle/0

@@ -20,3 +20,7 @@ actions:
     label: Shoot
     keys: [J, X]
     description: Hold to fire continuously in the direction the Bro faces. Bullets break dirt blocks.
+  crouch:
+    label: Crouch
+    keys: [S, Down]
+    description: Hold to crouch. The Bro shrinks from 1.5 blocks to 1 block (fits through a one-block tunnel), moves slower, and can still shoot. He cannot jump while crouched, and stays crouched under a low ceiling until there is room to stand.
