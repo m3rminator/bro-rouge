@@ -41,6 +41,16 @@ colors:
   fire_yellow:  "#ffd23e"
   fire_orange:  "#f07c22"
   fire_red:     "#c43a1a"
+  # earth (underground, olive-brown like the jungle references)
+  earth_light:  "#6b6a3c"
+  earth:        "#4a4a2c"
+  earth_dark:   "#34331f"
+  earth_deep:   "#24241a"
+  grass_bright: "#a2e24c"
+  # khaki (enemy uniforms)
+  khaki_light:  "#c8a878"
+  khaki:        "#9a7a4e"
+  khaki_dark:   "#6a5034"
   # sky
   sky:          "#5ab4e8"
   sky_dark:     "#2e6ea8"

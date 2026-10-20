@@ -1,37 +1,212 @@
-# Destructible terrain tiles, 16x16, no outline so they tile seamlessly.
+# Destructible terrain, 16x16, no outline so tiles join seamlessly.
+# Drafted once by a helper (seeded), now hand-owned ASCII - edit freely.
+# earth_N: underground variants. grass_N: surface tile. drip_N: grass strands
+# that hang into the tile below grass_N (decoration only, no collision).
 name: terrain
-description: Dirt block and grass-topped dirt block. Both destructible.
+description: Earth variants, grass-topped variants and hanging grass strands.
 palette: terrain
 frame: [16, 16]
 
 parts:
-  dirt: |
-    dLdddddddDddddLd
-    ddddDddLddddDddd
-    dDddddddddLddddd
-    ddddLdDddddddDdd
-    dLddddddDdddddLd
-    ddddDddLdddLdddd
-    ddLddddddDdddDdd
-    dddddDddddddLddd
-    dDddLdddLddDdddd
-    ddddddDddddddLdd
-    dLdDdddddDdddddd
-    ddddddLddddLdDdd
-    ddDddddddDdddddL
-    dddddLdDdddddLdd
-    dLddddddddDddddd
-    DDDDDDDDDDDDDDDD
-  grass_top: |
-    qqgqqqgqqqqgqqgq
-    ggggqgggggqggggg
-    gGggggGggGgggGgg
-    GdGGdGGdGGGdGdGG
+  earth_0: |
+    lellDDDDEeEEDDll
+    eeDellDDDEDDllee
+    eeeeeellDDllEeee
+    eeeeeeeEDDDDDEEe
+    EeEEEEEDDDllDDDE
+    DEDDDDDllDEellDD
+    DDeeeDleEDDEeell
+    DeEEEDeEDDDDeeee
+    DEEEDlEDeeeDEEeE
+    eEEEDEDeEEEDDDED
+    EEEDlDeDDDDllDDD
+    DEEDDDDlllleellD
+    DDDDllleeeeeeeel
+    lllleeeeeeeeeeee
+    EDDEEeeeeeeeeeEE
+    DlDDDEEeeeeeEEDD
+  earth_1: |
+    lleEDEEEEeDeeeDl
+    eeeDeEEEEEDDEEDe
+    EEEDEEEEEEeDEEDe
+    DDDDDDEEDDDDDEDE
+    llllDDDDllllDDDD
+    eeeEDDlleeeelDll
+    eeEDlDDeeeeeeDee
+    eEDlelDeeeeeeDee
+    EDleeeDeeeeeeDee
+    DleeeeDeeeEEEDEE
+    DDEEEEDEEEDDDDDD
+    eDDDDDDDDDeDeeee
+    EeeeeDDDeeEEEEEE
+    EEEEEDeDDEEEEEEE
+    EEDDDeEeDDEEEEEE
+    DDllDEEEeDDDDDDD
+  earth_2: |
+    EDEEEEEEDDEEEEEE
+    EDEEDEEEeDEEEEEE
+    EDEEEEEEEDEEEEEE
+    DDEEEDDDDDDDDDDD
+    eDDDDeeeeeeeeeDD
+    EeDeeEEEEEEEEDee
+    EEDDEEEEEEEDDeEE
+    EEeDEEEEEDDeeEEE
+    EEEDDEEEDeeEEEEE
+    EEDeDDDDDDEEEEEE
+    EEEDlllllDDDDDEE
+    DEDleeeeellllDDD
+    DDleeeeeeeeeelll
+    llDEEEEEEeEEEEEE
+    DDDDDDDDDEDDDDDD
+    eDeeeeeeDDeeeeee
+  earth_3: |
+    lDDDDDDllllDllll
+    ellllDleeeEDEeee
+    eeeEDlDeEEDDDEEE
+    EEEDleEEDDlDDDDD
+    DDDlEEDDlleDeeeD
+    eDDEDDlleeEDEEEe
+    EeDDlleeEEDeEEEE
+    EEDlEEEEDDDDDDEE
+    DDDDDDDDDllllDDD
+    llDlllllDDDDDDll
+    EDDDEEeellDlllee
+    DllDDDEeeeDEeeEE
+    leellDDEeeDDeEDD
+    eeeeelDDEelDEDll
+    EEeeeelDDEEDDlEE
+    DDEEEEEDDDDDDDDD
+  grass_0: |
+    q.qqq.qq.q.qq..q
+    qqqqqqqqqqqqqqqq
+    qqqqqqqqqqqqqqqq
+    ggGggGgGggggGgGg
+    GGhgGhGhGgGggGhG
+    hhDGgDhlhGhGgGDh
+    DDehgDleEhDhgGll
+    DeEEgDeEDDDDgGee
+    DEEEglEDeeeDggeE
+    eEEEgEDeEEEDgDED
+    EEEDgDeDDDDlggGD
+    DEEDgDDllllegggG
+    DDDDglleeeeegegG
+    llllgeeeeeeeGgGe
+    EDDEggeeeeeeeeEE
+    DlDDDgEeeeeeEEDD
+  drip_0: |
+    .....gg.........
+    ................
+    ......g.........
+    ......g.........
+    ......g.........
+    ......g.........
+    ......gg........
+    .......g........
+    .......g........
+    .......G........
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
+  grass_1: |
+    ...qq.qqqq..qqqq
+    qqqqqqqqqqqqqqqq
+    qqqqqqqqqqqqqqqq
+    gggggGggGgGggggg
+    gGGGGhGghGhgGggG
+    GgGhgGhGeheGhGGh
+    hgGDgGDgGeehehhe
+    egGlgGDgGeeeeDee
+    EgGegGDgGeeeeDee
+    DgGegGgGGeEEEDEE
+    DGEggGggEEDDDDDD
+    eDDgGDDDDDeDeeee
+    EeegGDDgGeEEEEEE
+    EEEgGDegGEEEEEEE
+    EEggGeEgGDEEEEEE
+    DDgGDEEgGDDDDDDD
+  drip_1: |
+    ..gG...gG.......
+    ..gG...gG.......
+    ..gG..gG........
+    ..G.............
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
+  grass_2: |
+    qqqq.q...q..qqqq
+    qqqqqqqqqqqqqqqq
+    qqqqqqqqqqqqqqqq
+    GggggGgggggGgggg
+    hGGGGhgGggghGGGG
+    EhghhEGhGGGEhhhh
+    EEgDEEhEghgDDeEE
+    EEgDEEEEgDgeeEEE
+    EEgDDEEEgegEEEEE
+    EEgeDDDDgDgEEEEE
+    EEgDllllgDgDDDEE
+    DEgleeeeglgllDDD
+    DDgeeeeegegeelll
+    llgEEEEEgeGEEEEE
+    DDgDDDDDgEDDDDDD
+    eDgeeeeggDeeeeee
+  drip_2: |
+    ..g....g........
+    ..gg...g........
+    ...g...g........
+    ...g...g........
+    ...g...g........
+    ...g...gg.......
+    ...g............
+    ...g....g.......
+    ...G....G.......
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
+    ................
 
 animations:
-  dirt:
+  earth_0:
     frames:
-      - [[dirt, 0, 0]]
-  grass:
+      - [[earth_0, 0, 0]]
+  earth_1:
     frames:
-      - [[dirt, 0, 0], [grass_top, 0, 0]]
+      - [[earth_1, 0, 0]]
+  earth_2:
+    frames:
+      - [[earth_2, 0, 0]]
+  earth_3:
+    frames:
+      - [[earth_3, 0, 0]]
+  grass_0:
+    frames:
+      - [[grass_0, 0, 0]]
+  grass_1:
+    frames:
+      - [[grass_1, 0, 0]]
+  grass_2:
+    frames:
+      - [[grass_2, 0, 0]]
+  drip_0:
+    frames:
+      - [[drip_0, 0, 0]]
+  drip_1:
+    frames:
+      - [[drip_1, 0, 0]]
+  drip_2:
+    frames:
+      - [[drip_2, 0, 0]]

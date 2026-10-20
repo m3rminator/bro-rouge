@@ -1,0 +1,13 @@
+# Entity: on-screen HUD.
+id: hud
+name: HUD
+kind: ui
+order: 20
+description: Fixed on screen, top-left. One heart per Bro hit point; hearts turn grey as he takes damage.
+sprite: fx
+files:
+  - game/scripts/hud.gd
+
+animations:
+  heart_full: A remaining hit point.
+  heart_empty: A lost hit point.

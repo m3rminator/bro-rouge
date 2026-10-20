@@ -1,9 +1,9 @@
 # Entity: rifle bullet fired by the Bro, plus its muzzle flash.
 id: bullet
-name: Rifle bullet
+name: Bro rifle bullet
 kind: projectile
 order: 2
-description: Spawned at the Bro's "muzzle" anchor every shot. Flies straight, damages the first world object it touches, then disappears.
+description: Spawned at the Bro's "muzzle" anchor every shot. Flies straight, damages the first block or enemy it touches, then disappears.
 sprite: fx
 files:
   - game/scripts/bullet.gd

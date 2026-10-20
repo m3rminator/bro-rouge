@@ -9,6 +9,21 @@
     "file_sha": "3965ac07699466c35972e0dcd3d584147cf44cf2b589e71af0b64d1433ff3b21",
     "spec_sha": "83332d0468593ca5c3b4771a8ae2ac318d99205af5cc680601b144bde9ed3173"
   },
+  "sfx/enemy_alert": {
+    "file": "game/assets/sfx/enemy_alert.mp3",
+    "file_sha": "fa13bcfa0d4aa153af6ce1602d8e23dbebf0c03e5a23d4cd80308e64e38dd96e",
+    "spec_sha": "1abfa18b0658fc0a398e2b5bbe724aadcf5d52414a52d6904be490f13501c748"
+  },
+  "sfx/enemy_death": {
+    "file": "game/assets/sfx/enemy_death.mp3",
+    "file_sha": "5528b2d2b6b20b2a1b8d3c55a4ed097aa141864b9837827960cc553dfa3f17c4",
+    "spec_sha": "fbb65f22f6b4a74e1a7cdc58fc9b82203596bfbcb50fd4a33dbb45263115994c"
+  },
+  "sfx/enemy_shoot": {
+    "file": "game/assets/sfx/enemy_shoot.mp3",
+    "file_sha": "c7b49af4d6d976260a9693f64a2e89193bbe2605cc5fc6f63c87161dce3d67bf",
+    "spec_sha": "d8a9952bc66d3bfb56171c956063ed9f95eaaca3cf213e27dc2f42c2f28e711c"
+  },
   "sfx/footstep": {
     "file": "game/assets/sfx/footstep.mp3",
     "file_sha": "c98364e2d12a45371282227dd61e3179ffa535057244662832ef10d08ebc5c3a",
@@ -23,6 +38,16 @@
     "file": "game/assets/sfx/land.mp3",
     "file_sha": "a2bfee140c039818ef79f94f9896e4b7dd7d03488a58e87e8d944180dc448ced",
     "spec_sha": "0b14389604fdc17d9292efe1592036caeb78091f5d78b14c49967778b35b930e"
+  },
+  "sfx/player_death": {
+    "file": "game/assets/sfx/player_death.mp3",
+    "file_sha": "16a80efab9867adb3c8e660ad22fcb55592f6dbb0c878a8b4b2597e22d823e4e",
+    "spec_sha": "a1c4ac330a9b8a3205b630bf9633269aca5abab21b62acad0ec227f6674e3550"
+  },
+  "sfx/player_hurt": {
+    "file": "game/assets/sfx/player_hurt.mp3",
+    "file_sha": "4f1a542cdedb55c5cfa2b431343a9fc0d899cd4ca605a3a3931aebba86988e47",
+    "spec_sha": "7e9d8562e0e6c0ac90d3d02bce33d27d6c1e65756896c87511c3fc554f54e5c3"
   },
   "sfx/shoot": {
     "file": "game/assets/sfx/shoot.mp3",

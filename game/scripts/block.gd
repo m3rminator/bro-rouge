@@ -1,21 +1,29 @@
 class_name Block
 extends StaticBody2D
-## Destructible 16x16 terrain tile. Breaks into debris after HP hits.
+## Destructible 16x16 terrain tile. Breaks into debris after GameData.BLOCK.hp hits.
+## A grass block also carries the strands that hang over the tile below it.
 
 const SIZE := 16
 const FRAMES := preload("res://assets/sprites/terrain_frames.tres")
-const DEBRIS_COLOR := Color("6e4628")  # master palette: dirt
+const DEBRIS_COLOR := Color("4a4a2c")  # master palette: earth
 
 ## Tuning numbers live in design/entities/block.yaml (generated into GameData.BLOCK).
 var hp: int = GameData.BLOCK.hp
 var _sprite: AnimatedSprite2D
 
 
-func setup(kind: String) -> Block:
+func setup(tile_anim: String, drip_anim := "") -> Block:
 	_sprite = AnimatedSprite2D.new()
 	_sprite.sprite_frames = FRAMES
-	_sprite.animation = kind
+	_sprite.animation = tile_anim
 	add_child(_sprite)
+	if drip_anim != "":
+		var drip := AnimatedSprite2D.new()
+		drip.sprite_frames = FRAMES
+		drip.animation = drip_anim
+		drip.position = Vector2(0, SIZE)
+		drip.z_index = 1  # in front of the block below
+		add_child(drip)
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
 	rect.size = Vector2(SIZE, SIZE)
@@ -26,7 +34,7 @@ func setup(kind: String) -> Block:
 	return self
 
 
-func hit(damage: int) -> void:
+func hit(damage: int, _direction := 0) -> void:
 	hp -= damage
 	if hp > 0:
 		Sfx.play(self, "block_hit", -10.0)
@@ -48,6 +56,7 @@ func hit(damage: int) -> void:
 	debris.scale_amount_max = 3.0
 	debris.color = DEBRIS_COLOR
 	debris.position = position
+	debris.z_index = 2
 	debris.finished.connect(debris.queue_free)
 	get_parent().add_child(debris)
 	debris.emitting = true

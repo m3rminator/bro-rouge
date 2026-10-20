@@ -18,6 +18,18 @@ panels:
     caption: Gun kicks back 1px each shot, muzzle flash at the tip. Hold to spray.
     sfx: shoot
   - title: Destroy
-    shot: terrain/grass/0
-    caption: Bullets chew through dirt. Three hits and a block bursts into debris.
+    shot: terrain/grass_1/0
+    caption: Bullets chew through dirt. Three hits and a block bursts into debris. The Bro is one block tall, so a single destroyed block is a tunnel he fits through.
     sfx: block_break
+  - title: Spotted
+    shot: mook/idle/0
+    caption: A mook only sees forward. Step in front of him, near his height, with nothing in between, and a "!" pops up — you have half a second.
+    sfx: enemy_alert
+  - title: Firefight
+    shot: mook/shoot/0
+    caption: He fires slow red bursts. Jump over them, or break the block under him. Two hits and he drops.
+    sfx: enemy_shoot
+  - title: Hit
+    shot: bro/hurt/0
+    caption: Each enemy hit costs a heart and makes the Bro blink (briefly invulnerable). Lose all three and the level restarts.
+    sfx: player_hurt

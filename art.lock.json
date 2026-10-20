@@ -1,17 +1,22 @@
 {
   "bro": {
-    "docs/previews/bro.png": "1a55e230b14555835ab600e0b225e10e4fc6e263664afbb85e7ac161c6f5e9db",
-    "game/assets/sprites/bro.png": "56fb7c5d8c62c3a85949d81513ced519a3fc228567e95039cdf21ba18d46ec58",
-    "game/assets/sprites/bro_frames.tres": "45708331b9382275a7f251593c065c0aca63d19dbd2a29b45037a54bdc1002a9"
+    "docs/previews/bro.png": "c85550008719db15d1079e9a6cbab366b836f598c9a8d78c96f2b883ffc3105c",
+    "game/assets/sprites/bro.png": "c7d2a33588790c3694a9dd4000ee0bd7e6a0ffb531f426ae1b773e7e2baa4fcc",
+    "game/assets/sprites/bro_frames.tres": "12d19bb5e6a457c9e0cab9694dff7b5666e3187c3d5f4c93fe509ec23db55a33"
   },
   "fx": {
-    "docs/previews/fx.png": "e19353e3bd03f2278ed31a7499f6a4370cd8d1bfad28153cc95a2fa4b87d04b7",
-    "game/assets/sprites/fx.png": "3082004f1c488a490e5a08b5cdb693a360609028875bec6e4e2156b50f6eab80",
-    "game/assets/sprites/fx_frames.tres": "c6d74117b1577c892aab01c0b16eb252872ecb9b58976a212c9d0b3e9a5c0e47"
+    "docs/previews/fx.png": "51b16b9543692fa638705a86d037b078b13e0fe64b04de827c66bdc752d26286",
+    "game/assets/sprites/fx.png": "cfc89fd5a2787700414c4f1d5a9e80346411f9d2dad14a5d91367e1bbfa2bdce",
+    "game/assets/sprites/fx_frames.tres": "dd4d435619bace4af8e9e97e101b55208b6f43dc902e95db50b1cee84650d015"
+  },
+  "mook": {
+    "docs/previews/mook.png": "a4e5b140a4e7586943d48c95f7cbd8292710b4e71f25c367c67c39dec12818ca",
+    "game/assets/sprites/mook.png": "d3114efd8d9855fd2205520891436d29ebfe8de7a307c2c03fda5d0af652fc71",
+    "game/assets/sprites/mook_frames.tres": "e62b6cd282940282710fe41968dee850a2e32090d3687e0344006399c2af60d7"
   },
   "terrain": {
-    "docs/previews/terrain.png": "adcbb692ee53def9b16380a6b08b37cd79338c14297bffdeb6c4d8def7779dea",
-    "game/assets/sprites/terrain.png": "ba98fcfa4acb4cc3d1a21da911b6f0a1d0a2f24ca6ce2326ab88aafbac923363",
-    "game/assets/sprites/terrain_frames.tres": "bd7010a0c7fef9c1cfb358b0f4271891151b538daced46a054fb1720593d3a77"
+    "docs/previews/terrain.png": "90c5fab340ad889c753a2f4ba077b415206578aef4c718903c813b36f84cc1ca",
+    "game/assets/sprites/terrain.png": "0c363cdee16f099be8e948abb9a8ec54288e8f005913a5c22a7aabf0cc53e546",
+    "game/assets/sprites/terrain_frames.tres": "13bef9921d74f64481b7eaebcda5a638658a5343d8b5648737728a5cd97b4f55"
   }
 }

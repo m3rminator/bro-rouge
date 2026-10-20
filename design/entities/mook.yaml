@@ -1,0 +1,79 @@
+# Entity: basic enemy soldier.
+id: mook
+name: Mook (enemy soldier)
+kind: enemy
+order: 3
+description: Masked soldier. Patrols back and forth and turns at walls and ledges. He only sees forward — if the Bro is in front of him, within vision range, roughly at his height, with no blocks in between, he shows "!", waits reaction_time, then fires bursts. After losing sight of the Bro he keeps watching for forget_time, then patrols again. Shot from behind, he turns around.
+sprite: mook
+files:
+  - game/scenes/mook.tscn
+  - game/scripts/mook.gd
+level_symbols:
+  "E": mook start position (air tile)
+spawns: [enemy_bullet]
+
+stats:
+  hp:
+    value: 2
+    unit: hp
+    description: Bro bullet hits needed to kill him.
+  walk_speed:
+    value: 30.0
+    unit: px/s
+    description: Patrol speed (the Bro runs 4× faster).
+  turn_pause:
+    value: 0.8
+    unit: s
+    description: How long he stands still after reaching a wall or ledge before walking back.
+  gravity:
+    value: 800.0
+    unit: px/s²
+    description: Downward acceleration while falling.
+  vision_range:
+    value: 150.0
+    unit: px
+    description: How far ahead he can see (≈ 9 blocks). He never sees behind himself.
+  vision_height:
+    value: 20.0
+    unit: px
+    description: How far above/below his eyes the Bro can be and still be seen (a bit more than one block either way).
+  reaction_time:
+    value: 0.5
+    unit: s
+    description: Delay between spotting the Bro ("!" bubble) and the first shot — the player's window to react.
+  fire_interval:
+    value: 0.18
+    unit: s
+    description: Time between bullets inside a burst.
+  burst_count:
+    value: 3
+    unit: shots
+    description: Bullets per burst.
+  burst_pause:
+    value: 0.9
+    unit: s
+    description: Pause between bursts.
+  forget_time:
+    value: 1.5
+    unit: s
+    description: How long he keeps aiming after losing sight of the Bro before patrolling again.
+  corpse_time:
+    value: 3.0
+    unit: s
+    description: How long the body stays before fading away.
+  hitbox:
+    value: [10, 14]
+    unit: px
+    description: Collision box, width × height (same as the Bro).
+
+animations:
+  idle: Waiting at a patrol turn, or watching the spot where he last saw the Bro.
+  walk: Patrolling.
+  shoot: Firing (gun kicks back 1 px).
+  fall: In the air (walked off a ledge, or the block under him was destroyed).
+  hurt: Dead — knocked back and falls over.
+
+sounds:
+  enemy_alert: He spots the Bro (together with the "!" bubble).
+  enemy_shoot: Every bullet he fires.
+  enemy_death: He dies.

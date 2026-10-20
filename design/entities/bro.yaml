@@ -5,12 +5,14 @@ id: bro
 name: Bro (default)
 kind: player
 order: 1
-description: The player character. Runs, jumps and sprays rifle fire. Every future Bro copies this file and changes what makes them unique.
+description: The player character, exactly one block tall so he fits through a single destroyed block. Runs, jumps, sprays rifle fire; dies after max_hp enemy hits and the level restarts. Every future Bro copies this file and changes what makes them unique.
 sprite: bro
 files:
   - game/scenes/player.tscn
   - game/scripts/player.gd
 controls: [move_left, move_right, jump, shoot]
+level_symbols:
+  "P": player start position (air tile)
 spawns: [bullet]
 
 stats:
@@ -30,15 +32,34 @@ stats:
     value: 0.11
     unit: s
     description: Time between shots while holding Shoot (~9 shots per second).
+  max_hp:
+    value: 3
+    unit: hp
+    description: Enemy bullet hits the Bro can take. Shown as hearts in the HUD.
+  invulnerable_time:
+    value: 1.0
+    unit: s
+    description: After being hit, the Bro blinks and can't be hurt again for this long.
+  respawn_delay:
+    value: 2.0
+    unit: s
+    description: Time between dying and the level restarting.
+  hitbox:
+    value: [10, 14]
+    unit: px
+    description: Collision box, width × height. Fits inside one 16 × 16 block, so he can walk through a single-block tunnel.
 
 animations:
   idle: Standing on the ground, not moving, not shooting.
   run: Moving left/right on the ground. Plays the footstep sound on frames 0 and 2.
   jump: Any time the Bro is in the air (rising or falling).
   shoot: Standing still while firing — the gun kicks back 1 px.
+  hurt: Dead — the body is knocked back and falls over.
 
 sounds:
   shoot: Every shot.
   jump: When a jump starts.
   land: When touching the ground after being in the air.
   footstep: Run animation frames 0 and 2.
+  player_hurt: Hit by an enemy bullet (and survives).
+  player_death: Last hit point lost.

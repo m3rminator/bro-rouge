@@ -1,21 +1,33 @@
 class_name Bullet
 extends Area2D
-## Rifle bullet. Hits anything on the "world" layer that has a hit() method.
+## Straight-flying bullet used by the Bro and by enemies. Damages the first body with a
+## hit() method that it touches. Stats come from GameData.BULLET / GameData.ENEMY_BULLET.
 
-## Tuning numbers live in design/entities/bullet.yaml (generated into GameData.BULLET).
-const STATS := GameData.BULLET
 const FX_FRAMES := preload("res://assets/sprites/fx_frames.tres")
 
 var direction := 1
+var stats: Dictionary
+var anim := "bullet"
 var _age := 0.0
+
+
+## Fires a bullet from `pos` (in `parent`'s space). `mask` = physics layers it can hit.
+static func spawn(parent: Node, pos: Vector2, dir: int, bullet_stats: Dictionary, animation: String, mask: int) -> void:
+	var bullet := Bullet.new()
+	bullet.position = pos
+	bullet.direction = dir
+	bullet.stats = bullet_stats
+	bullet.anim = animation
+	bullet.collision_mask = mask
+	parent.add_child(bullet)
 
 
 func _ready() -> void:
 	collision_layer = 0
-	collision_mask = 1
+	z_index = 3
 	var sprite := AnimatedSprite2D.new()
 	sprite.sprite_frames = FX_FRAMES
-	sprite.animation = "bullet"
+	sprite.animation = anim
 	sprite.flip_h = direction < 0
 	add_child(sprite)
 	var shape := CollisionShape2D.new()
@@ -27,13 +39,13 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	position.x += STATS.speed * direction * delta
+	position.x += stats.speed * direction * delta
 	_age += delta
-	if _age > STATS.lifetime:
+	if _age > stats.lifetime:
 		queue_free()
 
 
 func _on_body_entered(body: Node) -> void:
 	if body.has_method("hit"):
-		body.hit(STATS.damage)
+		body.hit(stats.damage, direction)
 	queue_free()

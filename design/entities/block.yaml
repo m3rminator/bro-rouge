@@ -2,16 +2,14 @@
 id: block
 name: Terrain block
 kind: terrain
-order: 3
-description: 16×16 solid tile that levels are built from. Bullets chip it; at 0 HP it bursts into debris and is gone for good.
+order: 10
+description: 16×16 solid tile that levels are built from. Bullets (player and enemy) chip it; at 0 HP it bursts into debris and is gone for good. Blocks with open sky above (grass_clearance air tiles) automatically become grass with hanging strands; tunnel and cave floors stay bare earth. Each block's variant is picked from its map position, so the same level always looks the same.
 sprite: terrain
 files:
   - game/scripts/block.gd
   - game/scripts/main.gd
 level_symbols:
-  "#": dirt block
-  "G": grass-topped dirt block
-  "P": player start (not a block)
+  "#": earth block (becomes grass automatically if it has open sky above)
   ".": empty air
 
 stats:
@@ -19,14 +17,26 @@ stats:
     value: 3
     unit: hits
     description: Bullet hits needed to destroy one block.
+  grass_clearance:
+    value: 3
+    unit: tiles
+    description: A block grows grass only if this many tiles directly above it are air (or it is near the top of the map). Keeps cave and tunnel floors bare.
   debris_amount:
     value: 14
     unit: particles
     description: Dirt chunks thrown when the block breaks.
 
 animations:
-  dirt: Plain dirt block (level symbol "#").
-  grass: Grass-topped dirt block (level symbol "G").
+  earth_0: Underground earth, variant 0.
+  earth_1: Underground earth, variant 1.
+  earth_2: Underground earth, variant 2.
+  earth_3: Underground earth, variant 3.
+  grass_0: Surface block (air above), variant 0. Its strands continue in drip_0.
+  grass_1: Surface block, variant 1. Its strands continue in drip_1.
+  grass_2: Surface block, variant 2. Its strands continue in drip_2.
+  drip_0: Grass strands hanging over the block (or air) below grass_0. Decoration only — disappears when the grass block breaks.
+  drip_1: Hanging strands below grass_1.
+  drip_2: Hanging strands below grass_2.
 
 sounds:
   block_hit: A bullet hits the block but it survives (it also flashes white).

@@ -1,6 +1,6 @@
-# Muzzle flash and bullet. Spawned by the game at the bro's "muzzle" anchor.
+# Small effects: muzzle flash, bullets, enemy alert bubble, HUD hearts.
 name: fx
-description: Muzzle flash (2 frames, plays once) and rifle bullet.
+description: Muzzle flash, player and enemy bullets, the enemy "!" alert bubble and HUD hearts.
 palette: fx
 frame: [8, 8]
 anchors:
@@ -20,6 +20,32 @@ parts:
   bullet: |
     RYWWW
     RYWWW
+  enemy_bullet: |
+    rRRO
+    rRRO
+  alert: |
+    ooooooo.
+    owwrwwo.
+    owwrwwo.
+    owwrwwo.
+    owwwwwo.
+    owwrwwo.
+    ooowooo.
+    ...o....
+  heart_full: |
+    .oo.oo.
+    owroRro
+    orrrrro
+    .orrro.
+    ..oro..
+    ...o...
+  heart_empty: |
+    .oo.oo.
+    oGGoGGo
+    oGGGGGo
+    .oGGGo.
+    ..oGo..
+    ...o...
 
 animations:
   muzzle:
@@ -33,3 +59,23 @@ animations:
     loop: false
     frames:
       - [[bullet, 2, 3]]
+  enemy_bullet:
+    fps: 1
+    loop: false
+    frames:
+      - [[enemy_bullet, 2, 3]]
+  alert:
+    fps: 1
+    loop: false
+    frames:
+      - [[alert, 0, 0]]
+  heart_full:
+    fps: 1
+    loop: false
+    frames:
+      - [[heart_full, 0, 1]]
+  heart_empty:
+    fps: 1
+    loop: false
+    frames:
+      - [[heart_empty, 0, 1]]

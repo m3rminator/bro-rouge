@@ -1,0 +1,28 @@
+# Entity: bullet fired by enemies.
+id: enemy_bullet
+name: Enemy bullet
+kind: projectile
+order: 4
+description: Red bullet fired straight ahead by enemies. Slower than the Bro's, so it can be jumped over. Hurts the Bro and chips blocks; passes through other enemies.
+sprite: fx
+files:
+  - game/scripts/bullet.gd
+spawned_by: [mook]
+
+stats:
+  speed:
+    value: 200.0
+    unit: px/s
+    description: Flight speed (about half the Bro's bullet).
+  lifetime:
+    value: 1.2
+    unit: s
+    description: Disappears after this long (range ≈ 240 px ≈ 15 blocks).
+  damage:
+    value: 1
+    unit: hp
+    description: Hearts taken from the Bro per hit.
+
+animations:
+  enemy_bullet: The bullet in flight.
+  alert: The "!" bubble shown above an enemy that just spotted the Bro.

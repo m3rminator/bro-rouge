@@ -20,6 +20,21 @@ sfx:
   block_hit:
     prompt: "Bullet impact on packed dirt, short crunchy thump, video game"
     duration: 0.5
+  enemy_shoot:
+    prompt: "Single retro 16-bit assault rifle shot from an enemy soldier, slightly lower and harsher than the hero's gun, short, no reverb"
+    duration: 0.5
+  enemy_alert:
+    prompt: "Short surprised male grunt 'huh!' of an enemy soldier spotting someone, retro video game voice"
+    duration: 0.6
+  enemy_death:
+    prompt: "Short comic male death scream 'argh' of an enemy soldier being shot, retro action video game"
+    duration: 0.8
+  player_hurt:
+    prompt: "Short pained male grunt of an action hero being hit by a bullet, retro video game"
+    duration: 0.5
+  player_death:
+    prompt: "Dramatic male death yell of an action hero, short, retro 80s action video game"
+    duration: 1.0
 
 music:
   level_jungle:

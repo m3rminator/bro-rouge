@@ -1,0 +1,16 @@
+# Palette set for the basic enemy soldier ("mook"): black balaclava, khaki uniform, AK.
+symbols:
+  o: outline
+  h: grey_dark
+  H: steel_dark
+  s: skin
+  t: khaki
+  T: khaki_dark
+  L: khaki_light
+  p: leather
+  P: hair
+  k: steel_dark
+  g: steel
+  G: steel_dark
+  w: hair_light
+  r: red
