@@ -9,7 +9,6 @@ signal died
 const STATS := GameData.BRO
 const MUZZLE: Vector2 = GameData.ANCHORS["bro"]["muzzle"]
 const MUZZLE_CROUCH: Vector2 = GameData.ANCHORS["bro"]["muzzle_crouch"]
-const SPRITE_Y := -4.0  # the 24 px frame is centered on the node; this puts the feet on the tile bottom (+8)
 const BULLET_MASK := 1 | 4  # world (blocks, barrels) + enemies
 
 @onready var sprite: AnimatedSprite2D = $Sprite
@@ -21,6 +20,7 @@ var dead := false
 var frozen := false  # level clear: no control, cannot be hurt
 var facing := 1
 var crouching := false
+var sprite_y := 0.0  # the frame is centered on the node; this offset puts the feet on the tile bottom (+8)
 var fire_cooldown := 0.0
 var shooting := 0.0
 var _invulnerable := 0.0
@@ -31,7 +31,8 @@ var _shake := 0.0
 func _ready() -> void:
 	add_to_group("player")
 	z_index = 2
-	sprite.position.y = SPRITE_Y
+	sprite_y = 8.0 - sprite.sprite_frames.get_frame_texture("idle", 0).get_height() / 2.0
+	sprite.position.y = sprite_y
 	_set_stance(false)
 	sprite.frame_changed.connect(_on_frame_changed)
 
@@ -134,7 +135,7 @@ func _die(direction: int) -> void:
 	velocity = Vector2(push * 90.0, -160.0)
 	var tween := create_tween().set_parallel()
 	tween.tween_property(sprite, "rotation", PI / 2 * push, 0.35)
-	tween.tween_property(sprite, "position:y", SPRITE_Y + 3.0, 0.35)
+	tween.tween_property(sprite, "position:y", sprite_y + 3.0, 0.35)
 	died.emit()
 
 
@@ -142,7 +143,7 @@ func _shoot() -> void:
 	fire_cooldown = STATS.fire_interval
 	shooting = 0.15
 	var tip := MUZZLE_CROUCH if crouching else MUZZLE
-	var muzzle := Vector2(tip.x * facing, tip.y + SPRITE_Y)
+	var muzzle := Vector2(tip.x * facing, tip.y + sprite_y)
 	Bullet.spawn(get_parent(), position + muzzle, facing, GameData.BULLET, "bro_shot", BULLET_MASK)
 	flash.fire(muzzle, facing)
 	Sfx.play(self, "shoot", -8.0)

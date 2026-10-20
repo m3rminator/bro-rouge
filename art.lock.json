@@ -10,9 +10,9 @@
     "game/assets/sprites/blood_frames.tres": "34ae4822738da8b0429e9dd00db41331bafe78268b02cdf0f5c5a93ff4df2202"
   },
   "bro": {
-    "docs/previews/bro.png": "e0115d9d84aecbd2b485ca2edd16890b98f08104104de95b41bd70d7587d4640",
-    "game/assets/sprites/bro.png": "df36e5936ba63202a86283d3a0908a564652426697687374d77555227aed1471",
-    "game/assets/sprites/bro_frames.tres": "965912088c024ce693d6ced06ed8efa3ca23d36d8c0e99d60cfbac81342c20f7"
+    "docs/previews/bro.png": "9c5950227cb9b714c6481015f934e04a4511457f86d72c438588ecf1a8b7673e",
+    "game/assets/sprites/bro.png": "04dbba613a19a3c28b61e573c02e3ac2849fe9c5a15459b46eac7e7e6bf4ec2c",
+    "game/assets/sprites/bro_frames.tres": "793288a77b4480476cfe02b333e57212d6ff5ca26c01a6893b5b92e254f2bdb2"
   },
   "brute": {
     "docs/previews/brute.png": "4c83b197e53285f21f258a706221c8daea3b66b1adaca76b1d200acd3a51fd7e",

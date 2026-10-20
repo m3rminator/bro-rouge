@@ -21,8 +21,8 @@ const BRO := {
 	"invulnerable_time": 1.0,
 	"respawn_delay": 2.0,
 	"speed_crouch": 55.0,
-	"hitbox": [10, 22],
-	"hitbox_crouch": [10, 14],
+	"hitbox": [12, 30],
+	"hitbox_crouch": [12, 24],
 }
 
 ## Bro rifle bullet (design/entities/bullet.yaml)
@@ -152,7 +152,7 @@ const HUD := {
 const ANCHORS := {
 	"barrel": {"center": Vector2(0.5, 1.5)},
 	"blood": {"spray_origin": Vector2(-8.5, 0.5), "center": Vector2(0.5, 0.5)},
-	"bro": {"muzzle": Vector2(11.5, -0.5), "muzzle_crouch": Vector2(11.5, 6.5), "feet": Vector2(0.5, 11.5)},
+	"bro": {"muzzle": Vector2(12.0, 1.5), "muzzle_crouch": Vector2(13.0, 0.5), "feet": Vector2(0.0, 16.5)},
 	"brute": {"muzzle_top": Vector2(17.5, -2.5), "muzzle_bottom": Vector2(15.5, 4.5), "eye": Vector2(-5.5, -9.5)},
 	"explosion": {"center": Vector2(0.5, 1.5)},
 	"explosion_big": {"ground": Vector2(0.5, 16.5)},

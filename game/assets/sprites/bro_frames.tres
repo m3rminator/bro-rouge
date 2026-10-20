@@ -1,70 +1,62 @@
-[gd_resource type="SpriteFrames" load_steps=18 format=3]
+[gd_resource type="SpriteFrames" load_steps=16 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/bro.png" id="1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0"]
 atlas = ExtResource("1")
-region = Rect2(0, 0, 24, 24)
+region = Rect2(0, 0, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1"]
 atlas = ExtResource("1")
-region = Rect2(24, 0, 24, 24)
+region = Rect2(37, 0, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2"]
 atlas = ExtResource("1")
-region = Rect2(0, 24, 24, 24)
+region = Rect2(0, 34, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3"]
 atlas = ExtResource("1")
-region = Rect2(24, 24, 24, 24)
+region = Rect2(37, 34, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4"]
 atlas = ExtResource("1")
-region = Rect2(48, 24, 24, 24)
+region = Rect2(0, 68, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5"]
 atlas = ExtResource("1")
-region = Rect2(72, 24, 24, 24)
+region = Rect2(0, 102, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6"]
 atlas = ExtResource("1")
-region = Rect2(0, 48, 24, 24)
+region = Rect2(37, 102, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7"]
 atlas = ExtResource("1")
-region = Rect2(0, 72, 24, 24)
+region = Rect2(0, 136, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8"]
 atlas = ExtResource("1")
-region = Rect2(24, 72, 24, 24)
+region = Rect2(37, 136, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_9"]
 atlas = ExtResource("1")
-region = Rect2(0, 96, 24, 24)
+region = Rect2(0, 170, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_10"]
 atlas = ExtResource("1")
-region = Rect2(24, 96, 24, 24)
+region = Rect2(37, 170, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_11"]
 atlas = ExtResource("1")
-region = Rect2(0, 120, 24, 24)
+region = Rect2(0, 204, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_12"]
 atlas = ExtResource("1")
-region = Rect2(24, 120, 24, 24)
+region = Rect2(37, 204, 37, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_13"]
 atlas = ExtResource("1")
-region = Rect2(0, 144, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_14"]
-atlas = ExtResource("1")
-region = Rect2(24, 144, 24, 24)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_15"]
-atlas = ExtResource("1")
-region = Rect2(0, 168, 24, 24)
+region = Rect2(0, 238, 37, 34)
 
 [resource]
 animations = [{
@@ -85,24 +77,29 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_3")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5")
 }],
 "loop": true,
 "name": &"run",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_6")
+"texture": SubResource("AtlasTexture_4")
 }],
 "loop": false,
 "name": &"jump",
 "speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6")
+}],
+"loop": true,
+"name": &"shoot",
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -112,8 +109,8 @@ animations = [{
 "texture": SubResource("AtlasTexture_8")
 }],
 "loop": true,
-"name": &"shoot",
-"speed": 16.0
+"name": &"crouch",
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -123,8 +120,8 @@ animations = [{
 "texture": SubResource("AtlasTexture_10")
 }],
 "loop": true,
-"name": &"crouch",
-"speed": 2.0
+"name": &"crouch_walk",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -134,23 +131,12 @@ animations = [{
 "texture": SubResource("AtlasTexture_12")
 }],
 "loop": true,
-"name": &"crouch_walk",
-"speed": 6.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_13")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_14")
-}],
-"loop": true,
 "name": &"crouch_shoot",
 "speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_15")
+"texture": SubResource("AtlasTexture_13")
 }],
 "loop": false,
 "name": &"hurt",

@@ -5,7 +5,7 @@ id: bro
 name: Bro (default)
 kind: player
 order: 1
-description: The player character (Rambo look). Stands one and a half blocks tall (24 px); holding Crouch makes him exactly one block tall (16 px) and slower, so he fits through a single destroyed block. Runs, jumps, sprays rifle fire; dies after max_hp hits (bullets, or blasts which take several hearts at once). Each death costs one run life and restarts the current level (design/run.yaml). Every future Bro copies this file and changes what makes them unique.
+description: The player character, traced pixel for pixel from the Rambo reference sheet. At the reference's native size he stands about two blocks tall (31 px); holding Crouch lowers him to about 1.6 blocks (26 px) and slows him down. Runs, jumps, sprays rifle fire; dies after max_hp hits (bullets, or blasts which take several hearts at once). Each death costs one run life and restarts the current level (design/run.yaml). Every future Bro copies this file and changes what makes them unique.
 sprite: bro
 files:
   - game/scenes/player.tscn
@@ -51,20 +51,20 @@ stats:
     unit: px/s
     description: Horizontal speed while crouched (less than half of the standing speed).
   hitbox:
-    value: [10, 22]
+    value: [12, 30]
     unit: px
-    description: Standing collision box, width × height — one and a half blocks tall (a block is 16 px).
+    description: Standing collision box, width × height — just under two blocks (a block is 16 px), so he still fits through a two-block-high gap.
   hitbox_crouch:
-    value: [10, 14]
+    value: [12, 24]
     unit: px
-    description: Crouched collision box. Fits inside one 16 × 16 block, so he can crawl through a single-block tunnel.
+    description: Crouched collision box (one and a half blocks).
 
 animations:
   idle: Standing on the ground, not moving, not shooting.
   run: Moving left/right on the ground. Plays the footstep sound on frames 0 and 2.
   jump: Any time the Bro is in the air (rising or falling).
   shoot: Standing still while firing — the gun kicks back 1 px.
-  crouch: Holding Crouch, standing still (one block tall).
+  crouch: Holding Crouch, standing still (reference crouch pose).
   crouch_walk: Crouched and moving (slow).
   crouch_shoot: Crouched and firing — the gun kicks back 1 px.
   hurt: Dead — the body is knocked back and falls over.
