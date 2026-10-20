@@ -56,6 +56,10 @@ func _ready() -> void:
 	cam.limit_bottom = rows.size() * tile
 	_fall_limit = rows.size() * tile + 48.0
 
+	var background := Background.new()
+	add_child(background)
+	background.track(cam)
+
 	hud = Hud.new()
 	add_child(hud)
 	hud.track(player)

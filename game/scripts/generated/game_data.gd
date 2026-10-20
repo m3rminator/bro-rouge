@@ -270,6 +270,7 @@ const RUN := {
 	"lives": 3,
 	"clear_delay": 2.0,
 	"run_over_delay": 3.0,
+	"background_parallax": 0.3,
 	"levels": [
 		{"map": "level_01", "title": "Jungle Outpost", "kill_quota": 8},
 		{"map": "level_02", "title": "The Tunnels", "kill_quota": 10},

@@ -18,6 +18,11 @@ stats:
     unit: s
     description: How long "RUN OVER" shows after the last life is lost, before a new run starts.
 
+  background_parallax:
+    value: 0.3
+    unit: ratio
+    description: The jungle backdrop (game/assets/backgrounds/jungle.jpg, scripts/background.gd) scrolls at this fraction of the camera's speed — 0 would glue it to the screen, 1 would pin it to the world. It is scaled to just cover the screen and mirrored end to end, so it never runs out.
+
 levels:
   - map: level_01
     title: Jungle Outpost
