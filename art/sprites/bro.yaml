@@ -9,9 +9,8 @@ description: Default player character, traced 1:1 from the Rambo reference sheet
 palette: bro
 reference: "refrences/bros/bro rambo/20c5f76e-3c54-41ff-9f0e-52b5f1bb19e9.jpg"
 frame: [37, 34]
+muzzle_symbols: Gg  # gun tip per frame is found from these colors (GameData.MUZZLES)
 anchors:
-  muzzle: [30, 18]   # gun tip while standing — bullets/flash spawn here
-  muzzle_crouch: [31, 17]  # gun tip while crouched
   feet: [18, 33]
 
 parts:

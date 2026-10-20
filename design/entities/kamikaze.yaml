@@ -77,7 +77,7 @@ stats:
     unit: hearts
     description: Hearts his blast takes from the Bro — a full-health Bro dies.
   hitbox:
-    value: [10, 14]
+    value: [12, 30]
     unit: px
     description: Collision box, width × height.
 

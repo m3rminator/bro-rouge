@@ -46,7 +46,7 @@ const MOOK := {
 	"burst_count": 3,
 	"burst_pause": 0.9,
 	"forget_time": 1.5,
-	"hitbox": [10, 14],
+	"hitbox": [12, 30],
 }
 
 ## Enemy rifle bullet (design/entities/enemy_bullet.yaml)
@@ -74,11 +74,12 @@ const KAMIKAZE := {
 	"blast_radius": 34.0,
 	"blast_damage": 4,
 	"blast_player_damage": 3,
-	"hitbox": [10, 14],
+	"hitbox": [12, 30],
 }
 
 ## Brute (mini-boss) (design/entities/brute.yaml)
 const BRUTE := {
+	"mass": 4.0,
 	"hp": 30,
 	"walk_speed": 16.0,
 	"turn_pause": 1.2,
@@ -92,7 +93,7 @@ const BRUTE := {
 	"burst_pause": 1.3,
 	"spread_angle": 36.0,
 	"forget_time": 3.0,
-	"hitbox": [20, 30],
+	"hitbox": [24, 42],
 }
 
 ## Minigun bullet (design/entities/minigun_bullet.yaml)
@@ -138,6 +139,19 @@ const EXPLOSION := {
 const BLOOD := {
 	"droplets_hit": 8,
 	"droplets_death": 22,
+	"droplet_gravity": 520.0,
+	"stains_per_block": 48,
+}
+
+## Corpse (enemy body) (design/entities/corpse.yaml)
+const CORPSE := {
+	"bump_speed": 0.9,
+	"bump_hop": -75.0,
+	"drag": 0.7,
+	"friction": 260.0,
+	"shot_knockback": 110.0,
+	"shot_hop": -95.0,
+	"lying_height": 18,
 }
 
 ## Extraction flag (design/entities/exit.yaml)
@@ -152,14 +166,38 @@ const HUD := {
 const ANCHORS := {
 	"barrel": {"center": Vector2(0.5, 1.5)},
 	"blood": {"spray_origin": Vector2(-8.5, 0.5), "center": Vector2(0.5, 0.5)},
-	"bro": {"muzzle": Vector2(12.0, 1.5), "muzzle_crouch": Vector2(13.0, 0.5), "feet": Vector2(0.0, 16.5)},
-	"brute": {"muzzle_top": Vector2(17.5, -2.5), "muzzle_bottom": Vector2(15.5, 4.5), "eye": Vector2(-5.5, -9.5)},
+	"bro": {"feet": Vector2(0.0, 16.5)},
+	"brute": {"muzzle_top": Vector2(25.0, -4.0), "muzzle_bottom": Vector2(24.0, 7.0), "eye": Vector2(2.0, -14.0)},
 	"explosion": {"center": Vector2(0.5, 1.5)},
 	"explosion_big": {"ground": Vector2(0.5, 16.5)},
 	"fx": {"center": Vector2(0.5, 0.5)},
-	"kamikaze": {"eye": Vector2(1.5, -5.5), "fuse": Vector2(4.5, -2.5)},
-	"mook": {"muzzle": Vector2(11.5, -1.5), "eye": Vector2(1.5, -5.5)},
+	"kamikaze": {"eye": Vector2(4.0, -7.5), "fuse": Vector2(10.0, -5.5)},
+	"mook": {"eye": Vector2(1.0, -8.5)},
 	"projectiles": {"center": Vector2(0.5, 0.5)},
+}
+
+## Gun tip of every frame, relative to the frame center (null = no gun in that frame).
+## Found by tools/build.py from each sprite's muzzle_symbols, so bullets always leave the barrel.
+const MUZZLES := {
+	"bro": {"idle": [Vector2(13.0, 1.5), Vector2(13.0, 2.5)], "run": [Vector2(13.0, 1.5), Vector2(13.0, 2.5)], "jump": [Vector2(14.0, -1.5)], "shoot": [Vector2(14.0, -3.5), Vector2(13.0, -3.5)], "crouch": [Vector2(14.0, 0.5), Vector2(14.0, 1.5)], "crouch_walk": [Vector2(14.0, 0.5), Vector2(14.0, 1.5)], "crouch_shoot": [Vector2(14.0, 0.5), Vector2(13.0, 0.5)], "hurt": [Vector2(11.0, 14.5)]},
+	"mook": {"idle": [Vector2(15.0, 1.5), Vector2(15.0, 2.5)], "walk": [Vector2(14.0, 1.5), Vector2(15.0, 2.5)], "shoot": [Vector2(15.0, -3.5), Vector2(14.0, -3.5)], "fall": [Vector2(15.0, -1.5)], "hurt": [Vector2(8.0, 15.5)], "dead": [null]},
+}
+
+## Frame size (width, height) of every sprite (art/sprites/*.yaml).
+const SPRITE_SIZES := {
+	"barrel": Vector2(16, 16),
+	"blood": Vector2(24, 24),
+	"bro": Vector2(37, 34),
+	"brute": Vector2(49, 45),
+	"exit": Vector2(16, 32),
+	"explosion": Vector2(32, 32),
+	"explosion_big": Vector2(64, 64),
+	"font": Vector2(4, 6),
+	"fx": Vector2(8, 8),
+	"kamikaze": Vector2(35, 34),
+	"mook": Vector2(35, 34),
+	"projectiles": Vector2(16, 10),
+	"terrain": Vector2(16, 16),
 }
 
 ## Number of terrain variants per kind (art/sprites/terrain.yaml).
@@ -178,7 +216,7 @@ const LEVELS := {
 		".....................................................E...........................###............................",
 		"................................................###########......................###............................",
 		".....................................OE.........###########....O.................###..OO..........##............",
-		"...P..............K.......###################...###########....OO..E..........E..###..OOOE.......O##..K.E....X..",
+		"...P..............K.......###################..................OO..E..........E..###..OOOE.......O##..K.E....X..",
 		"######################....###################..........E......##################################################",
 		"######################....######################################################################################",
 		"######################....######################################.........#######################################",

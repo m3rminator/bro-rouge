@@ -1,125 +1,140 @@
-# Suicide bomber ("kamikaze"). One block tall, same rig as the mook so they read as the
-# same scale. Red headband + goggles, dynamite vest, a lit stick in his fist. Faces right.
-# Base rig: tail(5,0) legs(7,9) torso(8,4) head(8,0) arm(11,6)
+# Suicide bomber. Built from the traced enemy soldier (refrences/enemies/default) so he has
+# the same art style and size as the Bro: the rifle was removed, the sweater became an olive
+# vest with a block of dynamite sticks, a red headband was added and he holds a lit stick.
+# Frame layers: [part, x, y]. Feet on the bottom row. Faces right; the game flips it.
 name: kamikaze
-description: Suicide bomber. Dynamite vest and a lit stick; when he spots you he screams and sprints at you to blow you both up.
+description: "Suicide bomber in the enemy soldiers' style. Balaclava with a red headband, dynamite vest, a lit stick in his fist; when he spots you he screams and sprints at you to blow you both up."
 palette: kamikaze
-frame: [24, 16]
+frame: [35, 34]
 anchors:
-  eye: [13, 2]
-  fuse: [16, 5]
+  eye: [21, 9]
+  fuse: [27, 11]
 
 parts:
-  head: |
-    .ooooo.
-    orrrrRo
-    osssolo
-    ossssso
-    .osooo.
-  tail_a: |
-    .oo.
-    oRrr
-    .oo.
-  tail_b: |
-    oorr
-    oRo.
-    oo..
-  torso: |
-    .oooooo.
-    otdDdDdo
-    otdDdDdo
-    okkkkkko
-    oPPPPPPo
-  arm: |
-    ....y.
-    ....o.
-    oooodo
-    osSsdo
-    .ooooo
-  arm_spark: |
-    ...ywy
-    ....o.
-    oooodo
-    osSsdo
-    .ooooo
-  arm_up: |
-    ..ywy
-    ...o.
-    ..odo
-    .osdo
-    .oSo.
-    osSo.
-    .oo..
-  legs_stand: |
-    .oppppppo.
-    .opPooPpo.
-    .opPooPpo.
-    .oPPooPPo.
-    .okkookko.
-    .okkkokkko
-    .ooooooooo
-  legs_run1: |
-    .oppppppo.
-    opPppppPpo
-    oPPo..oPpo
-    okko...oPo
-    .oo....oPo
-    ......okko
-    ......oooo
-  legs_run2: |
-    .oppppppo.
-    ..oPpPpo..
-    ..oPpokko.
-    ..oPpoooo.
-    ..oPpo....
-    ..okkko...
-    ..ooooo...
-  legs_run3: |
-    .oppppppo.
-    opPppppPpo
-    oPPo..oPpo
-    oPo....oPo
-    okko...oPo
-    okkko.okko
-    ooooo.oooo
-  legs_fall: |
-    .oppppppo.
-    opPppppPpo
-    oPpo.oPpko
-    okko.okkko
-    oooo.oooo.
+  idle: |
+    ........oooooooo.........
+    .......oMMMmmmmmo........
+    ......oMMMmmmmmmMo.......
+    ....RroRRrrrrrrrro.......
+    ...Rr.oMMmsssoosso.......
+    ......oMMmsssoosso.......
+    ......oMMMmmmmmmmo.......
+    .......oMMMmmmmmmo....w..
+    ....oooooMMMmmmmMooo...yy
+    ..ooPttPpoMMMMMMottPo.d..
+    .oPPttttPdooooooPtttPoo..
+    .ottttkkkkkkkkkkttttoo.o.
+    .ottttkrRkrRkrRkttPtorRo.
+    otttttkrRkrRkrRktPPPorRo.
+    ottttPorRkooooooooooorRo.
+    otttPpooooroooRktoooorRo.
+    otttttkko.o...ooo..oorRo.
+    oPttttttooooooooooossoo..
+    .opPPttpsssSSPPPPPPssso..
+    ..dooPPpssSpPPoomoSooo...
+    .....oooSSSdddo.o.o......
+    .....oddpppppppo.........
+    .....odpppppddppoo.......
+    .....odpppdooddpppo......
+    .....odppdo..oddppo......
+    .....odddo....odddo......
+    .....oooo.....oooo.......
+    .....oooo.....oooo.......
+    .....ooooo....ooooo......
+    .....ooooo....ooooo......
+  run: |
+    .........oooooooo........
+    ........oMMMmmmmmo.......
+    .......oMMMmmmmmmMd......
+    .....RroRRrrrrrrrrd......
+    ....Rr.oMMmsssoosLo......
+    .......oMMmsssoosLo......
+    .......oMMMmmmmmmo.......
+    ........oMMMmmmmmo....w..
+    .....oooooMMMmmmmooo...yy
+    ....oPttPpoMMMMMpptPo.d..
+    ...oPttttPdooooooPttPoo..
+    ...otttttttPPPPPPtttoo.o.
+    ...ottkkkkkkkkkktttPorRo.
+    ..otttkrRkrRkrRkttPPorRo.
+    ..otttkoRkroooooooooorRo.
+    ..ottPkooooRkrRkto..orRo.
+    ..otttkrRo.oooooo..oorRo.
+    ..oPttkkkooooooooooPsoo..
+    ...oPPttpsssSSPPPPPPsso..
+    ....ooPPpssSPPPPPmpPoo...
+    ......oooSSSdddSSSSt.....
+    ......oddddpppppooot.....
+    ..oo.oodpppppddpoooo.....
+    .ooooddppppoooodpppoo....
+    oooooddpppoo...oddppo....
+    ooooodddpo......odddo....
+    oo..ooooo........ooooo...
+    .................toooooo.
+    ..................soooo..
+    ...................d.....
+  hurt: |
+    ......................ooo..........
+    ....ooooo............ossso.........
+    ...ommmmoo...........ossto.........
+    ..oMmmmmsmo.........oosLto.........
+    .ommmmmsssmo.......ottoSo.t........
+    .ommmmootmmoo...ooottPPo...........
+    oMmmmSPommmMoooottttPPo............
+    oMMmSssmmmmMootPdPtPPo.............
+    oMMMssmmmmmMootttdPPo..............
+    oMMMMmMmMmMMoPttttdo...............
+    .ooMMMMMMMooPPttttPPo..............
+    ...oMMoMMooPPtttttPtPo...........Lo
+    ....ooooooPPtttttPtttPo...ooooo.ooo
+    ......ooPPPtttttPtttttPooopppddoooo
+    ......oPttttttttttttttPopppppddoooo
+    .....ottttPttttPttttPPdppdddooooooo
+    .....ottttoPttPtttooPdppdddoo......
+    .....otttPPPPPPttoPPopppddo........
+    ....oPttPPPPPPPPtorRoppooo.........
+    ....otttotttttPPPorRoppppo.........
+    ....ottttttttttPPorRoppppdo........
+    ....oPtttttttttttorRodppdddo.......
+    .....oPPtttttttttorRodddddoo.ooo...
+    ......ooPdpsssssssoooooodoooooo....
+    ........odssssssLLo....pdoooooo....
+    .........ossossssLLo....ttoooo.....
+    ..........oo.oooooooo......ooo.....
+    .............ommoooomo.............
+    ..............omo...o..............
+    ...............o...................
+    ...................................
+    ...................................
+    ...................................
+    ...................................
 
 animations:
   idle:
-    fps: 3
+    fps: 2
     loop: true
     frames:
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_a, 5, 0], [arm, 11, 4]]
-      - [[legs_stand, 7, 9], [torso, 8, 4], [head, 8, 1], [tail_b, 5, 2], [arm, 11, 5]]
+      - [[idle, 5, 4]]
+      - [[idle, 5, 4]]
   walk:
     fps: 6
     loop: true
     frames:
-      - [[legs_run3, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_a, 5, 0], [arm, 11, 4]]
-      - [[legs_run2, 7, 9], [torso, 8, 4], [head, 8, 1], [tail_b, 5, 2], [arm, 11, 5]]
-      - [[legs_run3, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_a, 5, 0], [arm, 11, 4]]
-      - [[legs_run2, 7, 9], [torso, 8, 4], [head, 8, 1], [tail_b, 5, 2], [arm, 11, 5]]
+      - [[run, 4, 4]]
+      - [[idle, 5, 4]]
   run:
-    fps: 14
+    fps: 12
     loop: true
     frames:
-      - [[legs_run1, 7, 9], [torso, 9, 5], [head, 10, 1], [tail_a, 7, 0], [arm_up, 15, 0]]
-      - [[legs_run2, 7, 9], [torso, 9, 4], [head, 10, 0], [tail_b, 7, 1], [arm_up, 15, 0]]
-      - [[legs_run3, 7, 9], [torso, 9, 5], [head, 10, 1], [tail_a, 7, 0], [arm_up, 15, 1]]
-      - [[legs_run2, 7, 9], [torso, 9, 4], [head, 10, 0], [tail_b, 7, 1], [arm_up, 15, 1]]
+      - [[run, 4, 4]]
+      - [[idle, 5, 4]]
   fall:
     fps: 1
     loop: false
     frames:
-      - [[legs_fall, 7, 9], [torso, 8, 4], [head, 8, 0], [tail_b, 5, 0], [arm_spark, 11, 4]]
+      - [[run, 4, 4]]
   hurt:
-    fps: 12
-    loop: true
+    fps: 1
+    loop: false
     frames:
-      - [[legs_fall, 7, 9], [torso, 7, 4], [head, 6, 1], [tail_b, 3, 1], [arm_spark, 10, 3]]
-      - [[legs_fall, 7, 9], [torso, 7, 4], [head, 6, 1], [tail_b, 3, 1], [arm, 10, 3]]
+      - [[hurt, 0, 0]]

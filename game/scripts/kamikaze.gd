@@ -14,6 +14,7 @@ var _exploded := false
 func _ready() -> void:
 	stats = GameData.KAMIKAZE
 	eye = GameData.ANCHORS["kamikaze"]["eye"]
+	sprite_name = "kamikaze"
 	super()
 
 

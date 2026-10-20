@@ -4,7 +4,7 @@ description: Each enemy has one job and one tell. Every kill is loud and messy, 
 panels:
   - title: Hit
     shot: blood/spray_1/1
-    caption: Every bullet that lands sprays blood the way the bullet was flying (three different sprays, used in turn).
+    caption: Every bullet that lands sprays blood the way the bullet was flying (three different sprays, used in turn). The loose drops really fall and stain every block they land on — the ground stays red.
   - title: Kill
     shot: blood/burst_0/2
     caption: A death bursts (two kinds) and the body is thrown back.
@@ -12,6 +12,9 @@ panels:
   - title: Bodies stay
     shot: blood/pool_1/3
     caption: Where a body lands, a pool spreads under it and stays all level (three kinds). Blasts still toss bodies around.
+  - title: Kick the bodies
+    shot: mook/dead/0
+    caption: Bodies lie on their backs and stay physical. Walk through one and it hops and gets dragged along; shoot it and it is knocked back and tossed a little, bleeding again.
   - title: Kamikaze spots you
     shot: kamikaze/idle/0
     caption: Dynamite vest, lit stick. Same eyes as a mook — he only sees forward.
@@ -26,7 +29,7 @@ panels:
     caption: One bullet kills him — but his vest still goes off a third of a second later. Kill him far away, or next to his friends.
   - title: The Brute
     shot: brute/idle/0
-    caption: Mini-boss, two blocks tall, two miniguns. Sees twice as far as a mook and spots you on platforms; hears you behind him.
+    caption: Mini-boss, about three blocks tall, two miniguns. Sees twice as far as a mook and spots you on platforms; hears you behind him.
     sfx: brute_alert
     flip: true
   - title: Spin up

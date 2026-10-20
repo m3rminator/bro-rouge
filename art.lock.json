@@ -15,9 +15,9 @@
     "game/assets/sprites/bro_frames.tres": "793288a77b4480476cfe02b333e57212d6ff5ca26c01a6893b5b92e254f2bdb2"
   },
   "brute": {
-    "docs/previews/brute.png": "4c83b197e53285f21f258a706221c8daea3b66b1adaca76b1d200acd3a51fd7e",
-    "game/assets/sprites/brute.png": "5723ce076f6d599a583699daa489b33c05be3ea0df9ffa2a156b344982af5981",
-    "game/assets/sprites/brute_frames.tres": "f377e7878d8946389e610d379d203c72c63e7d5bc58be48631da75189ece97ff"
+    "docs/previews/brute.png": "28f7811f4966ba79d5a4489b26b955134bb88664ffb8f9420b55f9bbc656eea8",
+    "game/assets/sprites/brute.png": "4b43e96e8220a32317578769a0625a2c6645212adcb06bc0094127c3d33c1a9f",
+    "game/assets/sprites/brute_frames.tres": "c238f6be0268f4ff3d2cf6481bdc492c1d4a9cfca73771771cd8493938c17c5d"
   },
   "exit": {
     "docs/previews/exit.png": "7ad656ef27ce1828eb95f559e6e758a6fce1c8f4992c916816f1c8f9ead1d6ea",
@@ -45,14 +45,14 @@
     "game/assets/sprites/fx_frames.tres": "dd4d435619bace4af8e9e97e101b55208b6f43dc902e95db50b1cee84650d015"
   },
   "kamikaze": {
-    "docs/previews/kamikaze.png": "6be9e5ec415064f064cd5de32ad267e2c04dcffde1bee29db0a6957660637744",
-    "game/assets/sprites/kamikaze.png": "03c26e676d353bc52913675a84fd38f766d49f2560345b33d7da8a117d19e3bb",
-    "game/assets/sprites/kamikaze_frames.tres": "b381c5f8cfd11fc6a9a637f5eac03591503858ce9030eaf673c89cc9d802cee8"
+    "docs/previews/kamikaze.png": "efb67ae0d7bb22d4d7d1b8c0fe62975c194c37ff0e0fb73b0ba9850ac9b1ca56",
+    "game/assets/sprites/kamikaze.png": "5f4e75e71e1c3fb94dd61d85ac393e28e4b83eb32f9f58810f40e904cc24ef54",
+    "game/assets/sprites/kamikaze_frames.tres": "491e34c305548419d534b45af0add61231341c0d39f59461f55974f8f4bd472f"
   },
   "mook": {
-    "docs/previews/mook.png": "49ae297d06e8ce35fb30bbfdef4df0b41c6d930c37bf3728fe5ee30332856392",
-    "game/assets/sprites/mook.png": "9cd7c2bf059b0ab2db083cd0c029f46720d1f4d586f27eeae0115eee490622b9",
-    "game/assets/sprites/mook_frames.tres": "e62b6cd282940282710fe41968dee850a2e32090d3687e0344006399c2af60d7"
+    "docs/previews/mook.png": "8c09ed9a8f67df96dd9d884d61e116ec1b0a98df0fb3741b464cffd6d0b922b1",
+    "game/assets/sprites/mook.png": "eb4d9179e6fc98a05431493fb292d3efed1f193f0d442495d94395d16b90b2ce",
+    "game/assets/sprites/mook_frames.tres": "d5084faaa89ebf9b8cfb10ddce9bff2201e92b88aaf046a4f69b2f6c623cfd0f"
   },
   "projectiles": {
     "docs/previews/projectiles.png": "7062df0bfa79ca54e25abc8fa62eb6d58ad066e930141d2d31245843899e4d7f",

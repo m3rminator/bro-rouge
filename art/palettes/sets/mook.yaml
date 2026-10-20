@@ -1,16 +1,16 @@
-# Palette set for the basic enemy soldier ("mook"): black balaclava, khaki uniform, AK.
+# Palette set for the default enemy soldier ("mook"). Every color was sampled from the
+# reference sheet (refrences/enemies/default), so the sprite matches it 1:1.
+# "." is always transparent.
 symbols:
-  o: outline
-  h: grey_dark
-  H: steel_dark
-  s: skin
-  t: khaki
-  T: khaki_dark
-  L: khaki_light
-  p: leather
-  P: hair
-  k: steel_dark
-  g: steel
-  G: steel_dark
-  w: hair_light
-  r: red
+  o: grunt_black         # outline, boots
+  d: grunt_brown_dark    # dark outline on sweater / pants
+  M: grunt_mask_dark     # balaclava shadow
+  m: grunt_mask          # balaclava
+  G: grunt_steel_dark    # rifle
+  g: grunt_steel
+  p: grunt_pants
+  P: grunt_brown         # pants light, sweater shadow
+  t: grunt_sweater
+  L: grunt_sweater_light
+  S: grunt_skin_dark
+  s: grunt_skin

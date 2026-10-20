@@ -16,6 +16,10 @@ level_preview:
 spawns: [minigun_bullet, blood]
 
 stats:
+  mass:
+    value: 4.0
+    unit: ×
+    description: How heavy his body is — pushes, bullets and blasts move it this many times less than a soldier's.
   hp:
     value: 30
     unit: hp
@@ -69,9 +73,9 @@ stats:
     unit: s
     description: How long he keeps firing at the last spot after losing sight of the Bro.
   hitbox:
-    value: [20, 30]
+    value: [24, 42]
     unit: px
-    description: Collision box, width × height (two blocks tall).
+    description: Collision box, width × height (a bit under three blocks tall).
 
 animations:
   idle: Standing guard.

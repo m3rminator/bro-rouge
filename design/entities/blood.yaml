@@ -3,10 +3,12 @@ id: blood
 name: Blood
 kind: effect
 order: 13
-description: Every bullet hit on an enemy sprays blood in the bullet's direction (one of three sprays, cycling, plus loose droplets). A death adds a radial burst (one of two). When a body comes to rest, a pool (one of three) spreads under it and stays for the rest of the level; it is stuck to the block underneath, so it disappears if that block is destroyed. A kamikaze leaves only a burst and a pool — no body.
+description: Every bullet hit on an enemy (alive or dead) sprays blood in the bullet's direction (one of three sprays, cycling, plus loose droplets). A death adds a radial burst (one of two). Every loose droplet is a real falling drop — it flies, falls with gravity and, where it hits a block, leaves a stain that stays (on top it splats wider, on walls and ceilings it is a small mark). Stains belong to the block, so they vanish when it is destroyed. When a body comes to rest, a pool (one of three) spreads under it and stays for the rest of the level; it is stuck to the block underneath, so it disappears if that block is destroyed. A kamikaze leaves only a burst and a pool — no body.
 sprite: blood
 files:
   - game/scripts/blood.gd
+  - game/scripts/blood_drops.gd
+  - game/scripts/blood_stains.gd
 spawned_by: [mook, kamikaze, brute]
 
 stats:
@@ -18,6 +20,15 @@ stats:
     value: 22
     unit: particles
     description: Loose droplets per death.
+
+  droplet_gravity:
+    value: 520.0
+    unit: px/s²
+    description: How fast droplets fall.
+  stains_per_block:
+    value: 48
+    unit: stains
+    description: Most stains one block keeps (oldest are replaced), so long fights stay fast.
 
 animations:
   spray_0: Hit spray — fine mist.

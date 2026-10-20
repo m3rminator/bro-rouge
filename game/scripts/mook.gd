@@ -5,7 +5,6 @@ extends Enemy
 
 enum State { PATROL, ALERT, ATTACK }
 
-const MUZZLE: Vector2 = GameData.ANCHORS["mook"]["muzzle"]
 const BULLET_MASK := 1 | 2  # world + player
 
 @onready var flash: MuzzleFlash = $Flash
@@ -20,6 +19,7 @@ var _shot_anim := 0.0
 func _ready() -> void:
 	stats = GameData.MOOK
 	eye = GameData.ANCHORS["mook"]["eye"]
+	sprite_name = "mook"
 	super()
 
 
@@ -70,7 +70,9 @@ func _spot() -> void:
 
 
 func _shoot() -> void:
-	var muzzle := Vector2(MUZZLE.x * facing, MUZZLE.y)
+	_shot_anim = 0.12
+	_animate()  # switch to the shoot pose first, so the bullet leaves its barrel
+	var muzzle := MuzzleFlash.gun_tip(sprite, "mook", facing)
 	Bullet.spawn(get_parent(), position + muzzle, facing, GameData.ENEMY_BULLET, "enemy_shot", BULLET_MASK)
 	flash.fire(muzzle, facing)
 	_shot_anim = 0.12

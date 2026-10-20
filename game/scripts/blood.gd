@@ -1,6 +1,7 @@
 class_name Blood
 ## Blood effects (design/entities/blood.yaml, GameData.BLOOD): a spray on every hit, a burst
 ## on every death, and a pool that stays under each body (stuck to the block below it).
+## Loose droplets fall and leave stains where they land (blood_drops.gd, blood_stains.gd).
 ## Variants are used in turn, so neighbouring hits never look the same.
 
 const FRAMES := preload("res://assets/sprites/blood_frames.tres")
@@ -60,26 +61,6 @@ static func _effect(parent: Node, pos: Vector2, anim: String) -> AnimatedSprite2
 	return s
 
 
+## Loose droplets: real drops that fall and stain the blocks they land on (BloodDrops).
 static func _droplets(parent: Node, pos: Vector2, dir: Vector2, amount: int, spread: float, speed: float) -> void:
-	var drops := CPUParticles2D.new()
-	drops.position = pos
-	drops.z_index = 3
-	drops.one_shot = true
-	drops.amount = amount
-	drops.lifetime = 0.6
-	drops.explosiveness = 1.0
-	drops.direction = dir
-	drops.spread = spread
-	drops.initial_velocity_min = speed * 0.4
-	drops.initial_velocity_max = speed
-	drops.gravity = Vector2(0, 500)
-	drops.scale_amount_min = 1.0
-	drops.scale_amount_max = 2.0
-	var colors := Gradient.new()
-	colors.interpolation_mode = Gradient.GRADIENT_INTERPOLATE_CONSTANT
-	colors.offsets = PackedFloat32Array([0.0, 0.34, 0.67])
-	colors.colors = PackedColorArray(COLORS)
-	drops.color_initial_ramp = colors
-	drops.finished.connect(drops.queue_free)
-	parent.add_child(drops)
-	drops.emitting = true
+	BloodDrops.emit(parent, pos, dir, amount, spread, speed)

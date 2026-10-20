@@ -1,0 +1,44 @@
+# Entity: enemy bodies (shared by every enemy that leaves one).
+id: corpse
+name: Corpse (enemy body)
+kind: effect
+order: 14
+description: A killed mook or Brute leaves a body that stays for the rest of the level. It flails (hurt pose) while flying and lies flat when it lands, with a pool of blood under it. Bodies are still physical — walk through one and it gets bumped up a little and dragged along the ground; shoot one and it is knocked back and tossed a bit (and bleeds); explosions throw them hard. Bodies never block the Bro or bullets of enemies.
+sprite: mook
+files:
+  - game/scripts/enemy.gd
+spawned_by: [mook, brute]
+
+stats:
+  bump_speed:
+    value: 0.9
+    unit: × Bro speed
+    description: When the Bro first walks into a body it is pushed at this fraction of his speed...
+  bump_hop:
+    value: -75.0
+    unit: px/s
+    description: ...and hops up this much (negative = up).
+  drag:
+    value: 0.7
+    unit: × Bro speed
+    description: While the Bro keeps walking through it, the body is dragged along at this fraction of his speed.
+  friction:
+    value: 260.0
+    unit: px/s²
+    description: How fast a sliding body stops on the ground.
+  shot_knockback:
+    value: 110.0
+    unit: px/s
+    description: Sideways speed a bullet gives a body.
+  shot_hop:
+    value: -95.0
+    unit: px/s
+    description: Upward speed a bullet gives a body (negative = up).
+  lying_height:
+    value: 18
+    unit: px
+    description: Height of a lying body's collision box (width = 80% of the standing height) — tall enough that the Bro's bullets hit it, standing or crouched.
+
+animations:
+  hurt: Flying through the air (knocked back, shot or blasted).
+  dead: Lying on its back on the ground — the traced standing pose without the rifle, turned 90° (exact pixels).

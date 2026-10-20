@@ -11,6 +11,7 @@ const DEBRIS_COLOR := Color("4a4a2c")  # master palette: earth
 ## Tuning numbers live in design/entities/block.yaml (generated into GameData.BLOCK).
 var hp: int = GameData.BLOCK.hp
 var _sprite: AnimatedSprite2D
+var _stains: BloodStains
 
 
 func setup(tile_anim: String, drip_anim := "") -> Block:
@@ -33,6 +34,15 @@ func setup(tile_anim: String, drip_anim := "") -> Block:
 	collision_layer = 1
 	collision_mask = 0
 	return self
+
+
+## A blood drop landed on this block (BloodDrops). `at` is in block space.
+func stain(at: Vector2, size: Vector2, color: Color) -> void:
+	if _stains == null:
+		_stains = BloodStains.new()
+		_stains.z_index = 1  # in front of the tile and of the grass hanging from the block above
+		add_child(_stains)
+	_stains.add(at, size, color)
 
 
 func hit(damage: int, _direction := 0) -> void:

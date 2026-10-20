@@ -7,9 +7,7 @@ signal hp_changed(hp: int, max_hp: int)
 signal died
 
 const STATS := GameData.BRO
-const MUZZLE: Vector2 = GameData.ANCHORS["bro"]["muzzle"]
-const MUZZLE_CROUCH: Vector2 = GameData.ANCHORS["bro"]["muzzle_crouch"]
-const BULLET_MASK := 1 | 4  # world (blocks, barrels) + enemies
+const BULLET_MASK := 1 | 4 | 8  # world (blocks, barrels) + enemies + bodies
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 @onready var flash: MuzzleFlash = $Flash
@@ -20,6 +18,7 @@ var dead := false
 var frozen := false  # level clear: no control, cannot be hurt
 var facing := 1
 var crouching := false
+var _dir := 0.0  # move input this frame
 var sprite_y := 0.0  # the frame is centered on the node; this offset puts the feet on the tile bottom (+8)
 var fire_cooldown := 0.0
 var shooting := 0.0
@@ -53,6 +52,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var dir := Input.get_axis("move_left", "move_right")
+	_dir = dir
 	_update_stance()
 	if _stagger > 0.0:
 		_stagger -= delta
@@ -142,8 +142,8 @@ func _die(direction: int) -> void:
 func _shoot() -> void:
 	fire_cooldown = STATS.fire_interval
 	shooting = 0.15
-	var tip := MUZZLE_CROUCH if crouching else MUZZLE
-	var muzzle := Vector2(tip.x * facing, tip.y + sprite_y)
+	_update_animation(_dir)  # the pose the bullet leaves from (run, crouch, shoot...)
+	var muzzle := MuzzleFlash.gun_tip(sprite, "bro", facing)
 	Bullet.spawn(get_parent(), position + muzzle, facing, GameData.BULLET, "bro_shot", BULLET_MASK)
 	flash.fire(muzzle, facing)
 	Sfx.play(self, "shoot", -8.0)

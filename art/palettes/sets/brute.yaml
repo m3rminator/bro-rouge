@@ -1,21 +1,21 @@
-# Palette set for the Brute mini-boss: steel helmet, gas mask with red lenses,
-# olive armor vest with ammo belt, khaki pants, two miniguns.
+# Palette set for the Brute mini-boss. Same colors as the traced enemy soldier (grunt_*),
+# with a dark olive armor suit, red gas-mask lenses and two miniguns.
+# "." is always transparent.
 symbols:
-  o: outline
-  s: skin
-  S: skin_shadow
-  H: steel_dark
-  h: steel
-  m: grey
-  M: grey_dark
-  r: red_light
-  v: olive_dark
-  V: olive
+  o: grunt_black
+  d: grunt_brown_dark
+  M: grunt_mask_dark
+  m: grunt_mask
+  p: grunt_pants
+  P: grunt_brown
+  S: grunt_skin_dark
+  s: grunt_skin
+  t: olive_dark     # armor
+  L: olive
+  e: red_light      # mask lenses
+  E: rambo_red
+  G: grunt_steel_dark
+  g: grunt_steel
+  l: steel_light
   y: fire_yellow
   Y: fire_orange
-  p: khaki_dark
-  P: leather
-  k: hair
-  g: steel
-  G: steel_dark
-  l: steel_light

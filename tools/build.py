@@ -99,6 +99,25 @@ def render_frame(layers, parts, size, colors, sprite, where):
     return img
 
 
+def gun_tip(layers, parts, size, gun):
+    """Muzzle of one frame: just right of the rightmost pixel drawn in a gun color (`gun` =
+    palette symbols), on the middle row of the barrel there. None if the frame has no gun."""
+    w, h = size
+    grid = [["."] * w for _ in range(h)]
+    for layer in layers:
+        x, y = int(layer[1]), int(layer[2])
+        for ry, row in enumerate(parts[layer[0]]):
+            for rx, ch in enumerate(row):
+                if ch != ".":
+                    grid[y + ry][x + rx] = ch
+    cols = [x for x in range(w) if any(grid[y][x] in gun for y in range(h))]
+    if not cols:
+        return None
+    tip = max(cols)
+    rows = [y for y in range(h) if grid[y][tip] in gun]
+    return (tip + 1, rows[(len(rows) - 1) // 2])
+
+
 def build_sprite(path, master, sets):
     spec = load_yaml(path)
     name = spec["name"]
@@ -118,6 +137,9 @@ def build_sprite(path, master, sets):
             frame = render_frame(layers, parts, (fw, fh), colors, name, f"{aname}[{col}]")
             sheet[row * fh:(row + 1) * fh, col * fw:(col + 1) * fw] = frame
         layout.append((aname, row, len(anim["frames"]), anim.get("fps", 8), anim.get("loop", True)))
+    if spec.get("muzzle_symbols"):
+        spec["_muzzles"] = {aname: [gun_tip(layers, parts, (fw, fh), spec["muzzle_symbols"]) for layers in anim["frames"]]
+                            for aname, anim in anims.items()}
     return spec, Image.fromarray(sheet, "RGBA"), layout
 
 
@@ -233,8 +255,11 @@ def load_levels(entities):
             raise SpecError(f"{path.name}: needs exactly one 'P' (player start)")
         for y, row in enumerate(rows):
             for x, ch in enumerate(row):
-                if ch in TALL_SYMBOLS:  # 2-block-tall things: their upper tile (and the Brute's sides) must be free
-                    around = [(x, y - 1)] + ([(x - 1, y), (x + 1, y), (x - 1, y - 1), (x + 1, y - 1)] if ch == "B" else [])
+                if ch in TALL_SYMBOLS:  # tall things: the tiles above them (and the Brute's sides) must be free
+                    tall = TALL_SYMBOLS[ch]
+                    around = [(x, y - k) for k in range(1, tall)]
+                    if ch == "B":
+                        around += [(x + dx, y - k) for dx in (-1, 1) for k in range(tall)]
                     for ax, ay in around:
                         if ay < 0 or not (0 <= ax < len(row)) or rows[ay][ax] == "#":
                             raise SpecError(f"{path.name}: {ch!r} at ({x},{y}) needs air at ({ax},{ay})")
@@ -242,7 +267,7 @@ def load_levels(entities):
     return levels
 
 
-TALL_SYMBOLS = "BX"
+TALL_SYMBOLS = {"P": 2, "E": 2, "K": 2, "X": 2, "B": 3}  # height in tiles of what stands on that tile
 
 
 def enemy_symbols(entities):
@@ -366,6 +391,19 @@ def game_data_gd(controls, entities, sprites, levels, run):
             fw, fh = spec["frame"]
             pts = ", ".join(f'"{k}": Vector2({x + 0.5 - fw / 2}, {y + 0.5 - fh / 2})' for k, (x, y) in spec["anchors"].items())
             lines.append(f'\t"{spec["name"]}": {{{pts}}},')
+    lines += ["}", "",
+              "## Gun tip of every frame, relative to the frame center (null = no gun in that frame).",
+              "## Found by tools/build.py from each sprite's muzzle_symbols, so bullets always leave the barrel.",
+              "const MUZZLES := {"]
+    for spec, _, _ in sprites:
+        if spec.get("_muzzles"):
+            fw, fh = spec["frame"]
+            anims = ", ".join(f'"{a}": [' + ", ".join("null" if t is None else f"Vector2({t[0] + 0.5 - fw / 2}, {t[1] + 0.5 - fh / 2})"
+                                                       for t in tips) + "]" for a, tips in spec["_muzzles"].items())
+            lines.append(f'	"{spec["name"]}": {{{anims}}},')
+    lines += ["}", "", "## Frame size (width, height) of every sprite (art/sprites/*.yaml).", "const SPRITE_SIZES := {"]
+    for spec, _, _ in sprites:
+        lines.append(f'	"{spec["name"]}": Vector2({spec["frame"][0]}, {spec["frame"][1]}),')
     lines += ["}", ""]
     variants = tile_variants(sprites)
     lines += ["## Number of terrain variants per kind (art/sprites/terrain.yaml).",
@@ -560,6 +598,9 @@ def catalog_html(master, sets, sprites, storyboards, audio, controls, entities, 
                         f"background-position-y:-{row * fh * s}px;animation:{kf} {dur:.3f}s steps({count}) infinite'></div>"
                         f"{e(aname)} · {count}f @ {fps}fps{'' if loop else ' · once'}</div>")
         body.append(f"<p><img class='px' src='{uri[name]}' style='width:{img.width * 4}px;background:#0003'></p>")
+        if spec.get("_muzzles"):
+            body.append("<p class='mute'>gun tip per frame (from colors " + e(spec["muzzle_symbols"]) + "): " + "; ".join(
+                f"{e(a)} " + " ".join("—" if t is None else f"({t[0]},{t[1]})" for t in tips) for a, tips in spec["_muzzles"].items()) + "</p>")
         if spec.get("anchors"):
             body.append("<p class='mute'>anchors: " + ", ".join(f"{e(k)} = {v}" for k, v in spec["anchors"].items()) + "</p>")
         body.append("</div>")
