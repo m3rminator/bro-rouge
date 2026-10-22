@@ -71,6 +71,30 @@ sfx:
   exit_locked:
     prompt: "Short negative error buzz, retro 16-bit video game, access denied"
     duration: 0.5
+  reload:
+    prompt: "Rifle magazine being ejected and a fresh one slapped in, two quick metallic clacks, short, video game"
+    duration: 1.0
+  dry_fire:
+    prompt: "Single dry click of an empty rifle trigger, short metallic, video game"
+    duration: 0.5
+  bro_shout:
+    prompt: "Action hero roaring a wordless angry battle cry while firing wildly, short, retro 80s action video game voice"
+    duration: 1.0
+  knife_swing:
+    prompt: "Fast combat knife slash whoosh through the air, sharp and short, retro action video game"
+    duration: 0.5
+  knife_stab:
+    prompt: "Brutal knife stab into flesh, wet meaty thud with a short squelch, retro action video game hit"
+    duration: 0.5
+  grenade_throw:
+    prompt: "Grenade pin pulled with a metallic ping and the spoon flicking off, then a quick throwing whoosh, short, retro action video game"
+    duration: 0.6
+  grenade_bounce:
+    prompt: "Small metal grenade bouncing once on dirt, short dull metallic clink, video game"
+    duration: 0.5
+  enemy_panic:
+    prompt: "Short panicked male yell 'grenade!' of an enemy soldier running away, retro action video game voice"
+    duration: 0.8
 
 music:
   level_jungle:

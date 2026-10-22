@@ -1,0 +1,24 @@
+# Palette set for Blala, the second Bro (refrences/bros/balal): dark skin, black buzz cut,
+# white tank top, green pants, black boots. Steel and the knife swoosh are shared with the Bro.
+# "." is always transparent.
+symbols:
+  o: rambo_black          # outline, hair, boots
+  h: blala_hair           # buzz cut
+  H: blala_hair_light
+  e: blala_skin_outline
+  S: blala_skin_dark
+  s: blala_skin
+  L: blala_skin_light
+  K: blala_tank_shadow
+  k: blala_tank           # tank top
+  d: blala_pants_dark     # pants outline
+  N: blala_pants_shadow
+  n: blala_pants
+  q: rambo_khaki          # knife grip
+  R: rambo_red_dark       # knife grip wrap
+  r: rambo_red
+  G: rambo_steel_dark     # guns
+  g: rambo_steel
+  W: rambo_swoosh_light   # knife swoosh: bright edge
+  v: rambo_swoosh
+  V: rambo_swoosh_dark

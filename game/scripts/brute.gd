@@ -29,6 +29,10 @@ func _ready() -> void:
 	super()
 
 
+func fears_grenades() -> bool:
+	return false  # a boss stands his ground
+
+
 func _think(delta: float) -> void:
 	var sees := sees_player(facing)
 	if not sees and _hears_behind():
@@ -125,7 +129,7 @@ func _lie() -> void:
 	_lying = true
 	var box: RectangleShape2D = $Collision.shape
 	box.size = Vector2(stats.hitbox[0] + 8, stats.hitbox[1] * 0.6)
-	$Collision.position.y = 8.0 - box.size.y / 2.0
+	$Collision.position.y = Block.SIZE / 2.0 - box.size.y / 2.0
 
 
 func _animate() -> void:

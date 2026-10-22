@@ -7,10 +7,10 @@ name: mook
 description: Masked enemy soldier with an AK, traced 1:1 from the default enemy reference sheet. Black balaclava, brown sweater, dark pants, black boots.
 palette: mook
 reference: "refrences/enemies/default/f9b0ee49-eef8-433a-a46d-bce462496112.jpg"
-frame: [35, 34]
+frame: [47, 34]
 muzzle_symbols: Gg  # gun tip per frame is found from these colors (GameData.MUZZLES)
 anchors:
-  eye: [18, 8]
+  eye: [24, 8]
 
 parts:
   idle: |
@@ -176,30 +176,40 @@ parts:
     .............oo.....ooogoom........
     ......................oogM.........
     .......................oomo........
-  dead: |
-    ...............o.oo...........
-    ..........ooooomosso..........
-    .........oPtttomosso..........
-    ........oPtttPooosso..........
-    ........otttPPoo.oPSo..ooo..oo
-    ..ooooooottttPoo.oPo..oppdoooo
-    .oMmssmmMoPtttotooPmo.oppdoooo
-    ommmssmmmMoPttotooPo.oppddoooo
-    ommmoommmMoPttomooPooppddooooo
-    ommmoommmMoPttoo.oPPdpddo.....
-    ommmssmmmMoPttoo.oSPdpdo......
-    ommmssmmMMoPttoo.oSpdppo......
-    oMmmssmMMMoPttomoosSSppdo.....
-    oMMmmmMMModtttto.ossSpppdo..oo
-    oMMMMMMMopPtttPooossSppppdoooo
-    .oMMMMMooPttPPPoptppodpppdoooo
-    ..ooooo.ottttPootttPodddddoooo
-    ........otttttPptttPoooooooooo
-    ........oPtttttPttPo..........
-    .........oPtttttttPo..........
-    .........oPtttttttpd..........
-    ..........ooottttPo...........
-    .............ooooo............
+  # dead_a / dead_b: the two body poses, traced pixel for pixel from their own references
+  # (refrences/enemies/default/f897d015... and d8de3968...). Lying on the stomach, head right.
+  dead_a: |
+    .....................oooooooo..............
+    ..............oooooooPttttttPoo.ooooooooo..
+    ..............oooooooPttttttPoo.ooooooooo..
+    .............opppdtttttttttttPPoooMMMMMMMo.
+    ...........oodpppdttttttttttPoooMMMmmmmmmMo
+    ...........ooppppdttttttttttPooMmmmmssmmmmo
+    ...........ooppppdttttttttttPooMmmmmssmmmmo
+    .......ooooppppppdPPttPPPPPtPooMmmmmssmmmmo
+    .oooooooddpppppdddPPPPoooPPttooMmmmmoommmmo
+    .oooooooddpppppdddPPPPoooPPttooMmmmmoommmmo
+    .oooooooddppppdoooooootttttttoooMMMmSSMmmMo
+    ooooooooddddddooosssPttttttttPPoooMMSSMMMo.
+    ooooooooooooooooosssPPtttPPPPoo.ooooooooo..
+    ooooooooooooooooosssPPtttPPPPoo.ooooooooo..
+    ooo..............oooooooooooo..............
+  dead_b: |
+    ooo..............Sssooooooooo..............
+    ooo....oooooooooooooPPPPPtttPoo.ooooooooo..
+    ooo....oooooooooooooPPPPPtttPoo.ooooooooo..
+    ooooooodpppppppppdPPtttttttttPPoooMMMMMMMo.
+    ooooooodppppppdppdPPttttttttPooommmmSSMmmMo
+    oooooooddddddopppdPPttttttttPooMmmSmMMmmmmo
+    oooooooddddddopppdPPttttttttPooMmmSmMMmmmmo
+    .......ooooooppppdPPttttttttPooMmmmmSSmmmmo
+    ooooooodpppppppppdPPPPPPPPPttooMMMmmSSmmmmo
+    ooooooodpppppppppdPPPPPPPPPttooMMMmmSSmmmmo
+    ooooooodpppppppddoooooooottttPPoMMMmmmmmmMo
+    oooooooddddddddooSssPttttttttPPoooMMMMMMMo.
+    ooooooooooooooooosssPPtttPPPPoo.ooooooooo..
+    ooooooooooooooooosssPPtttPPPPoo.ooooooooo..
+    .................oooooooooooo..............
   idle_top: |
     ........oooooooo...............
     .......oMMMmmmmmo..............
@@ -233,37 +243,223 @@ parts:
     .....ooooo....ooooo............
     .....ooooo....ooooo............
 
+  # Head blown off (refrences/enemies/default 937b4e02 / ab38342b): the lying poses cut at the neck —
+  # the body keeps a skin stump, the head (with its own outline) flies off on its own.
+  headless_a: |
+    .....................oooooooo..
+    ..............oooooooPttttttPoo
+    ..............oooooooPttttttPoo
+    .............opppdtttttttttttPo
+    ...........oodpppdttttttttttPoo
+    ...........ooppppdttttttttttPSL
+    ...........ooppppdttttttttttPSL
+    .......ooooppppppdPPttPPPPPtPSL
+    .oooooooddpppppdddPPPPoooPPttSL
+    .oooooooddpppppdddPPPPoooPPttoo
+    .oooooooddppppdoooooootttttttoo
+    ooooooooddddddooosssPttttttttPo
+    ooooooooooooooooosssPPtttPPPPoo
+    ooooooooooooooooosssPPtttPPPPoo
+    ooo..............oooooooooooo..
+  headless_b: |
+    ooo..............Sssooooooooo..
+    ooo....oooooooooooooPPPPPtttPoo
+    ooo....oooooooooooooPPPPPtttPoo
+    ooooooodpppppppppdPPtttttttttPo
+    ooooooodppppppdppdPPttttttttPoo
+    oooooooddddddopppdPPttttttttPSL
+    oooooooddddddopppdPPttttttttPSL
+    .......ooooooppppdPPttttttttPSL
+    ooooooodpppppppppdPPPPPPPPPttSL
+    ooooooodpppppppppdPPPPPPPPPttoo
+    ooooooodpppppppddoooooooottttPo
+    oooooooddddddddooSssPttttttttPo
+    ooooooooooooooooosssPPtttPPPPoo
+    ooooooooooooooooosssPPtttPPPPoo
+    .................oooooooooooo..
+  head_a: |
+    ..ooooooooo..
+    ..ooooooooo..
+    .oooMMMMMMMo.
+    ooMMMmmmmmmMo
+    oMmmmmssmmmmo
+    oMmmmmssmmmmo
+    oMmmmmssmmmmo
+    oMmmmmoommmmo
+    oMmmmmoommmmo
+    ooMMMmSSMmmMo
+    .oooMMSSMMMo.
+    ..ooooooooo..
+    ..ooooooooo..
+  head_b: |
+    ..ooooooooo..
+    ..ooooooooo..
+    .oooMMMMMMMo.
+    oommmmSSMmmMo
+    oMmmSmMMmmmmo
+    oMmmSmMMmmmmo
+    oMmmmmSSmmmmo
+    oMMMmmSSmmmmo
+    oMMMmmSSmmmmo
+    .oMMMmmmmmmMo
+    .oooMMMMMMMo.
+    ..ooooooooo..
+    ..ooooooooo..
+
+  # Torn apart by an explosion (refrences/enemies/default/torn.jpg): the body breaks into limbs that
+  # fly off on their own (BodyPiece), each with a torn, bloody end. The head is head_a / head_b.
+  piece_torso: |
+    .....oooooo.....
+    ...oooRrrRooo...
+    ..oPtPoDRoPtPo..
+    .oPttPooooPttPo.
+    otttttPPPPttttdo
+    ottttPttttttPPto
+    otttPPtttttttPto
+    ottttttttttttPPo
+    oPttttttPtttttdo
+    .oPttttPPttttPdo
+    .oRrPtRtPtRrPdo.
+    ..oDRoRrDoRDoo..
+    ...o..oo..o.....
+  piece_arm: |
+    .oooo.
+    oDrRRo
+    oRrrRo
+    oPttPo
+    otttto
+    otttPo
+    oPttPo
+    otttdo
+    oPPddo
+    .oSsso
+    .ossso
+    .oSsso
+    ..ooo.
+  piece_leg: |
+    .ooooo.
+    oDRrRDo
+    oRrrrRo
+    odppppo
+    odpppdo
+    odpppdo
+    odppdo.
+    odppdo.
+    odddo..
+    oooo...
+    oooo...
+    ooooo..
+    ooooo..
+  piece_leg_bent: |
+    .ooooo.......
+    oDRrRDo......
+    oRrrrRo......
+    odppppo......
+    odpppdo......
+    odpppdo......
+    .odpppdo.....
+    ..odpppdooo..
+    ...odddooooo.
+    ....oooooooo.
+    .....ooooooo.
+    ......oooooo.
+  piece_bit_a: |
+    .oo.
+    oRro
+    oDRo
+    .oo.
+  piece_bit_b: |
+    .ooo.
+    oPtRo
+    ottro
+    oDRo.
+    .oo..
 animations:
   idle:
     fps: 2
     loop: true
     frames:
-      - [[idle_legs, 2, 25], [idle_top, 2, 4]]
-      - [[idle_legs, 2, 25], [idle_top, 2, 5]]
+      - [[idle_legs, 8, 25], [idle_top, 8, 4]]
+      - [[idle_legs, 8, 25], [idle_top, 8, 5]]
   walk:
     fps: 6
     loop: true
     frames:
-      - [[run, 1, 4]]
-      - [[idle_legs, 2, 25], [idle_top, 2, 5]]
+      - [[run, 7, 4]]
+      - [[idle_legs, 8, 25], [idle_top, 8, 5]]
   shoot:
     fps: 16
     loop: true
     frames:
-      - [[shoot, 4, 2]]
-      - [[shoot, 3, 2]]
+      - [[shoot, 10, 2]]
+      - [[shoot, 9, 2]]
   fall:
     fps: 1
     loop: false
     frames:
-      - [[jump, 4, 2]]
+      - [[jump, 10, 2]]
   hurt:
     fps: 1
     loop: false
     frames:
-      - [[hurt, 0, 0]]
-  dead:
+      - [[hurt, 6, 0]]
+  dead_a:
     fps: 1
     loop: false
     frames:
-      - [[dead, 2, 11]]
+      - [[dead_a, 2, 19]]
+  dead_b:
+    fps: 1
+    loop: false
+    frames:
+      - [[dead_b, 2, 19]]
+  headless_a:
+    fps: 1
+    loop: false
+    frames:
+      - [[headless_a, 2, 19]]
+  headless_b:
+    fps: 1
+    loop: false
+    frames:
+      - [[headless_b, 2, 19]]
+  head_a:
+    fps: 1
+    loop: false
+    frames:
+      - [[head_a, 17, 10]]
+  head_b:
+    fps: 1
+    loop: false
+    frames:
+      - [[head_b, 17, 10]]
+  piece_torso:
+    fps: 1
+    loop: false
+    frames:
+      - [[piece_torso, 15, 10]]
+  piece_arm:
+    fps: 1
+    loop: false
+    frames:
+      - [[piece_arm, 20, 10]]
+  piece_leg:
+    fps: 1
+    loop: false
+    frames:
+      - [[piece_leg, 20, 10]]
+  piece_leg_bent:
+    fps: 1
+    loop: false
+    frames:
+      - [[piece_leg_bent, 17, 11]]
+  piece_bit_a:
+    fps: 1
+    loop: false
+    frames:
+      - [[piece_bit_a, 21, 15]]
+  piece_bit_b:
+    fps: 1
+    loop: false
+    frames:
+      - [[piece_bit_b, 21, 14]]

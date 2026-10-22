@@ -15,14 +15,14 @@ func _ready() -> void:
 	collision_mask = 2  # the Bro
 	_sprite = AnimatedSprite2D.new()
 	_sprite.sprite_frames = FRAMES
-	_sprite.position = Vector2(0, -8)  # 2 blocks tall, bottom on the bottom of its tile
+	_sprite.position = Vector2(0, -Block.SIZE / 2.0)  # 2 blocks tall, bottom on the bottom of its tile
 	add_child(_sprite)
 	_sprite.play("locked")
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
-	rect.size = Vector2(14, 28)
+	rect.size = Vector2(21, 42)
 	shape.shape = rect
-	shape.position = Vector2(0, -6)
+	shape.position = Vector2(0, -9)
 	add_child(shape)
 
 

@@ -1,0 +1,19 @@
+# Palette set for item icons (magazine, grenade). Every magazine color was sampled from the reference
+# (refrences/items). "." is always transparent.
+symbols:
+  o: mag_black       # outline
+  d: mag_dark        # seam under the cap, shadow edge
+  m: mag_body        # body
+  b: mag_brown       # cap and base plate
+  l: mag_light       # ridges, cap highlight
+  w: white           # the plus sign
+  k: grenade_black   # grenade outline and grooves
+  E: grenade_dark    # grenade shadow side
+  B: grenade_olive   # grenade body
+  H: grenade_light   # grenade segment highlight
+  Y: grenade_band    # yellow band under the lever
+  A: lever_dark      # lever / spoon shadow
+  I: lever_light     # lever / spoon, pin ring
+  F: grenade_flash_dark   # blink: body flashes red
+  f: grenade_flash
+  P: grenade_flash_light

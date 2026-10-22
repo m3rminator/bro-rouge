@@ -15,3 +15,6 @@ symbols:
   t: rambo_green        # tank top
   G: rambo_steel_dark   # rifle
   g: rambo_steel
+  W: rambo_swoosh_light # knife swoosh: bright edge
+  v: rambo_swoosh       # knife swoosh
+  V: rambo_swoosh_dark  # knife swoosh: fading

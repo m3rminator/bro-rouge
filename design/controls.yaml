@@ -24,3 +24,19 @@ actions:
     label: Crouch
     keys: [S, Down]
     description: Hold to crouch. The Bro drops into the reference crouch pose (about 1.6 blocks instead of 2), moves slower, and can still shoot. He cannot jump while crouched, and stays crouched under a low ceiling until there is room to stand.
+  knife:
+    label: Knife
+    keys: [K, C]
+    description: Quick knife slash in front of the Bro (about one block). Kills any normal enemy in one hit and throws him back in a burst of blood; the Brute takes several. Every knife kill gives one spare magazine (up to 3). He can't shoot while slashing and only shuffles forward slowly.
+  grenade:
+    label: Grenade
+    keys: [Q]
+    description: Throw a grenade in an arc in front of the Bro (a low roll while crouched). It bounces, blinks and explodes after 2 seconds like a barrel. Three per level, refilled only when a level is finished. Throwing one while hanging on a wall blows it up in his hand.
+  reload:
+    label: Reload
+    keys: [R]
+    description: Swap to a fresh magazine now. The gun also reloads by itself when the magazine runs dry.
+  interact:
+    label: Interact
+    keys: [E]
+    description: Use a station in the safe house (restock ammo, refill hearts and lives, refill grenades) when standing next to it.

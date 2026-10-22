@@ -22,7 +22,8 @@ var _fall_limit := 0.0
 
 func _ready() -> void:
 	var lv: Dictionary = Run.level()
-	var rows: Array = GameData.LEVELS[lv.map]
+	var rows: Array = lv.rows
+	var hub: bool = lv.kind == "hub"
 	Run.begin_level()
 	var tile := Block.SIZE
 	for y in rows.size():
@@ -38,6 +39,12 @@ func _ready() -> void:
 				var barrel := Barrel.new()
 				barrel.position = pos
 				add_child(barrel)
+			elif HubStation.KINDS.has(ch):
+				var station := HubStation.new()
+				station.kind = ch
+				station.position = pos
+				add_child(station)
+				station.used.connect(_on_station_used)
 			elif ch == "X":
 				exit_flag = LevelExit.new()
 				exit_flag.position = pos
@@ -63,10 +70,15 @@ func _ready() -> void:
 	hud = Hud.new()
 	add_child(hud)
 	hud.track(player)
-	hud.show_level(Run.level_index + 1, Run.loop, lv.title)
 	hud.set_lives(Run.lives)
-	hud.set_kills(0, Run.quota())
-	hud.message("LEVEL %d" % (Run.level_index + 1), Hud.WHITE, 2.5, "%s - KILL %d TO OPEN THE EXIT" % [lv.title, Run.quota()])
+	if hub:
+		hud.show_hub()
+		exit_flag.set_open(true)
+		hud.message("SAFE HOUSE", Hud.GREEN, 3.0, "RESTOCK, THEN TAKE THE DOOR >")
+	else:
+		hud.show_level(Run.depth + 1, Run.loop, lv.title)
+		hud.set_kills(0, Run.quota())
+		hud.message("LEVEL %d" % (Run.depth + 1), Hud.WHITE, 2.5, "%s - KILL %d TO OPEN THE EXIT" % [lv.title, Run.quota()])
 	Run.kills_changed.connect(hud.set_kills)
 	Run.quota_reached.connect(_on_quota_reached)
 	player.died.connect(_on_player_died)
@@ -113,7 +125,11 @@ func _on_exit_touched() -> void:
 		return
 	_ending = true
 	player.freeze()
-	hud.message("LEVEL CLEAR", Hud.YELLOW, 0.0)
+	Run.store_loadout(player)
+	if Run.in_hub:
+		hud.message("GOOD LUCK", Hud.YELLOW, 0.0)
+	else:
+		hud.message("LEVEL CLEAR", Hud.YELLOW, 0.0)
 	Sfx.play(self, "level_clear")
 	await get_tree().create_timer(GameData.RUN.clear_delay).timeout
 	Run.next_level()
@@ -130,7 +146,7 @@ func _on_player_died() -> void:
 		hud.message("RUN OVER", Hud.RED, 0.0, "BACK TO LEVEL 1")
 	else:
 		hud.message("YOU DIED", Hud.RED, 0.0, "%d LIVES LEFT" % Run.lives)
-	await get_tree().create_timer(GameData.RUN.run_over_delay if over else GameData.BRO.respawn_delay).timeout
+	await get_tree().create_timer(GameData.RUN.run_over_delay if over else Run.bro_stats().respawn_delay).timeout
 	if over:
 		Run.new_run()
 	get_tree().reload_current_scene()
@@ -143,6 +159,7 @@ func _add_block(rows: Array, x: int, y: int, pos: Vector2) -> void:
 		var k := _variant(x, y, GameData.TILE_VARIANTS.grass)
 		var drip := "drip_%d" % k if y + 1 < rows.size() else ""
 		block.setup("grass_%d" % k, drip)
+		block.add_child(Grass.new())  # living blades on top (grass.gd)
 	else:
 		block.setup("earth_%d" % _variant(x, y, GameData.TILE_VARIANTS.earth))
 	block.position = pos
@@ -159,3 +176,23 @@ func _has_sky(rows: Array, x: int, y: int) -> bool:
 
 func _variant(x: int, y: int, count: int) -> int:
 	return ((x * 73) ^ (y * 151)) % count
+
+
+## A hub station was used (hub_station.gd).
+func _on_station_used(kind: String) -> void:
+	match kind:
+		"A":
+			player.restock()
+			hud.message("AMMO RESTOCKED", Hud.GREEN, 1.5)
+			Sfx.play(self, "reload", -4.0)
+		"H":
+			player.heal()
+			Run.lives = GameData.RUN.lives
+			hud.set_lives(Run.lives)
+			hud.message("HEARTS AND LIVES REFILLED", Hud.GREEN, 1.5)
+			Sfx.play(self, "quota_reached", -6.0)
+		"G":
+			Run.grenades = GameData.GRENADE.grenades_per_level
+			player.grenades_changed.emit(Run.grenades)
+			hud.message("GRENADES REFILLED", Hud.GREEN, 1.5)
+			Sfx.play(self, "reload", -4.0)

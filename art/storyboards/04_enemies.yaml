@@ -13,8 +13,11 @@ panels:
     shot: blood/pool_1/3
     caption: Where a body lands, a pool spreads under it and stays all level (three kinds). Blasts still toss bodies around.
   - title: Kick the bodies
-    shot: mook/dead/0
-    caption: Bodies lie on their backs and stay physical. Walk through one and it hops and gets dragged along; shoot it and it is knocked back and tossed a little, bleeding again.
+    shot: mook/dead_b/0
+    caption: Bodies lie in one of two poses (50 / 50) and stay physical. Walk through one and it hops and gets dragged along; shoot it and it is knocked back and tossed a little, bleeding again.
+  - title: Heads off
+    shot: mook/headless_a/0
+    caption: Kill a mook with a blast, or shoot him in the head, and his head flies off spinning and pouring blood; it bounces, rolls and stays. Blood pumps out of the neck for seconds. Bullets fly through a loose head and just knock it about — the knife bursts it.
   - title: Kamikaze spots you
     shot: kamikaze/idle/0
     caption: Dynamite vest, lit stick. Same eyes as a mook — he only sees forward.

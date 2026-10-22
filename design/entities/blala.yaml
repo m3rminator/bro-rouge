@@ -1,0 +1,48 @@
+# Entity: Balal, a playable Bro (the second character).
+# Only the numbers that differ from the default Bro live here; everything else comes from
+# design/entities/bro.yaml. Generated into GameData.BLALA and laid over GameData.BRO by Run.bro_stats().
+id: blala
+name: Balal (playable Bro)
+kind: player
+order: 1.5
+description: A glass-cannon Bro. His rifle fires twice as fast as the default Bro's and the magazine holds 60 rounds, but the bullets die out after a short range and fly all over the place. He runs faster and jumps higher. His knife needs two hits - the first one throws the enemy back and leaves him stunned, standing in a corner unable to move or shoot for about two seconds, the second one kills. Has his own sprite (art/sprites/blala.yaml) - dark skin, short black hair, white tank top, green pants - for now in the default Bro's poses. Pick him on the character select screen at the start of the game.
+sprite: blala
+files:
+  - game/scripts/character_select.gd
+  - game/scripts/run.gd
+  - game/scripts/player.gd
+controls: [move_left, move_right, jump, crouch, shoot, reload, knife, grenade]
+
+stats:
+  fire_interval:
+    value: 0.055
+    unit: s
+    description: Time between shots while holding Shoot - twice the default Bro's fire rate (~18 shots per second).
+  magazine_size:
+    value: 60
+    unit: rounds
+    description: Rounds in one magazine (the default Bro has 30).
+  bullet_lifetime:
+    value: 0.28
+    unit: s
+    description: Bullets vanish after this long, so the range is only about 118 px (~5 blocks) instead of 336 px.
+  base_spread:
+    value: 12.0
+    unit: degrees
+    description: Every bullet leaves the gun up to this many degrees off line, up or down - a very wide spray. (The running-fire spread of the default Bro stacks on top.)
+  speed:
+    value: 150.0
+    unit: px/s
+    description: Run speed (the default Bro runs at 120).
+  jump_velocity:
+    value: -400.0
+    unit: px/s
+    description: Upward speed at the start of a jump - about four blocks high instead of three.
+  knife_hits:
+    value: 2
+    unit: hits
+    description: Knife hits needed to kill an ordinary enemy.
+  knife_stun:
+    value: 2.0
+    unit: s
+    description: After the first knife hit the enemy is thrown back and stands stunned this long - no walking, no shooting.

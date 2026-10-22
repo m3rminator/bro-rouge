@@ -2,7 +2,7 @@
 # Generated into GameData.RUN. The build checks that every map exists, has an exit
 # ("X") and enough enemies to meet its kill quota.
 name: Run loop
-description: A run is the levels below played in order. Each level ends at the extraction flag (X), but the flag only opens after you have killed the level's kill_quota enemies (any enemy, any way — bullets, barrels, kamikaze blasts all count). Touch the open flag to clear the level. After the last level the run loops back to level 1 and the loop counter goes up. Dying costs one life and restarts the current level (kills reset); losing the last life ends the run and you start again from level 1 with full lives.
+description: A run is endless and every level is generated fresh (scripts/level_gen.gd) - fight, fight, BOSS (a Brute), then a safe-house HUB where the Bro can walk around and restock ammo, refill hearts and lives, and refill grenades - then it starts again, every level with real height - hills with stairs, valleys, narrow gaps and towers of floating platforms, enemies on every level of it - and every level a little bigger, fuller and tougher (more enemies, more kamikazes, higher kill quota, more barrels). Each level has at least min_enemies enemies; the exit flag opens after the kill quota (a boss level needs every enemy dead, the Brute included). Hearts and ammo carry over from level to level, so the hub matters. Dying costs one life and restarts the current level (same layout, kills reset, hearts refilled); losing the last life ends the run and you start again from the first fight with full lives. The three hand-made maps listed under 'levels' are no longer part of the run - they stay as reference and test maps.
 
 stats:
   lives:
@@ -22,6 +22,83 @@ stats:
     value: 0.3
     unit: ratio
     description: The jungle backdrop (game/assets/backgrounds/jungle.jpg, scripts/background.gd) scrolls at this fraction of the camera's speed — 0 would glue it to the screen, 1 would pin it to the world. It is scaled to just cover the screen and mirrored end to end, so it never runs out.
+
+  boss_every:
+    value: 3
+    unit: levels
+    description: Every this many fights the last one is a boss level (a Brute), and a hub follows it.
+  min_enemies:
+    value: 15
+    unit: enemies
+    description: Enemies in the very first level (a boss level gets this many soldiers plus the Brute).
+  enemies_per_depth:
+    value: 2
+    unit: enemies
+    description: Extra enemies for every fight already cleared in this run (plus a random 0-3).
+  max_enemies:
+    value: 70
+    unit: enemies
+    description: Cap on enemies per level.
+  width_base:
+    value: 110
+    unit: tiles
+    description: Width of the first level (a block is 24 px).
+  width_per_depth:
+    value: 6
+    unit: tiles
+    description: Extra width for every fight already cleared.
+  width_max:
+    value: 260
+    unit: tiles
+    description: Cap on level width.
+  boss_width:
+    value: 90
+    unit: tiles
+    description: Width of the first boss arena (it also grows with width_per_depth per boss cleared).
+  platform_towers_base:
+    value: 4
+    unit: towers
+    description: Towers of floating platforms (2-4 tiers, each two blocks higher than the last, one jump apart) in the first level. Enemies and barrels also stand on them.
+  platform_towers_per_depth:
+    value: 0.5
+    unit: towers
+    description: Extra towers for every fight cleared.
+  platform_towers_max:
+    value: 14
+    unit: towers
+    description: Cap on towers per level.
+  kamikaze_base:
+    value: 0.12
+    unit: share
+    description: Share of the soldiers that are kamikazes in the first level.
+  kamikaze_per_depth:
+    value: 0.02
+    unit: share
+    description: Extra kamikaze share for every fight cleared.
+  kamikaze_max:
+    value: 0.4
+    unit: share
+    description: Cap on the kamikaze share.
+  barrel_clusters_base:
+    value: 4
+    unit: clusters
+    description: Explosive barrel clusters (1-3 barrels each) in the first level (a boss arena always has 5 near the Brute).
+  barrel_clusters_per_depth:
+    value: 0.5
+    unit: clusters
+    description: Extra barrel clusters for every fight cleared.
+  quota_base:
+    value: 0.6
+    unit: share
+    description: Share of the enemies that must be killed to open the exit, in the first level.
+  quota_per_depth:
+    value: 0.02
+    unit: share
+    description: Extra share required for every fight cleared.
+  quota_max:
+    value: 0.9
+    unit: share
+    description: Cap on the kill-quota share.
 
 levels:
   - map: level_01

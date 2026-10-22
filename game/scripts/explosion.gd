@@ -31,8 +31,10 @@ func _ready() -> void:
 	z_index = 4
 	var extra := sources.size() - 1
 	_hit_everything()
+	Grass.blast(get_tree(), global_position, power.radius)
 	if extra == 0:
-		_blast(SMALL_BLASTS[_variant(position)], Vector2.ZERO, 0.0)
+		var boom := _blast(SMALL_BLASTS[_variant(position)], Vector2.ZERO, 0.0)
+		boom.scale = Vector2.ONE * clampf(power.radius / STATS.small_radius_ref, 1.0, 2.5)
 		_smoke(Vector2.ZERO, STATS.smoke_puffs)
 		_fire(STATS.fire_particles, 90.0)
 		Sfx.play(self, "explosion_small", -2.0)
@@ -40,7 +42,8 @@ func _ready() -> void:
 		_big(extra)
 	var p := get_tree().get_first_node_in_group("player")
 	if p:
-		p.shake(minf(STATS.shake + STATS.shake_per_extra * extra, 9.0))
+		p.shake(minf(STATS.shake + STATS.shake_per_extra * extra, 18.0))
+	Ember.scatter(get_parent(), position, STATS.embers + STATS.embers_per_extra * extra, 150.0 + 25.0 * extra)
 	get_tree().create_timer(3.0).timeout.connect(queue_free)
 
 
@@ -64,7 +67,7 @@ func _hit_everything() -> void:
 func _big(extra: int) -> void:
 	var ground := 0.0
 	for s in sources:
-		ground = maxf(ground, s.y - position.y + 8.0)
+		ground = maxf(ground, s.y - position.y + Block.SIZE / 2.0)
 	var grow := 1.0 + STATS.big_scale_per_extra * maxi(extra - 1, 0)
 	var fireball := _sprite(BIG, "inferno", Vector2(0, ground) - BIG_GROUND * grow, grow)
 	fireball.z_index = 1
@@ -78,7 +81,7 @@ func _big(extra: int) -> void:
 	Sfx.play(self, "explosion_big", 0.0)
 
 
-func _blast(anim: String, at: Vector2, delay: float) -> void:
+func _blast(anim: String, at: Vector2, delay: float) -> AnimatedSprite2D:
 	var s := _sprite(SMALL, anim, at, 1.0)
 	if delay > 0.0:
 		s.visible = false
@@ -86,6 +89,7 @@ func _blast(anim: String, at: Vector2, delay: float) -> void:
 		get_tree().create_timer(delay).timeout.connect(func():
 			s.visible = true
 			s.play(anim))
+	return s
 
 
 func _smoke(at: Vector2, count: int) -> void:
@@ -131,6 +135,6 @@ func _fire(amount: int, speed: float) -> void:
 
 ## Same formula as terrain variants, so the same barrel always gets the same small blast.
 static func _variant(at: Vector2) -> int:
-	var x := int(floor(at.x / 16.0))
-	var y := int(floor(at.y / 16.0))
+	var x := int(floor(at.x / Block.SIZE))
+	var y := int(floor(at.y / Block.SIZE))
 	return ((x * 73) ^ (y * 151)) % 3

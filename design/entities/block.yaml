@@ -3,28 +3,45 @@ id: block
 name: Terrain block
 kind: terrain
 order: 10
-description: 16×16 solid tile that levels are built from. Bullets (player and enemy) chip it; at 0 HP it bursts into debris and is gone for good. Any block whose center is inside an explosion is destroyed at once. Blocks with open sky above (grass_clearance air tiles) automatically become grass with hanging strands; tunnel and cave floors stay bare earth. Each block's variant is picked from its map position, so the same level always looks the same.
+description: 24×24 solid tile that levels are built from. Bullets (player and enemy) chip it — every hit adds more cracks across its face — and at 0 HP it bursts into debris and is gone for good. Any block whose center is inside an explosion is destroyed at once. Blocks with open sky above (grass_clearance air tiles) automatically become grass with hanging strands; tunnel and cave floors stay bare earth. Each block's variant is picked from its map position, so the same level always looks the same.
 sprite: terrain
 files:
   - game/scripts/block.gd
+  - art/sprites/cracks.yaml
   - game/scripts/main.gd
 level_symbols:
   "#": earth block (becomes grass automatically if it has open sky above)
   ".": empty air
 
 stats:
+  size:
+    value: 24
+    unit: px
+    description: Side of one block — the same as the crouched Bro's hitbox height, so a crouching Bro fits through a one-block gap. Everything is measured in blocks of this size.
   hp:
     value: 3
     unit: hits
-    description: Bullet hits needed to destroy one block.
+    description: Bullet hits needed to destroy one block. Each hit before the last adds cracks.
+  crack_stages:
+    value: 4
+    unit: stages
+    description: How many growing crack images a block goes through before it breaks (the last one shows one hit before the end). Each block uses one of the crack patterns, chosen from its map position.
   grass_clearance:
     value: 3
     unit: tiles
     description: A block grows grass only if this many tiles directly above it are air (or it is near the top of the map). Keeps cave and tunnel floors bare.
   debris_amount:
-    value: 14
+    value: 34
     unit: particles
     description: Dirt chunks thrown when the block breaks.
+  blast_ragged:
+    value: 0.45
+    unit: ×
+    description: Blocks just outside a blast (up to this fraction of the radius beyond it) are torn out too, with a chance that falls off with distance - so a crater has a ragged, bigger edge.
+  chain_break:
+    value: 0.3
+    unit: chance
+    description: Chance that the block directly above a breaking block breaks too, a moment later (that one can chain again).
 
 animations:
   earth_0: Underground earth, variant 0.
@@ -37,6 +54,38 @@ animations:
   drip_0: Grass strands hanging over the block (or air) below grass_0. Decoration only — disappears when the grass block breaks.
   drip_1: Hanging strands below grass_1.
   drip_2: Hanging strands below grass_2.
+  cracks/crack_0_1: Crack overlay, pattern 0 (fork), stage 1 of 4.
+  cracks/crack_0_2: Crack overlay, pattern 0 (fork), stage 2 of 4.
+  cracks/crack_0_3: Crack overlay, pattern 0 (fork), stage 3 of 4.
+  cracks/crack_0_4: Crack overlay, pattern 0 (fork), stage 4 of 4.
+  cracks/crack_1_1: Crack overlay, pattern 1 (web), stage 1 of 4.
+  cracks/crack_1_2: Crack overlay, pattern 1 (web), stage 2 of 4.
+  cracks/crack_1_3: Crack overlay, pattern 1 (web), stage 3 of 4.
+  cracks/crack_1_4: Crack overlay, pattern 1 (web), stage 4 of 4.
+  cracks/crack_2_1: Crack overlay, pattern 2 (zig-zag), stage 1 of 4.
+  cracks/crack_2_2: Crack overlay, pattern 2 (zig-zag), stage 2 of 4.
+  cracks/crack_2_3: Crack overlay, pattern 2 (zig-zag), stage 3 of 4.
+  cracks/crack_2_4: Crack overlay, pattern 2 (zig-zag), stage 4 of 4.
+  cracks/crack_3_1: Crack overlay, pattern 3 (corner), stage 1 of 4.
+  cracks/crack_3_2: Crack overlay, pattern 3 (corner), stage 2 of 4.
+  cracks/crack_3_3: Crack overlay, pattern 3 (corner), stage 3 of 4.
+  cracks/crack_3_4: Crack overlay, pattern 3 (corner), stage 4 of 4.
+  cracks/crack_4_1: Crack overlay, pattern 4 (tree), stage 1 of 4.
+  cracks/crack_4_2: Crack overlay, pattern 4 (tree), stage 2 of 4.
+  cracks/crack_4_3: Crack overlay, pattern 4 (tree), stage 3 of 4.
+  cracks/crack_4_4: Crack overlay, pattern 4 (tree), stage 4 of 4.
+  cracks/crack_5_1: Crack overlay, pattern 5 (cross), stage 1 of 4.
+  cracks/crack_5_2: Crack overlay, pattern 5 (cross), stage 2 of 4.
+  cracks/crack_5_3: Crack overlay, pattern 5 (cross), stage 3 of 4.
+  cracks/crack_5_4: Crack overlay, pattern 5 (cross), stage 4 of 4.
+  cracks/crack_6_1: Crack overlay, pattern 6 (side), stage 1 of 4.
+  cracks/crack_6_2: Crack overlay, pattern 6 (side), stage 2 of 4.
+  cracks/crack_6_3: Crack overlay, pattern 6 (side), stage 3 of 4.
+  cracks/crack_6_4: Crack overlay, pattern 6 (side), stage 4 of 4.
+  cracks/crack_7_1: Crack overlay, pattern 7 (chip), stage 1 of 4.
+  cracks/crack_7_2: Crack overlay, pattern 7 (chip), stage 2 of 4.
+  cracks/crack_7_3: Crack overlay, pattern 7 (chip), stage 3 of 4.
+  cracks/crack_7_4: Crack overlay, pattern 7 (chip), stage 4 of 4.
 
 sounds:
   block_hit: A bullet hits the block but it survives (it also flashes white).

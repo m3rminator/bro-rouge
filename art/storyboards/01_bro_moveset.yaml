@@ -36,3 +36,34 @@ panels:
     shot: bro/hurt/0
     caption: Each enemy hit costs a heart and makes the Bro blink (briefly invulnerable). Lose all three and you lose a life; the level restarts. Blasts take two or three hearts at once and throw you.
     sfx: player_hurt
+  - title: Knife
+    shot: bro/knife/3
+    caption: Up close, press Knife (K or C). He draws the blade, then slashes with a silver swoosh. Any normal enemy dies from one cut, thrown back in a shower of blood that stains the ground; the Brute needs six.
+    sfx: knife_stab
+  - title: Ammo from kills
+    shot: items/mag_pickup/0
+    caption: Every knife kill gives a spare magazine — "+ magazine" floats up over his head and fades. The HUD shows one magazine per spare, three at most.
+  - title: Run and gun
+    shot: bro/run_shoot/1
+    caption: Firing on the move — he keeps his stride and the rifle slides a pixel forward and back under his hand on every shot.
+    sfx: shoot
+  - title: Hang on
+    shot: bro/cling/0
+    caption: Jump into the side of a block and he drives his knife into it and hangs there by one arm, body and legs swaying under him. Jump kicks off the wall; after a moment he starts sliding down.
+    sfx: knife_stab
+  - title: Grenade
+    shot: items/grenade/1
+    caption: Q throws a grenade in an arc. It bounces, blinks red faster and faster and blows up after two seconds like a barrel. Three per level, back only when the level is finished.
+    sfx: grenade_throw
+  - title: Run!
+    shot: mook/walk/0
+    caption: A soldier who sees a live grenade near him panics after a moment and runs from it. The Brute doesn't care.
+    sfx: enemy_panic
+  - title: Not on the wall
+    shot: items/grenade_hud/0
+    caption: Throwing a grenade while hanging on a wall is a mistake — no room to throw, it goes off in his hand.
+    sfx: explosion_small
+  - title: Wall flip
+    shot: bro/flip/1
+    caption: Hanging on a wall, press Jump — he kicks off and somersaults away from it. A wall too short for the knife (his upper body already above it) is not grabbed; he just keeps going.
+    sfx: jump

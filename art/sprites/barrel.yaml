@@ -1,57 +1,125 @@
-# Explosive barrel: one block. Red drum with steel rims and a white skull.
-# idle = untouched. burning = hit once: flames on the lid and the drum flashes hot
-# until it blows (fuse_time in design/entities/barrel.yaml).
+# Explosive barrel, drawn at half the size of its references (refrences/barrel) — about
+# 1.4 blocks tall, a bit shorter than the Bro. Red drum, three steel rims, skull and crossbones.
+# idle = untouched (first reference). burning = it was hit (second reference): the drum
+# bulges, the lid pops up, and it flashes hot until it blows (fuse_time in
+# design/entities/barrel.yaml). The fire around it is particles (game/scripts/barrel.gd).
 name: barrel
-description: Red explosive barrel. Shoot it (or blast it) and it starts burning, then explodes. Barrels touching each other explode together as one bigger blast.
+description: Red explosive barrel. Shoot it (or blast it) and it bulges, catches fire and explodes. Barrels touching each other explode together as one bigger blast.
 palette: barrel
-frame: [16, 16]
+reference: refrences/barrel/2ab95a5b-c2d7-4757-a903-a9f6fb285a5c.jpg
+frame: [26, 36]
 anchors:
-  center: [8, 9]
+  center: [13, 20]
 
 parts:
   drum: |
-    .oooooooooooo.
-    oGgggggggggGGo
-    oGGGGGGGGGGGGo
-    orRRRRRRRRRRDo
-    orRRRwwwwRRRDo
-    orRRwwwwwwRRDo
-    orRRwoowowRRDo
-    orRRwwwwwwRRDo
-    orRRRwowwRRRDo
-    oGgggggggggGGo
-    orRRRRRRRRRRDo
-    oGGGGGGGGGGGGo
-    .oooooooooooo.
+    .oooooooooooooooooooooo.
+    osGgggggggggggggggggGsso
+    osGGGGGGGGsGGGGsGGGGssso
+    oDDDDDDDDDDDDDDDDDDDDDDo
+    oDRRrrrRRRRRRRRRRRRDDRDo
+    oDRRrrrRRRRRRRRRRRRDDRDo
+    oDRRrrrRRRRRRRRRRRRDDRDo
+    oDRRrrrRRRRRRRRRRRRDDRDo
+    osGgggggggggggggggggGsso
+    osGGGGGGGGsGGGGsGGGGssso
+    oDDDDDDDDDDDDDDDDDDDDDDo
+    oDRRrrrRRRRRRRRRRRRDDRDo
+    oDRRrrrRRwwwwwwRRRRDDRDo
+    oDRRrrrRwwwwwwwwRRRDDRDo
+    oDRRrrrRwDDwwDDwRRRDDRDo
+    oDRRrrrRwDDwwDDwRRRDDRDo
+    oDRRrrrRRwwDDwwRRRRDDRDo
+    oDRRrrrRRwRwwRwRRRRDDRDo
+    oDRRrrwwRRRRRRRRwwRDDRDo
+    oDRRrrwwwwRRRRwwwwRDDRDo
+    oDRRrrrRRwwwwwwRRRRDDRDo
+    oDRRrrwwwwRRRRwwwwRDDRDo
+    oDRRrrwwRRRRRRRRwwRDDRDo
+    osGgggggggggggggggggGsso
+    osGGGGGGGGsGGGGsGGGGssso
+    oDDDDDDDDDDDDDDDDDDDDDDo
+    oDRRrrrRRRRRRRRRRRRDDRDo
+    oDRRrrrRRRRRRRRRRRRDDRDo
+    oDRRrrrRRRRRRRRRRRRDDRDo
+    oDRRrrrRRRRRRRRRRRRDDRDo
+    osGgggggggggggggggggGsso
+    osGGGGGGGGsGGGGsGGGGssso
+    .oooooooooooooooooooooo.
+  drum_hit: |
+    .......oooooooooooo.......
+    ....oooGGggggwwwgGGooo....
+    ..ooGGGgggggggggggGGGGoo..
+    .osGGGGGGGGGGGGGGGGGGGsso.
+    .osGgggggggggggggggggGsso.
+    .osGGGGGGGGsGGGGsGGGGssso.
+    .oDDDDDDDDDDDDDDDDDDDDDDo.
+    .oDRRrrrRRRRRRRRRRRRDDRDo.
+    .oDRRrrrRRRRRRRRRRRRDDRDo.
+    .oDRRrrrRRRRRRRRRRRRDDRDo.
+    .osGgggggggggggggggggGsso.
+    oosGGGGGGGGsGGGGsGGGGsssso
+    ooDDDDDDDDDDDDDDDDDDDDDDoo
+    oDDRRrrrRRRRRRRRRRRRDDRDDo
+    oDDRRrrrRRwwwwwwRRRRDDRDDo
+    oDDRRrrrRwwwwwwwwRRRDDRDDo
+    oDDRRrrrRwDDwwDDwRRRDDRDDo
+    oDDRRrrrRwDDwwDDwRRRDDRDDo
+    oDDRRrrrRRwwDDwwRRRRDDRDDo
+    oDDRRrrrRRwRwwRwRRRRDDRDDo
+    oDDRRrrwwRRRRRRRRwwRDDRDDo
+    oDDRRrrwwwwRRRRwwwwRDDRDDo
+    oDDRRrrrRRwwwwwwRRRRDDRDDo
+    oDDRRrrwwwwRRRRwwwwRDDRDDo
+    oDDRRrrwwRRRRRRRRwwRDDRDDo
+    oossssssssssssssssssssssoo
+    .osGgggggggggggggggggGsso.
+    .osGGGGGGGGsGGGGsGGGGssso.
+    .oDDDDDDDDDDDDDDDDDDDDDDo.
+    .oDRRrrrRRRRRRRRRRRRDDRDo.
+    .oDRRrrrRRRRRRRRRRRRDDRDo.
+    .oDRRrrrRRRRRRRRRRRRDDRDo.
+    .oDRRrrrRRRRRRRRRRRRDDRDo.
+    .osGgggggggggggggggggGsso.
+    .osGGGGGGGGsGGGGsGGGGssso.
+    ..oooooooooooooooooooooo..
   drum_hot: |
-    .oooooooooooo.
-    oGgggggggggGGo
-    oGGGGGGGGGGGGo
-    oYrrrrrrrrrrRo
-    oYrrrwwwwrrrRo
-    oYrrwwwwwwrrRo
-    oYrrwoowowrrRo
-    oYrrwwwwwwrrRo
-    oYrrrwowwrrrRo
-    oGgggggggggGGo
-    oYrrrrrrrrrrRo
-    oGGGGGGGGGGGGo
-    .oooooooooooo.
-  flame_a: |
-    ...Y......
-    ..YOY..Y..
-    .YOWOY.OY.
-    YOWWWOYOOY
-  flame_b: |
-    ......Y...
-    .Y...YOY..
-    YOY.YOWOY.
-    YOOYOWWWOY
-  flame_c: |
-    ..Y...Y...
-    .YOY.YOY..
-    .OWOYOWOY.
-    YOWWOWWOOY
+    .......oooooooooooo.......
+    ....oooGGggggwwwgGGooo....
+    ..ooGGGgggggggggggGGGGoo..
+    .osGGGGGGGGGGGGGGGGGGGsso.
+    .osGgggggggggggggggggGsso.
+    .osGGGGGGGGsGGGGsGGGGssso.
+    .oRRRRRRRRRRRRRRRRRRRRRRo.
+    .oRrrhhhrrrrrrrrrrrrRRrRo.
+    .oRrrhhhrrrrrrrrrrrrRRrRo.
+    .oRrrhhhrrrrrrrrrrrrRRrRo.
+    .osGgggggggggggggggggGsso.
+    oosGGGGGGGGsGGGGsGGGGsssso
+    ooRRRRRRRRRRRRRRRRRRRRRRoo
+    oRRrrhhhrrrrrrrrrrrrRRrRRo
+    oRRrrhhhrrwwwwwwrrrrRRrRRo
+    oRRrrhhhrwwwwwwwwrrrRRrRRo
+    oRRrrhhhrwRRwwRRwrrrRRrRRo
+    oRRrrhhhrwRRwwRRwrrrRRrRRo
+    oRRrrhhhrrwwRRwwrrrrRRrRRo
+    oRRrrhhhrrwrwwrwrrrrRRrRRo
+    oRRrrhhwwrrrrrrrrwwrRRrRRo
+    oRRrrhhwwwwrrrrwwwwrRRrRRo
+    oRRrrhhhrrwwwwwwrrrrRRrRRo
+    oRRrrhhwwwwrrrrwwwwrRRrRRo
+    oRRrrhhwwrrrrrrrrwwrRRrRRo
+    oossssssssssssssssssssssoo
+    .osGgggggggggggggggggGsso.
+    .osGGGGGGGGsGGGGsGGGGssso.
+    .oRRRRRRRRRRRRRRRRRRRRRRo.
+    .oRrrhhhrrrrrrrrrrrrRRrRo.
+    .oRrrhhhrrrrrrrrrrrrRRrRo.
+    .oRrrhhhrrrrrrrrrrrrRRrRo.
+    .oRrrhhhrrrrrrrrrrrrRRrRo.
+    .osGgggggggggggggggggGsso.
+    .osGGGGGGGGsGGGGsGGGGssso.
+    ..oooooooooooooooooooooo..
 
 animations:
   idle:
@@ -63,7 +131,5 @@ animations:
     fps: 12
     loop: true
     frames:
-      - [[drum, 1, 3], [flame_a, 3, 0]]
-      - [[drum_hot, 1, 3], [flame_b, 3, 0]]
-      - [[drum, 1, 3], [flame_c, 3, 0]]
-      - [[drum_hot, 1, 3], [flame_b, 3, 0]]
+      - [[drum_hit, 0, 0]]
+      - [[drum_hot, 0, 0]]

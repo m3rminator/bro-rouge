@@ -25,7 +25,7 @@ static func emit(parent: Node, pos: Vector2, dir: Vector2, amount: int, spread: 
 		drops._pos.append(Vector2.ZERO)
 		drops._vel.append(v)
 		drops._color.append(Blood.COLORS[randi() % Blood.COLORS.size()])
-		drops._size.append(1 if randf() < 0.6 else 2)
+		drops._size.append(randi_range(GameData.BLOOD.drop_size_min, GameData.BLOOD.drop_size_max))
 	parent.add_child(drops)
 
 
@@ -60,18 +60,22 @@ func _land(block: Block, from: Vector2, to: Vector2, i: int) -> void:
 	var at: Vector2
 	var shape: Vector2
 	if a.y <= -half:  # fell on top: splats wider
-		at = Vector2(clampf(b.x, -half, half - 2), -half)
-		shape = Vector2(_size[i] + 1, 1)
+		shape = Vector2(_size[i] + 2, 2)
+		at = Vector2(clampf(b.x, -half, half - shape.x), -half)
 	elif a.x <= -half:  # left wall
-		at = Vector2(-half, clampf(b.y, -half, half - 2))
-		shape = Vector2(1, _size[i])
+		shape = Vector2(2, _size[i])
+		at = Vector2(-half, clampf(b.y, -half, half - shape.y))
 	elif a.x >= half:  # right wall
-		at = Vector2(half - 1, clampf(b.y, -half, half - 2))
-		shape = Vector2(1, _size[i])
+		shape = Vector2(2, _size[i])
+		at = Vector2(half - 2, clampf(b.y, -half, half - shape.y))
 	else:  # ceiling
-		at = Vector2(clampf(b.x, -half, half - 1), half - 1)
-		shape = Vector2(1, 1)
+		shape = Vector2(2, 2)
+		at = Vector2(clampf(b.x, -half, half - 2), half - 2)
 	block.stain(at.floor(), shape, _color[i])
+	if a.y <= -half:  # and the grass standing there keeps it
+		for c in block.get_children():
+			if c is Grass:
+				c.stain_at(b.x, _color[i])
 
 
 func _remove(i: int) -> void:

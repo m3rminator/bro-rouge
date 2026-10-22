@@ -1,0 +1,86 @@
+# Entity: the Bro's hand grenade.
+id: grenade
+name: Grenade
+kind: weapon
+order: 2.5
+description: The Bro carries grenades_per_level grenades (Grenade key). They come back only when he finishes a level — dying and restarting the level keeps whatever he had left. A thrown grenade is a small round ball with its lever on top (the pin is pulled), drawn from the pineapple grenade reference (refrences/items). It flies in an arc, bounces off blocks and rolls, blinking red faster and faster, and after fuse_time explodes with the power of one explosive barrel (same radius, same damage, breaks blocks, hurts the Bro too if he is close). Enemies that see a live grenade near them panic after flee_reaction and run away from it until it is gone. Throwing a grenade while hanging on a wall is a mistake - it goes off in his hand at once, right next to him.
+sprite: items
+files:
+  - game/scripts/grenade.gd
+  - game/scripts/player.gd
+  - game/scripts/enemy.gd
+  - game/scripts/hud.gd
+  - game/scripts/run.gd
+controls: [grenade]
+spawns: [explosion]
+
+stats:
+  grenades_per_level:
+    value: 3
+    unit: grenades
+    description: Grenades the Bro has at the start of every level. Refilled only by finishing a level (not by dying).
+  fuse_time:
+    value: 2.0
+    unit: s
+    description: Time from the throw to the explosion.
+  throw_speed:
+    value: [190.0, 210.0]
+    unit: px/s
+    description: Throw velocity — sideways (in the facing direction) and upward. Half of the Bro's own running speed is added.
+  crouch_throw_speed:
+    value: [150.0, 40.0]
+    unit: px/s
+    description: Throwing while crouched — a low lob that mostly rolls along the ground.
+  gravity:
+    value: 700.0
+    unit: px/s²
+    description: Pull on the grenade in flight.
+  radius:
+    value: 3.0
+    unit: px
+    description: Collision radius (it only touches blocks and barrels, never characters).
+  bounce:
+    value: 0.45
+    unit: ratio
+    description: Speed kept after bouncing off a block.
+  roll_friction:
+    value: 220.0
+    unit: px/s²
+    description: How fast it stops rolling on the ground.
+  blink_speed:
+    value: [4.0, 20.0]
+    unit: blinks/s
+    description: Blink rate right after the throw, and just before it explodes (speeds up in between).
+  blast_radius:
+    value: 30.0
+    unit: px
+    description: Blast radius - the same as one explosive barrel (barrel.yaml blast_radius).
+  blast_damage:
+    value: 4
+    unit: hp
+    description: Damage to enemies in the blast - the same as one barrel.
+  blast_player_damage:
+    value: 2
+    unit: hearts
+    description: Hearts the blast takes from the Bro if he is in it (his own grenade included).
+  flee_range:
+    value: 96.0
+    unit: px
+    description: Enemies closer than this to a live grenade (and able to see it) panic (4 blocks).
+  flee_reaction:
+    value: 0.6
+    unit: s
+    description: Delay between an enemy seeing the grenade and running away from it.
+  flee_speed:
+    value: 85.0
+    unit: px/s
+    description: Running speed of a panicking enemy (faster than his patrol walk).
+
+animations:
+  items/grenade: The thrown grenade - olive ball with its lever, blinking red (speeds up as the fuse runs out).
+  items/grenade_hud: HUD icon - one per grenade left (the full grenade with lever and pin ring).
+
+sounds:
+  grenade_throw: Pin pulled and the grenade thrown.
+  grenade_bounce: Each time it bounces off a block.
+  enemy_panic: An enemy runs from a grenade.

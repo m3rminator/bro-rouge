@@ -5,12 +5,13 @@ id: bro
 name: Bro (default)
 kind: player
 order: 1
-description: The player character, traced pixel for pixel from the Rambo reference sheet. At the reference's native size he stands about two blocks tall (31 px); holding Crouch lowers him to about 1.6 blocks (26 px) and slows him down. Runs, jumps, sprays rifle fire; dies after max_hp hits (bullets, or blasts which take several hearts at once). Each death costs one run life and restarts the current level (design/run.yaml). Every future Bro copies this file and changes what makes them unique.
+description: The player character, traced pixel for pixel from the Rambo reference sheet. At the reference's native size he stands about 1.3 blocks tall (31 px); holding Crouch lowers him to one block (26 px sprite, 24 px hitbox) and slows him down. Runs, jumps, sprays rifle fire; dies after max_hp hits (bullets, or blasts which take several hearts at once). Each death costs one run life and restarts the current level (design/run.yaml). Every future Bro copies this file and changes what makes them unique.
 sprite: bro
 files:
   - game/scenes/player.tscn
   - game/scripts/player.gd
-controls: [move_left, move_right, jump, crouch, shoot]
+  - game/scripts/mag_popup.gd
+controls: [move_left, move_right, jump, crouch, shoot, reload, knife, grenade]
 level_symbols:
   "P": player start position (air tile)
 level_preview:
@@ -21,11 +22,11 @@ stats:
   speed:
     value: 120.0
     unit: px/s
-    description: Horizontal run speed (one tile is 16 px).
+    description: Horizontal run speed (one block is 24 px).
   jump_velocity:
-    value: -290.0
+    value: -350.0
     unit: px/s
-    description: Upward speed at the start of a jump (negative = up). Higher magnitude = higher jump (~3 tiles now).
+    description: Upward speed at the start of a jump (negative = up). Higher magnitude = higher jump (~3 blocks, same feel as before the blocks grew to 24 px).
   gravity:
     value: 800.0
     unit: px/s²
@@ -53,21 +54,147 @@ stats:
   hitbox:
     value: [12, 30]
     unit: px
-    description: Standing collision box, width × height — just under two blocks (a block is 16 px), so he still fits through a two-block-high gap.
+    description: Standing collision box, width × height — about one and a quarter blocks (a block is 24 px), so he fits through a two-block-high gap.
   hitbox_crouch:
-    value: [12, 24]
+    value: [12, 22]
     unit: px
-    description: Crouched collision box (one and a half blocks).
+    description: Crouched collision box — just under one block high (24 px), so a crouching Bro crawls under a single block with a one-block gap beneath it. Level 1 has one such crawl tunnel under the tall wall near the exit.
+  magazines:
+    value: 2
+    unit: magazines
+    description: Magazines the Bro starts with, the loaded one included. Knife kills give more (see max_spare_mags); once all are empty the gun only clicks.
+  max_spare_mags:
+    value: 3
+    unit: magazines
+    description: Most spare magazines (not counting the loaded one) he can carry — the HUD shows one magazine icon each. A knife kill at the cap gives nothing.
+  magazine_size:
+    value: 30
+    unit: rounds
+    description: Rounds in one magazine. The gun reloads by itself when it runs dry (or press Reload).
+  reload_time:
+    value: 1.4
+    unit: s
+    description: Time to swap magazines. He cannot shoot meanwhile.
+  recoil:
+    value: 22.0
+    unit: px/s
+    description: Each shot pushes the Bro this much backwards (opposite to where he faces).
+  recoil_max:
+    value: 45.0
+    unit: px/s
+    description: Cap on the built-up recoil push, so sustained fire does not shove him far.
+  recoil_decay:
+    value: 160.0
+    unit: px/s²
+    description: How fast the recoil push fades.
+  spread_after:
+    value: 3
+    unit: shots
+    description: Shooting while running, the first this-many shots are accurate; every shot after that in the same burst flies off-line and he starts shouting.
+  spread_degrees:
+    value: 7.0
+    unit: degrees
+    description: Maximum random angle (up or down) of a sloppy shot.
+  burst_reset:
+    value: 0.35
+    unit: s
+    description: A pause in firing this long (or stopping to stand still) ends the burst, so the aim is accurate again.
+  knife_range:
+    value: 26.0
+    unit: px
+    description: How far in front of the Bro's center the knife reaches (about one block past his front). With no enemy in reach the knife breaks the block in front in ONE stab - for every character.
+  knife_speed:
+    value: 40.0
+    unit: px/s
+    description: He can still shuffle forward slowly while the knife animation plays (normal run speed is 120).
+  knife_boss_damage:
+    value: 5
+    unit: hp
+    description: Damage one knife hit does to the Brute (mini-boss). Every other enemy dies from one hit.
+  knife_knockback:
+    value: 190.0
+    unit: px/s
+    description: Sideways speed a knifed enemy (or body) is thrown back with — harder than a bullet kill. Divided by the enemy's mass.
+  knife_hop:
+    value: -180.0
+    unit: px/s
+    description: Upward speed a knifed enemy is thrown with (negative = up). Divided by the enemy's mass.
+  knife_blood:
+    value: 70
+    unit: drops
+    description: Extra blood drops sprayed by a knife kill, on top of the normal death burst. They fall and stain the ground.
+  mag_popup_time:
+    value: 1.5
+    unit: s
+    description: How long the "+ magazine" icon floats over his head after a knife kill (fades in rising, then rises further and fades out).
+  shout_interval:
+    value: 1.1
+    unit: s
+    description: While the sloppy fire continues the Bro yells again this often.
+  cling_hold:
+    value: 2.0
+    unit: s
+    description: Jump into the side of a block and the knife sticks in the dirt; he hangs there this long before he starts to slide.
+  cling_slide_start:
+    value: 12.0
+    unit: px/s
+    description: Slide speed the moment the hang time is over.
+  cling_slide_accel:
+    value: 70.0
+    unit: px/s²
+    description: How quickly the slide speeds up the longer he stays on the wall.
+  cling_slide_max:
+    value: 220.0
+    unit: px/s
+    description: Top slide speed.
+  cling_kick:
+    value: [120.0, -300.0]
+    unit: px/s
+    description: Jump while clinging kicks him off the wall - sideways away from it, and up.
+  cling_cooldown:
+    value: 0.25
+    unit: s
+    description: After letting go he cannot grab a wall again for this long.
+  flip_time:
+    value: 0.25
+    unit: s
+    description: Jumping off a wall he is hanging on, he somersaults away from it (the flip animation) for this long - one full turn - unless he lands, shoots or knifes first. A wall too short for the knife (his upper body is above it) is not grabbed at all; he just keeps jumping.
+  base_spread:
+    value: 0.0
+    unit: degrees
+    description: Random aim error on every shot, always (the Bro's rifle is dead straight). Characters with a sloppy gun set this higher.
+  bullet_lifetime:
+    value: 0.8
+    unit: s
+    description: How long his bullets fly before disappearing - bullet speed times this is his weapon range (336 px).
+  knife_hits:
+    value: 1
+    unit: hits
+    description: Knife hits needed to kill an ordinary enemy (the Bro kills in one).
+  knife_stun:
+    value: 0.0
+    unit: s
+    description: When the knife needs more than one hit, how long an enemy stands stunned (no moving, no shooting) after a hit that did not kill.
+  tint:
+    value: [1.0, 1.0, 1.0]
+    unit: rgb
+    description: Colour multiplied over his sprite (white = unchanged). Placeholder to tell characters apart until each has its own art.
 
 animations:
   idle: Standing on the ground, not moving, not shooting.
   run: Moving left/right on the ground. Plays the footstep sound on frames 0 and 2.
+  run_shoot: Running while firing — the same two run poses, the rifle sliding 1 px forward and back under his hand on every shot.
   jump: Any time the Bro is in the air (rising or falling).
   shoot: Standing still while firing — the gun kicks back 1 px.
   crouch: Holding Crouch, standing still (reference crouch pose).
-  crouch_walk: Crouched and moving (slow).
+  crouch_walk: Crouched and moving (slow) — front leg steps forward, back leg slides after it (4 frames).
   crouch_shoot: Crouched and firing — the gun kicks back 1 px.
+  flip: Kicking off a wall he hangs on - a forward somersault away from it, the tucked ball turning a quarter turn per frame.
+  climb: Not used yet (crouched landing frames drawn with the flip).
+  cling: Hanging on a wall from his knife (knife level, driven into the wall), one arm up; his body and legs sway slowly under it.
   hurt: Dead — the body is knocked back and falls over.
+  knife: Knife attack, traced from the knife references — knife drawn (held 3 frames), then the arm up with a silver swing trail that fades over 3 frames. The hit lands on the first arm-up frame.
+  items/mag_pickup: Floats over his head for mag_popup_time after a knife kill gave him a magazine.
 
 sounds:
   shoot: Every shot.
@@ -76,3 +203,8 @@ sounds:
   footstep: Run animation frames 0 and 2.
   player_hurt: Hit by an enemy bullet (and survives).
   player_death: Last hit point lost.
+  reload: Magazine swap starts.
+  dry_fire: Trigger pulled with an empty gun.
+  bro_shout: Held fire while running past spread_after shots — he yells and the aim goes wild.
+  knife_swing: Every knife attack (the whoosh).
+  knife_stab: The knife hits an enemy or a body.

@@ -1,26 +1,18 @@
-[gd_resource type="SpriteFrames" load_steps=7 format=3]
+[gd_resource type="SpriteFrames" load_steps=5 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/barrel.png" id="1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0"]
 atlas = ExtResource("1")
-region = Rect2(0, 0, 16, 16)
+region = Rect2(0, 0, 26, 36)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1"]
 atlas = ExtResource("1")
-region = Rect2(0, 16, 16, 16)
+region = Rect2(0, 36, 26, 36)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2"]
 atlas = ExtResource("1")
-region = Rect2(16, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3"]
-atlas = ExtResource("1")
-region = Rect2(32, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4"]
-atlas = ExtResource("1")
-region = Rect2(48, 16, 16, 16)
+region = Rect2(26, 36, 26, 36)
 
 [resource]
 animations = [{
@@ -38,12 +30,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4")
 }],
 "loop": true,
 "name": &"burning",

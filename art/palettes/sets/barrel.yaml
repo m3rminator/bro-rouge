@@ -1,12 +1,13 @@
-# Palette set for the explosive barrel: red drum, steel rims, white skull, flames.
+# Palette set for the explosive barrel. Every color was sampled from the barrel references
+# (refrences/barrel): red drum, steel rims, bone-white skull and crossbones.
+# "." is always transparent.
 symbols:
-  o: outline
-  r: red_light
-  R: red
-  D: red_dark
-  g: steel_light
-  G: steel
-  w: white
-  W: fire_white
-  Y: fire_yellow
-  O: fire_orange
+  o: barrel_black        # outline
+  D: barrel_red_dark     # shadow side, band under each rim
+  R: barrel_red          # drum
+  r: barrel_red_light    # highlight streak
+  h: barrel_red_hot      # highlight while burning (hot flash)
+  s: barrel_steel_dark   # rim shadow, rivets
+  G: barrel_steel        # rims, lid
+  g: barrel_steel_light  # rim highlight
+  w: barrel_bone         # skull and crossbones

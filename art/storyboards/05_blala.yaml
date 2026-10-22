@@ -1,0 +1,16 @@
+# Storyboard: Blala, the second Bro - who he is at a glance.
+title: Blala
+description: The glass cannon. Two SMGs that spray a wall of short-range bullets, a fast runner and a high jumper - nothing like the Rambo Bro.
+panels:
+  - title: Two SMGs
+    shot: blala/idle/0
+    caption: Black buzz cut, white tank top, green pants - and an SMG in each hand, one across his chest and one held out front.
+  - title: Spray
+    shot: blala/shoot/0
+    caption: Twice the Bro's fire rate and a 60-round magazine, but the bullets fan out wide and die after about 5 blocks. Get close.
+  - title: On the move
+    shot: blala/run_shoot/0
+    caption: He runs faster and jumps higher than the Bro, and keeps spraying while he runs.
+  - title: Two stabs
+    shot: blala/knife/3
+    caption: His knife needs two hits - the first knocks the enemy back and leaves him stunned, the second kills.

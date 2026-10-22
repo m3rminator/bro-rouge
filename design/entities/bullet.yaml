@@ -26,6 +26,10 @@ stats:
     value: [10, 6]
     unit: px
     description: Hit box, length × height (the glow around it is bigger but harmless).
+  behead:
+    value: headshot
+    unit: mode
+    description: 'Power to blow heads off (head.yaml): "headshot" = a hit on an enemy''s head kills him and blows the head off; "always" = every kill blows the head off (for later weapons like a shotgun); "none" = never.'
 
 animations:
   bro_shot: The bullet in flight (halo pulses).

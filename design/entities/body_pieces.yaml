@@ -1,0 +1,81 @@
+# Entity: a soldier torn into pieces by an explosion.
+id: body_pieces
+name: Torn-apart body
+kind: effect
+order: 16
+description: A soldier killed by an explosion (a grenade or a barrel), or a body lying in a blast, is torn apart into the drawn body pieces from the torn reference (refrences/enemies/default/torn.jpg) - torso, two arms, a straight and a bent leg, and a few scraps of flesh, each with a torn, bloody end. His head flies off as a Head (head.yaml). Every piece is thrown away from the blast spinning, trails blood from its torn end while it flies (engine particles plus real drops that stain the blocks), bounces a few times spraying blood, and then lies flat on the ground for the rest of the level. A gore burst and a blood pool go with it. Kamikazes (their vest goes off anyway) and the Brute (boss) are not torn apart; a sprite without piece_* animations is just tossed.
+sprite: mook
+files:
+  - game/scripts/body_piece.gd
+  - game/scripts/enemy.gd
+spawned_by: [mook]
+
+stats:
+  bits:
+    value: [2, 3]
+    unit: pieces
+    description: Scraps of flesh thrown out besides the limbs (random in this range).
+  throw_x:
+    value: [40.0, 150.0]
+    unit: px/s
+    description: Sideways speed a piece is thrown with, away from the blast (random in this range).
+  throw_y:
+    value: [120.0, 260.0]
+    unit: px/s
+    description: Upward speed a piece is thrown with (random in this range).
+  spin:
+    value: 540.0
+    unit: °/s
+    description: How fast a piece spins in the air.
+  gravity:
+    value: 700.0
+    unit: px/s²
+    description: Fall acceleration.
+  bounce:
+    value: 0.35
+    unit: ×
+    description: Speed kept after hitting a block.
+  rest_speed:
+    value: 70.0
+    unit: px/s
+    description: A landing slower than this ends the bouncing and the piece stays put.
+  trail_time:
+    value: 2.2
+    unit: s
+    description: How long a piece trails blood after the blast (each piece varies ±30%).
+  drip_interval:
+    value: 0.05
+    unit: s
+    description: A real blood drop (stains blocks) falls from a bleeding piece this often.
+  drip_droplets:
+    value: 5
+    unit: particles
+    description: Droplets per drip from a bleeding piece.
+  piece_droplets:
+    value: 120
+    unit: particles
+    description: Blood droplets sprayed by each piece the moment the body is torn (they fall and stain blocks and walls around).
+  bounce_droplets:
+    value: 40
+    unit: particles
+    description: Extra droplets every time a piece bounces off the ground.
+  rest_time:
+    value: 5.0
+    unit: s
+    description: How long a piece lies on the ground before it starts to fade.
+  fade_time:
+    value: 1.5
+    unit: s
+    description: How long a piece takes to sink into the ground and fade away (the blood it sprayed stays).
+  sink_speed:
+    value: 14.0
+    unit: px/s
+    description: How fast a fading piece sinks into the ground, as if the earth were swallowing it (it is drawn behind the blocks while it does).
+
+animations:
+  mook/piece_torso: Torso - sweater with a bloody neck and a torn, bloody waist.
+  mook/piece_arm: Arm - sleeve torn at the shoulder, bare hand (two per body).
+  mook/piece_leg: Straight leg - pants torn at the hip, black boot.
+  mook/piece_leg_bent: Leg bent at the knee - pants torn at the hip, black boot.
+  mook/piece_bit_a: Small scrap of flesh.
+  mook/piece_bit_b: Scrap of sweater with flesh.

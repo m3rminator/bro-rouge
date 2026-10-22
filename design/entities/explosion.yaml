@@ -10,6 +10,10 @@ files:
 spawned_by: [barrel, kamikaze]
 
 stats:
+  small_radius_ref:
+    value: 36.0
+    unit: px
+    description: The small blast picture is drawn for this radius; a bigger blast radius scales the picture up (to 2.5x).
   big_scale_per_extra:
     value: 0.18
     unit: ×
@@ -31,13 +35,25 @@ stats:
     unit: px/s
     description: How hard bodies and the Bro are thrown away from the center.
   shake:
+    value: 6.0
+    unit: px
+    description: Screen shake for a small blast (doubled to keep the game chaotic).
+  shake_per_extra:
     value: 3.0
     unit: px
-    description: Screen shake for a small blast.
-  shake_per_extra:
-    value: 1.5
-    unit: px
-    description: Extra screen shake for every other barrel in a cluster (max 9 px).
+    description: Extra screen shake for every other barrel in a cluster (max 18 px).
+  embers:
+    value: 34
+    unit: embers
+    description: Glowing specks in blast colors thrown out by a blast; they fall, land on the ground and fade away.
+  embers_per_extra:
+    value: 10
+    unit: embers
+    description: Extra embers for every other barrel in a cluster.
+  ember_life:
+    value: 3.0
+    unit: s
+    description: About how long an ember glows on the ground before it has faded (each varies 0.6x to 1.2x).
 
 animations:
   blast_a: Small blast — round fireball cluster.

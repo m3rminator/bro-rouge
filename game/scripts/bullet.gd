@@ -27,6 +27,7 @@ static func spawn(parent: Node, pos: Vector2, dir: int, bullet_stats: Dictionary
 
 
 func _ready() -> void:
+	add_to_group("bullets")  # flying heads feel them pass (head.gd)
 	collision_layer = 0
 	z_index = 3
 	var turn := deg_to_rad(angle)
@@ -56,7 +57,9 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node) -> void:
 	if is_queued_for_deletion():
 		return
-	if body.has_method("hit"):
+	if body is Enemy:  # where it struck matters: a head shot can blow the head off
+		body.hit(stats.damage, direction, global_position, stats.get("behead", "none"))
+	elif body.has_method("hit"):
 		body.hit(stats.damage, direction)
 	var spark := AnimatedSprite2D.new()
 	spark.sprite_frames = FRAMES

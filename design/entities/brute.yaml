@@ -36,6 +36,10 @@ stats:
     value: 800.0
     unit: px/s²
     description: Downward acceleration while falling.
+  fall_death_height:
+    value: 0
+    unit: px
+    description: Falls never hurt the Brute (0 = immune). Any other enemy dies if it falls farther than its own fall_death_height.
   vision_range:
     value: 270.0
     unit: px

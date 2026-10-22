@@ -19,6 +19,11 @@
     "file_sha": "34efa1ddc72448f859e472597da24dce650563c978f519313ead2371642a49da",
     "spec_sha": "a77f7ca02a6bbbc70ff8abb3ba5c433eb5c6b74db6eed5c323936bcdf79188d6"
   },
+  "sfx/bro_shout": {
+    "file": "game/assets/sfx/bro_shout.mp3",
+    "file_sha": "d761d8c3fe012fc9cdf0cb2e655d1adaa055bc73b318a4e03c582023ec80807d",
+    "spec_sha": "ec2ffb9bb373d01f80e8940f7b7cb86f2ecd33055aacdfc2e8cf253022dee7c3"
+  },
   "sfx/brute_alert": {
     "file": "game/assets/sfx/brute_alert.mp3",
     "file_sha": "27524977ccc2ece952e5047cf2615558294a1f21670a4cc8cde44abe168a0f9c",
@@ -29,6 +34,11 @@
     "file_sha": "c28712e93e6028f35bce855279dabc27ef85d61054b57ef01120e8b807b5eb11",
     "spec_sha": "a5b5ad25e57786714481e6630d030483bbbdb5240553511f2c20f6c5006ce473"
   },
+  "sfx/dry_fire": {
+    "file": "game/assets/sfx/dry_fire.mp3",
+    "file_sha": "c637aa733be5cdc708f7b7366d8c7df5f7fc4478a6fda160e5998af359c75fb9",
+    "spec_sha": "38edf160e556354668f1e6c529e7ea1eebe0009b7243991072ff5e14cac2a467"
+  },
   "sfx/enemy_alert": {
     "file": "game/assets/sfx/enemy_alert.mp3",
     "file_sha": "fa13bcfa0d4aa153af6ce1602d8e23dbebf0c03e5a23d4cd80308e64e38dd96e",
@@ -38,6 +48,11 @@
     "file": "game/assets/sfx/enemy_death.mp3",
     "file_sha": "5528b2d2b6b20b2a1b8d3c55a4ed097aa141864b9837827960cc553dfa3f17c4",
     "spec_sha": "fbb65f22f6b4a74e1a7cdc58fc9b82203596bfbcb50fd4a33dbb45263115994c"
+  },
+  "sfx/enemy_panic": {
+    "file": "game/assets/sfx/enemy_panic.mp3",
+    "file_sha": "085cedb4c1a6cf57dbfa52def0918567417149cb8aa87665e2dfbc222d648fd7",
+    "spec_sha": "55100a6a8e1324b88f66776af07d8826e67fd36fa0748c927481fb3532b19b11"
   },
   "sfx/enemy_shoot": {
     "file": "game/assets/sfx/enemy_shoot.mp3",
@@ -64,6 +79,16 @@
     "file_sha": "c98364e2d12a45371282227dd61e3179ffa535057244662832ef10d08ebc5c3a",
     "spec_sha": "357b138b2e6867a7340f3c22a0967013bf1e6609a58437229c09a66cee81b5bc"
   },
+  "sfx/grenade_bounce": {
+    "file": "game/assets/sfx/grenade_bounce.mp3",
+    "file_sha": "26143a9690f6dd657ba37f38d8dc5795a79647dfa909d9c88c3fa2a17ca8b16e",
+    "spec_sha": "5e7f97595cad6ea9533a3e35a1b3d0b80836616d4dd458466061faf74ac9e2ee"
+  },
+  "sfx/grenade_throw": {
+    "file": "game/assets/sfx/grenade_throw.mp3",
+    "file_sha": "4f26e10e1211bc7330c36a0049d67a1c39de25bfaac218fea6f8867bb53f78d5",
+    "spec_sha": "6a0fe51ad082c93a705150c38f5e98c3ff769322c72bb340f894437263eb38eb"
+  },
   "sfx/jump": {
     "file": "game/assets/sfx/jump.mp3",
     "file_sha": "bd4e130755c91fe243383f8448defa59b141d5a43c04ce0d405546f4982d89e3",
@@ -73,6 +98,16 @@
     "file": "game/assets/sfx/kamikaze_scream.mp3",
     "file_sha": "c2563ed364e8589490b8adf379c47d1c7af924a61b40cc78d6eb8a9eae71b337",
     "spec_sha": "2a67d708e6384df2ace6e93bf628ccaaebad41d1f89ce3fc92b1ae8be9d65824"
+  },
+  "sfx/knife_stab": {
+    "file": "game/assets/sfx/knife_stab.mp3",
+    "file_sha": "3163a6b75cbf826f3593d10ba94c860435b9b415f62fe3f3b2a8fb5cd776f145",
+    "spec_sha": "3b5a433780951a93bb1b09d443f3bf4e67cc1774e5018a21faa9cd7f80c0a790"
+  },
+  "sfx/knife_swing": {
+    "file": "game/assets/sfx/knife_swing.mp3",
+    "file_sha": "963fffce63608817ddf74d8cd7fc50eaeeb3b6738e018cba3da460a1e634b38c",
+    "spec_sha": "852ce2244ac9d86cae0fad8ebea02899894467961556226ad1f69117bc8cc1b5"
   },
   "sfx/land": {
     "file": "game/assets/sfx/land.mp3",
@@ -108,6 +143,11 @@
     "file": "game/assets/sfx/quota_reached.mp3",
     "file_sha": "26dea87d239fb4d859e2aa4ea67a8ed9f95cf0f368a5c18870bec5835b1d6833",
     "spec_sha": "5e935993f5dcfe4bef77dc19b6c4fb36cf1977982cbe8b8c0f0735e97b4a127a"
+  },
+  "sfx/reload": {
+    "file": "game/assets/sfx/reload.mp3",
+    "file_sha": "bcbf3c48b8b8cc33cfb78d1acc3de43a849eff7f4d56f1b41ae5011bea15732a",
+    "spec_sha": "3a69ab38679cd557a92ab2bf1ec053549fc6e4ff53f141e88ffe0d3379de2631"
   },
   "sfx/shoot": {
     "file": "game/assets/sfx/shoot.mp3",

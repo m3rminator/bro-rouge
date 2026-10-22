@@ -7,6 +7,7 @@ enum State { PATROL, ALERT, CHARGE }
 
 var state := State.PATROL
 var _timer := 0.0
+var _seen_for := 0.0  # seconds since he first spotted the Bro; at fuse_after_seen he blows
 var _fuse := -1.0  # counting down after death; explodes at 0
 var _exploded := false
 
@@ -15,10 +16,16 @@ func _ready() -> void:
 	stats = GameData.KAMIKAZE
 	eye = GameData.ANCHORS["kamikaze"]["eye"]
 	sprite_name = "kamikaze"
+	tears_apart = false
 	super()
 
 
 func _think(delta: float) -> void:
+	if state != State.PATROL:
+		_seen_for += delta
+		if _seen_for >= stats.fuse_after_seen:
+			_explode()
+			return
 	match state:
 		State.PATROL:
 			if sees_player(facing):
@@ -37,6 +44,7 @@ func _think(delta: float) -> void:
 
 func _spot() -> void:
 	state = State.ALERT
+	_seen_for = 0.0
 	_timer = stats.reaction_time
 	velocity.x = 0.0
 	show_alert(true)
@@ -57,6 +65,11 @@ func _charge() -> void:
 	velocity.x = facing * stats.run_speed
 	if is_on_floor() and is_on_wall():
 		velocity.y = stats.jump_velocity
+
+
+## Splattered by a fall: the vest goes off at once.
+func _fall_death() -> void:
+	_explode()
 
 
 func _on_hurt(_direction: int) -> void:
@@ -92,7 +105,10 @@ func _explode() -> void:
 		die(0)
 	var power := {"radius": stats.blast_radius, "damage": stats.blast_damage, "player_damage": stats.blast_player_damage}
 	Explosion.detonate(get_parent(), global_position, power, [global_position])
-	Blood.burst(get_parent(), global_position)
+	Blood.gore(get_parent(), global_position)
+	var bro := get_tree().get_first_node_in_group("player")
+	if bro:
+		bro.shake(stats.blast_shake)
 	Blood.pool_under(self)
 	queue_free()
 

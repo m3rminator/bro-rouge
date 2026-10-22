@@ -3,7 +3,7 @@ id: hud
 name: HUD
 kind: ui
 order: 20
-description: Fixed on screen. Top-left — one heart per Bro hit point (grey when lost) and the lives left. Top-center — level number, loop and level name. Top-right — kills / kill quota (turns green when met). Center — big messages (KILL N MORE, EXIT OPEN, LEVEL CLEAR, YOU DIED, RUN OVER). While the Brute is fighting, his health bar is shown under the top line. Text uses the pixel font (sprite "font") with a dark outline.
+description: Fixed on screen. Top-left — one heart per Bro hit point (grey when lost), the lives left, rounds in the loaded magazine, and one magazine icon per spare magazine (up to 3), and under them one grenade icon per grenade left (3 per level). Top-center — level number, loop and level name. Top-right — kills / kill quota (turns green when met). Center — big messages (KILL N MORE, EXIT OPEN, LEVEL CLEAR, YOU DIED, RUN OVER). While the Brute is fighting, his health bar is shown under the top line. Text uses the pixel font (sprite "font") with a dark outline.
 sprite: fx
 files:
   - game/scripts/hud.gd
@@ -12,4 +12,6 @@ files:
 animations:
   heart_full: A remaining hit point.
   heart_empty: A lost hit point.
+  items/mag_hud: One spare magazine (drawn from the magazine reference).
+  items/grenade_hud: One grenade left (drawn from the grenade reference).
   font/g_A: "Pixel font glyph (A-Z, 0-9 and the signs / ! : - . + > <), all in the sprite font."

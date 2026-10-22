@@ -9,12 +9,16 @@ const CONTROLS := {
 	"jump": [KEY_W, KEY_UP, KEY_SPACE],
 	"shoot": [KEY_J, KEY_X],
 	"crouch": [KEY_S, KEY_DOWN],
+	"knife": [KEY_K, KEY_C],
+	"grenade": [KEY_Q],
+	"reload": [KEY_R],
+	"interact": [KEY_E],
 }
 
 ## Bro (default) (design/entities/bro.yaml)
 const BRO := {
 	"speed": 120.0,
-	"jump_velocity": -290.0,
+	"jump_velocity": -350.0,
 	"gravity": 800.0,
 	"fire_interval": 0.11,
 	"max_hp": 3,
@@ -22,7 +26,49 @@ const BRO := {
 	"respawn_delay": 2.0,
 	"speed_crouch": 55.0,
 	"hitbox": [12, 30],
-	"hitbox_crouch": [12, 24],
+	"hitbox_crouch": [12, 22],
+	"magazines": 2,
+	"max_spare_mags": 3,
+	"magazine_size": 30,
+	"reload_time": 1.4,
+	"recoil": 22.0,
+	"recoil_max": 45.0,
+	"recoil_decay": 160.0,
+	"spread_after": 3,
+	"spread_degrees": 7.0,
+	"burst_reset": 0.35,
+	"knife_range": 26.0,
+	"knife_speed": 40.0,
+	"knife_boss_damage": 5,
+	"knife_knockback": 190.0,
+	"knife_hop": -180.0,
+	"knife_blood": 70,
+	"mag_popup_time": 1.5,
+	"shout_interval": 1.1,
+	"cling_hold": 2.0,
+	"cling_slide_start": 12.0,
+	"cling_slide_accel": 70.0,
+	"cling_slide_max": 220.0,
+	"cling_kick": [120.0, -300.0],
+	"cling_cooldown": 0.25,
+	"flip_time": 0.25,
+	"base_spread": 0.0,
+	"bullet_lifetime": 0.8,
+	"knife_hits": 1,
+	"knife_stun": 0.0,
+	"tint": [1.0, 1.0, 1.0],
+}
+
+## Balal (playable Bro) (design/entities/blala.yaml)
+const BLALA := {
+	"fire_interval": 0.055,
+	"magazine_size": 60,
+	"bullet_lifetime": 0.28,
+	"base_spread": 12.0,
+	"speed": 150.0,
+	"jump_velocity": -400.0,
+	"knife_hits": 2,
+	"knife_stun": 2.0,
 }
 
 ## Bro rifle bullet (design/entities/bullet.yaml)
@@ -31,6 +77,26 @@ const BULLET := {
 	"lifetime": 0.8,
 	"damage": 1,
 	"size": [10, 6],
+	"behead": "headshot",
+}
+
+## Grenade (design/entities/grenade.yaml)
+const GRENADE := {
+	"grenades_per_level": 3,
+	"fuse_time": 2.0,
+	"throw_speed": [190.0, 210.0],
+	"crouch_throw_speed": [150.0, 40.0],
+	"gravity": 700.0,
+	"radius": 3.0,
+	"bounce": 0.45,
+	"roll_friction": 220.0,
+	"blink_speed": [4.0, 20.0],
+	"blast_radius": 30.0,
+	"blast_damage": 4,
+	"blast_player_damage": 2,
+	"flee_range": 96.0,
+	"flee_reaction": 0.6,
+	"flee_speed": 85.0,
 }
 
 ## Mook (enemy soldier) (design/entities/mook.yaml)
@@ -39,13 +105,15 @@ const MOOK := {
 	"walk_speed": 30.0,
 	"turn_pause": 0.8,
 	"gravity": 800.0,
+	"fall_death_height": 72,
 	"vision_range": 150.0,
 	"vision_height": 20.0,
-	"reaction_time": 0.5,
+	"reaction_time": 0.7,
 	"fire_interval": 0.18,
 	"burst_count": 3,
 	"burst_pause": 0.9,
 	"forget_time": 1.5,
+	"head_height": 9,
 	"hitbox": [12, 30],
 }
 
@@ -62,17 +130,20 @@ const KAMIKAZE := {
 	"hp": 1,
 	"walk_speed": 28.0,
 	"run_speed": 105.0,
-	"jump_velocity": -250.0,
+	"jump_velocity": -300.0,
 	"turn_pause": 0.8,
 	"gravity": 800.0,
+	"fall_death_height": 72,
 	"vision_range": 150.0,
 	"vision_height": 24.0,
 	"reaction_time": 0.35,
+	"fuse_after_seen": 3.0,
 	"chase_range": 260.0,
 	"trigger_range": 14.0,
 	"death_fuse": 0.35,
-	"blast_radius": 34.0,
+	"blast_radius": 58.0,
 	"blast_damage": 4,
+	"blast_shake": 14.0,
 	"blast_player_damage": 3,
 	"hitbox": [12, 30],
 }
@@ -84,6 +155,7 @@ const BRUTE := {
 	"walk_speed": 16.0,
 	"turn_pause": 1.2,
 	"gravity": 800.0,
+	"fall_death_height": 0,
 	"vision_range": 270.0,
 	"vision_height": 56.0,
 	"hearing_range": 90.0,
@@ -106,56 +178,143 @@ const MINIGUN_BULLET := {
 
 ## Terrain block (design/entities/block.yaml)
 const BLOCK := {
+	"size": 24,
 	"hp": 3,
+	"crack_stages": 4,
 	"grass_clearance": 3,
-	"debris_amount": 14,
+	"debris_amount": 34,
+	"blast_ragged": 0.45,
+	"chain_break": 0.3,
 }
 
 ## Explosive barrel (design/entities/barrel.yaml)
 const BARREL := {
 	"fuse_time": 0.45,
 	"chain_fuse": 0.15,
-	"blast_radius": 30.0,
-	"radius_per_extra": 10.0,
-	"max_radius": 80.0,
+	"blast_radius": 58.0,
+	"radius_per_extra": 18.0,
+	"max_radius": 150.0,
 	"blast_damage": 4,
 	"damage_per_extra": 3,
 	"blast_player_damage": 2,
+	"fire_particles": 8,
+	"fire_puff_interval": 0.07,
+	"fire_speed": 65.0,
 	"gravity": 800.0,
 }
 
 ## Explosion (design/entities/explosion.yaml)
 const EXPLOSION := {
+	"small_radius_ref": 36.0,
 	"big_scale_per_extra": 0.18,
 	"secondary_delay": 0.06,
 	"smoke_puffs": 2,
 	"fire_particles": 24,
 	"fling_speed": 220.0,
-	"shake": 3.0,
-	"shake_per_extra": 1.5,
+	"shake": 6.0,
+	"shake_per_extra": 3.0,
+	"embers": 34,
+	"embers_per_extra": 10,
+	"ember_life": 3.0,
 }
 
 ## Blood (design/entities/blood.yaml)
 const BLOOD := {
-	"droplets_hit": 8,
-	"droplets_death": 22,
+	"droplets_hit": 28,
+	"droplets_death": 90,
+	"droplets_gore": 450,
+	"gibs_death": 3,
+	"gore_shake": 5.0,
+	"gibs_gore": 14,
+	"gib_size_min": 2,
+	"gib_size_max": 7,
+	"gibs_per_block": 6,
+	"drop_size_min": 2,
+	"drop_size_max": 4,
 	"droplet_gravity": 520.0,
-	"stains_per_block": 48,
+	"stains_per_block": 90,
 }
 
 ## Corpse (enemy body) (design/entities/corpse.yaml)
 const CORPSE := {
-	"bump_speed": 0.9,
-	"bump_hop": -75.0,
-	"drag": 0.7,
+	"bump_speed": 0.3,
+	"bump_hop": -25.0,
+	"drag": 0.23,
 	"friction": 260.0,
 	"shot_knockback": 110.0,
 	"shot_hop": -95.0,
+	"burst_hits": 3,
 	"lying_height": 18,
+	"neck": [9, 8],
+	"fountain_time": 4.0,
+	"fountain_speed": 170.0,
+	"fountain_beat": 2.5,
+	"fountain_drops": 3,
 }
 
 ## Extraction flag (design/entities/exit.yaml)
 const EXIT := {
+}
+
+## Grass blades (design/entities/grass.yaml)
+const GRASS := {
+	"blades_per_block": 18,
+	"height_min": 5,
+	"height_max": 12,
+	"root_depth": 2,
+	"sway": 1.2,
+	"sway_speed": 1.7,
+	"stiffness": 90.0,
+	"damping": 7.0,
+	"push": 5.0,
+	"push_radius": 11.0,
+	"flick": 0.25,
+	"blast_push": 260.0,
+	"blast_range": 3.0,
+	"crush_width": 40.0,
+	"crushed_share": 0.5,
+	"crush_speed": 6.0,
+	"burst_particles": 3,
+	"blood_pixels": 3,
+}
+
+## Severed head (design/entities/head.yaml)
+const HEAD := {
+	"throw_x": [70.0, 150.0],
+	"throw_y": [200.0, 300.0],
+	"spin": 720.0,
+	"gravity": 700.0,
+	"radius": 5.0,
+	"bounce": 0.45,
+	"rest_speed": 60.0,
+	"roll_friction": 160.0,
+	"trail_time": 2.5,
+	"bullet_nudge": 60.0,
+	"kick_reach": 9.0,
+	"kick_speed": 150.0,
+	"kick_up": 190.0,
+	"kick_drops": 24,
+	"kick_bleed": 0.8,
+	"burst_drops": 40,
+}
+
+## Torn-apart body (design/entities/body_pieces.yaml)
+const BODY_PIECES := {
+	"bits": [2, 3],
+	"throw_x": [40.0, 150.0],
+	"throw_y": [120.0, 260.0],
+	"spin": 540.0,
+	"gravity": 700.0,
+	"bounce": 0.35,
+	"rest_speed": 70.0,
+	"trail_time": 2.2,
+	"drip_interval": 0.05,
+	"drip_droplets": 5,
+	"piece_droplets": 120,
+	"bounce_droplets": 40,
+	"rest_time": 5.0,
+	"fade_time": 1.5,
+	"sink_speed": 14.0,
 }
 
 ## HUD (design/entities/hud.yaml)
@@ -164,9 +323,10 @@ const HUD := {
 
 ## Sprite anchors relative to the frame center, in pixels (art/sprites/*.yaml)
 const ANCHORS := {
-	"barrel": {"center": Vector2(0.5, 1.5)},
+	"barrel": {"center": Vector2(0.5, 2.5)},
+	"blala": {"feet": Vector2(0.0, 17.5)},
 	"blood": {"spray_origin": Vector2(-8.5, 0.5), "center": Vector2(0.5, 0.5)},
-	"bro": {"feet": Vector2(0.0, 16.5)},
+	"bro": {"feet": Vector2(0.0, 17.5)},
 	"brute": {"muzzle_top": Vector2(25.0, -4.0), "muzzle_bottom": Vector2(24.0, 7.0), "eye": Vector2(2.0, -14.0)},
 	"explosion": {"center": Vector2(0.5, 1.5)},
 	"explosion_big": {"ground": Vector2(0.5, 16.5)},
@@ -179,25 +339,29 @@ const ANCHORS := {
 ## Gun tip of every frame, relative to the frame center (null = no gun in that frame).
 ## Found by tools/build.py from each sprite's muzzle_symbols, so bullets always leave the barrel.
 const MUZZLES := {
-	"bro": {"idle": [Vector2(13.0, 1.5), Vector2(13.0, 2.5)], "run": [Vector2(13.0, 1.5), Vector2(13.0, 2.5)], "jump": [Vector2(14.0, -1.5)], "shoot": [Vector2(14.0, -3.5), Vector2(13.0, -3.5)], "crouch": [Vector2(14.0, 0.5), Vector2(14.0, 1.5)], "crouch_walk": [Vector2(14.0, 0.5), Vector2(14.0, 1.5)], "crouch_shoot": [Vector2(14.0, 0.5), Vector2(13.0, 0.5)], "hurt": [Vector2(11.0, 14.5)]},
-	"mook": {"idle": [Vector2(15.0, 1.5), Vector2(15.0, 2.5)], "walk": [Vector2(14.0, 1.5), Vector2(15.0, 2.5)], "shoot": [Vector2(15.0, -3.5), Vector2(14.0, -3.5)], "fall": [Vector2(15.0, -1.5)], "hurt": [Vector2(8.0, 15.5)], "dead": [null]},
+	"blala": {"idle": [Vector2(16.0, 2.5), Vector2(16.0, 3.5)], "run": [Vector2(15.0, 2.5), Vector2(16.0, 3.5)], "jump": [Vector2(16.0, -0.5)], "shoot": [Vector2(17.0, -2.5), Vector2(18.0, -2.5)], "crouch": [Vector2(16.0, 1.5), Vector2(16.0, 2.5)], "crouch_walk": [Vector2(16.0, 2.5), Vector2(16.0, 1.5), Vector2(16.0, 2.5), Vector2(16.0, 1.5)], "crouch_shoot": [Vector2(16.0, 1.5), Vector2(17.0, 1.5)], "hurt": [Vector2(7.0, 10.5)], "knife": [null, null, null, Vector2(17.0, -9.5), Vector2(17.0, -9.5), Vector2(17.0, -9.5)], "run_shoot": [Vector2(15.0, 2.5), Vector2(16.0, 2.5), Vector2(16.0, 3.5), Vector2(17.0, 3.5)], "cling": [Vector2(7.0, -13.5), Vector2(7.0, -13.5), Vector2(7.0, -13.5), Vector2(7.0, -13.5)], "flip": [Vector2(16.0, -0.5), Vector2(2.0, 8.5), Vector2(10.0, -1.5), Vector2(7.0, 5.5)], "climb": [Vector2(16.0, 3.5), Vector2(16.0, 2.5), Vector2(16.0, 1.5)]},
+	"bro": {"idle": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "run": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "jump": [Vector2(14.0, -0.5)], "shoot": [Vector2(14.0, -2.5), Vector2(15.0, -2.5)], "crouch": [Vector2(14.0, 1.5), Vector2(14.0, 2.5)], "crouch_walk": [Vector2(14.0, 2.5), Vector2(14.0, 1.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)], "crouch_shoot": [Vector2(14.0, 1.5), Vector2(15.0, 1.5)], "hurt": [Vector2(11.0, 15.5)], "knife": [null, null, null, Vector2(17.0, -9.5), Vector2(17.0, -9.5), Vector2(17.0, -9.5)], "run_shoot": [Vector2(13.0, 2.5), Vector2(14.0, 2.5), Vector2(13.0, 3.5), Vector2(14.0, 3.5)], "cling": [Vector2(7.0, -13.5), Vector2(7.0, -13.5), Vector2(7.0, -13.5), Vector2(7.0, -13.5)], "flip": [Vector2(14.0, -0.5), Vector2(2.0, 13.5), Vector2(8.0, -2.5), Vector2(7.0, -2.5)], "climb": [Vector2(14.0, 3.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)]},
+	"mook": {"idle": [Vector2(15.0, 1.5), Vector2(15.0, 2.5)], "walk": [Vector2(14.0, 1.5), Vector2(15.0, 2.5)], "shoot": [Vector2(15.0, -3.5), Vector2(14.0, -3.5)], "fall": [Vector2(15.0, -1.5)], "hurt": [Vector2(8.0, 15.5)], "dead_a": [null], "dead_b": [null], "headless_a": [null], "headless_b": [null], "head_a": [null], "head_b": [null], "piece_torso": [null], "piece_arm": [null], "piece_leg": [null], "piece_leg_bent": [null], "piece_bit_a": [null], "piece_bit_b": [null]},
 }
 
 ## Frame size (width, height) of every sprite (art/sprites/*.yaml).
 const SPRITE_SIZES := {
-	"barrel": Vector2(16, 16),
+	"barrel": Vector2(26, 36),
+	"blala": Vector2(39, 36),
 	"blood": Vector2(24, 24),
-	"bro": Vector2(37, 34),
+	"bro": Vector2(39, 36),
 	"brute": Vector2(49, 45),
-	"exit": Vector2(16, 32),
+	"cracks": Vector2(24, 24),
+	"exit": Vector2(24, 48),
 	"explosion": Vector2(32, 32),
 	"explosion_big": Vector2(64, 64),
 	"font": Vector2(4, 6),
 	"fx": Vector2(8, 8),
+	"items": Vector2(16, 16),
 	"kamikaze": Vector2(35, 34),
-	"mook": Vector2(35, 34),
+	"mook": Vector2(47, 34),
 	"projectiles": Vector2(16, 10),
-	"terrain": Vector2(16, 16),
+	"terrain": Vector2(24, 24),
 }
 
 ## Number of terrain variants per kind (art/sprites/terrain.yaml).
@@ -216,7 +380,7 @@ const LEVELS := {
 		".....................................................E...........................###............................",
 		"................................................###########......................###............................",
 		".....................................OE.........###########....O.................###..OO..........##............",
-		"...P..............K.......###################..................OO..E..........E..###..OOOE.......O##..K.E....X..",
+		"...P..............K.......###################..................OO..E..........E.......OOOE.......O##..K.E....X..",
 		"######################....###################..........E......##################################################",
 		"######################....######################################################################################",
 		"######################....######################################.........#######################################",
@@ -271,6 +435,25 @@ const RUN := {
 	"clear_delay": 2.0,
 	"run_over_delay": 3.0,
 	"background_parallax": 0.3,
+	"boss_every": 3,
+	"min_enemies": 15,
+	"enemies_per_depth": 2,
+	"max_enemies": 70,
+	"width_base": 110,
+	"width_per_depth": 6,
+	"width_max": 260,
+	"boss_width": 90,
+	"platform_towers_base": 4,
+	"platform_towers_per_depth": 0.5,
+	"platform_towers_max": 14,
+	"kamikaze_base": 0.12,
+	"kamikaze_per_depth": 0.02,
+	"kamikaze_max": 0.4,
+	"barrel_clusters_base": 4,
+	"barrel_clusters_per_depth": 0.5,
+	"quota_base": 0.6,
+	"quota_per_depth": 0.02,
+	"quota_max": 0.9,
 	"levels": [
 		{"map": "level_01", "title": "Jungle Outpost", "kill_quota": 8},
 		{"map": "level_02", "title": "The Tunnels", "kill_quota": 10},

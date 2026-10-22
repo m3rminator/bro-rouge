@@ -1,0 +1,88 @@
+# Entity: living grass on top of the ground.
+id: grass
+name: Grass blades
+kind: effect
+order: 14
+description: Tufts of grass blades standing on top of every surface (grass) block. No sprite — every blade is drawn by the game pixel by pixel and moves on its own spring, so the grass is alive. It sways gently in the wind (a wave runs across the level), bends away from the Bro and enemies standing in it, is pressed down to half height under a body lying on it and gets flicked by anyone running through, whips away from explosions (the closer the blast, the harder), keeps any blood that falls on it (drops, death bursts and the pool under a body turn the blade tips red for the rest of the level), and bursts into green blade particles when its block is destroyed.
+sprite: terrain
+files:
+  - game/scripts/grass.gd
+  - game/scripts/main.gd
+  - game/scripts/block.gd
+  - game/scripts/blood_drops.gd
+  - game/scripts/blood.gd
+  - game/scripts/explosion.gd
+
+stats:
+  blades_per_block:
+    value: 18
+    unit: blades
+    description: Blades on each surface block (24 px wide) — a thick tuft. Positions and heights come from the block's map position, so the same level always grows the same grass.
+  height_min:
+    value: 5
+    unit: px
+    description: Shortest blade.
+  height_max:
+    value: 12
+    unit: px
+    description: Tallest blade (half a block).
+  root_depth:
+    value: 2
+    unit: px
+    description: Each blade starts this far inside the block's top edge, in the tile's own bright grass color, so the grass grows out of the ground with no gap (it also fills the notches in the tile's top row).
+  sway:
+    value: 1.2
+    unit: px
+    description: How far the wind bends a blade tip either way.
+  sway_speed:
+    value: 1.7
+    unit: rad/s
+    description: Speed of the wind wave.
+  stiffness:
+    value: 90.0
+    unit: 1/s²
+    description: Spring pulling a bent blade back upright. Higher = snaps back faster.
+  damping:
+    value: 7.0
+    unit: 1/s
+    description: How fast a blade's wobble dies out.
+  push:
+    value: 5.0
+    unit: px
+    description: How far a blade bends away from a body standing right next to it (less further away).
+  push_radius:
+    value: 11.0
+    unit: px
+    description: Blades this close (horizontally) to a body standing on the block are pushed aside.
+  flick:
+    value: 0.25
+    unit: ×
+    description: Someone running through also flicks the blades along — this share of their speed is added to the blades' swing.
+  blast_push:
+    value: 260.0
+    unit: px/s
+    description: Swing an explosion gives a blade at the blast center; it fades to nothing at blast_range.
+  blast_range:
+    value: 3.0
+    unit: × radius
+    description: Grass up to this many blast radii away still shakes.
+  crush_width:
+    value: 40.0
+    unit: px
+    description: A body lying in the grass presses the blades under it (this wide, centered on the body) down to half height, so the grass never hides a corpse.
+  crushed_share:
+    value: 0.5
+    unit: ×
+    description: Share of its height a blade keeps under a lying body (half — pressed down, not flattened).
+  crush_speed:
+    value: 6.0
+    unit: 1/s
+    description: How fast blades fold under a body that lands on them (and stand back up if it is thrown off).
+  burst_particles:
+    value: 3
+    unit: per blade
+    description: Green blade particles thrown up per blade when its block breaks.
+  blood_pixels:
+    value: 3
+    unit: px
+    description: Most pixels of a blade tip one blood drop paints red (the pool under a body paints more).

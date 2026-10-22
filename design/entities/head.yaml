@@ -1,0 +1,83 @@
+# Entity: a soldier's head blown off.
+id: head
+name: Severed head
+kind: effect
+order: 15
+description: When a mook dies in an explosion, or a Bro bullet hits him in the head (a head shot kills at once), his head is blown off. The head flies off away from the hit, spinning and pouring blood (engine particles plus real drops that stain the ground), bounces, rolls to a stop and stays for the rest of the level. It never blocks anything — the Bro running into it kicks it away (spinning, spraying blood), bullets fly through it and only knock it about a little (a few drops each) — but the Bro's knife bursts it into blood. The body keeps the matching headless pose, with blood pumping out of the neck (corpse.yaml fountain_*). Later Bros can carry weapons that behead on any kill (bullet stat behead "always").
+sprite: mook
+files:
+  - game/scripts/head.gd
+  - game/scripts/enemy.gd
+  - game/scripts/bullet.gd
+  - game/scripts/player.gd
+spawned_by: [mook]
+
+stats:
+  throw_x:
+    value: [70.0, 150.0]
+    unit: px/s
+    description: Sideways speed it flies off with, away from the bullet or blast (random in this range).
+  throw_y:
+    value: [200.0, 300.0]
+    unit: px/s
+    description: Upward speed it flies off with (random in this range).
+  spin:
+    value: 720.0
+    unit: °/s
+    description: How fast it spins in the air.
+  gravity:
+    value: 700.0
+    unit: px/s²
+    description: Fall acceleration.
+  radius:
+    value: 5.0
+    unit: px
+    description: Size of the ball it bounces and rolls as (only touches blocks).
+  bounce:
+    value: 0.45
+    unit: ×
+    description: Speed kept after hitting a block (it bounces a few times).
+  rest_speed:
+    value: 60.0
+    unit: px/s
+    description: Below this falling speed a landing stops the bouncing and it rolls instead.
+  roll_friction:
+    value: 160.0
+    unit: px/s²
+    description: How fast a rolling head stops.
+  trail_time:
+    value: 2.5
+    unit: s
+    description: How long blood keeps pouring from it after it is blown off.
+  bullet_nudge:
+    value: 60.0
+    unit: px/s
+    description: Knock a bullet flying through it gives it.
+  kick_reach:
+    value: 9.0
+    unit: px
+    description: The Bro running past within this distance kicks the head.
+  kick_speed:
+    value: 150.0
+    unit: px/s
+    description: Sideways speed of a kick (plus half the Bro's own speed), the way he is running.
+  kick_up:
+    value: 190.0
+    unit: px/s
+    description: Upward speed of a kick.
+  kick_drops:
+    value: 24
+    unit: drops
+    description: Blood drops a kick sprays all around (they fall and stain the ground).
+  kick_bleed:
+    value: 0.8
+    unit: s
+    description: A kicked head pours blood again for at least this long.
+  burst_drops:
+    value: 40
+    unit: drops
+    description: Blood drops thrown when the Bro's knife bursts it.
+
+animations:
+  mook/head_a: The head of lying pose A, cut from that pose (with its own outline).
+  mook/head_b: The head of lying pose B.

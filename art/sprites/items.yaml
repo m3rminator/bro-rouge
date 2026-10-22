@@ -1,0 +1,112 @@
+# Item icons. The magazine is drawn from its reference (refrences/items): the pixel-for-pixel
+# trace (34 x 52) cut down to a third (HUD icon, keeps the cap, ridges, curve and base plate)
+# and to a quarter (the small pick-up icon over the Bro's head), then cleaned by hand.
+# The grenade icon is the pineapple grenade of refrences/items/25c1cc54-...jpg cut down to the
+# HUD size (lever, pin ring, yellow band, segmented body). In the level the thrown grenade is just
+# a small round ball with its lever on top (the pin is pulled), blinking red as the fuse burns.
+name: items
+description: Item icons — the magazine shown in the HUD (one per spare magazine), the "+ magazine" pop-up over the Bro's head when a knife kill gives him one, the grenade HUD icon (one per grenade left) and the thrown grenade (blinks red while its fuse burns).
+palette: items
+reference: refrences/items/57d2b35a-865a-42b5-bd4c-b10d9abaf164.jpg
+frame: [16, 16]
+
+parts:
+  mag: |
+    .oooooo....
+    oblbbbbo...
+    obbbbbbo...
+    oddddddo...
+    .omlmmlo...
+    .omlmmlo...
+    .omlmmlo...
+    .omlmmldo..
+    ..omlmmlo..
+    ..omlmmldo.
+    ..oomlmmlo.
+    ...omlmmlo.
+    ...omlmmldo
+    ....omlmmlo
+    ....obbbbbo
+    .....ooooo.
+  mag_small: |
+    .oooo...
+    oblbbo..
+    obbbbo..
+    oddddo..
+    .omlmo..
+    .omlmo..
+    .omlmdo.
+    ..omlmo.
+    ..omlmdo
+    ...omlmo
+    ...obbbo
+    ....ooo.
+  plus: |
+    ..ooo..
+    ..owo..
+    ooowooo
+    owwwwwo
+    ooowooo
+    ..owo..
+    ..ooo..
+  grenade_icon: |
+    ....kkkkkk....
+    ...kIIIIIIAk..
+    ....kAAAkkIAk.
+    ....kYYYIkkIAk
+    ...kkkkkI.IkAk
+    ..kHBkHBkIkk.k
+    .kHBBkHBkkHBk.
+    .kBBEkBBkBBEk.
+    .kkkkkkkkkkkk.
+    .kHBkkHBkHBEk.
+    .kBBEkBBkBBEk.
+    .kkkkkkkkkkkk.
+    .kHBkkHBkHBEk.
+    ..kBEkBBkBEk..
+    ...kkkkkkkk...
+  grenade_ball: |
+    ..kkkk..
+    .kIIIIk.
+    ..kAAk..
+    ..kkkk..
+    .kHHBBk.
+    kHHBBBEk
+    kHBBBBEk
+    kBBBBEEk
+    .kBEEEk.
+    ..kkkk..
+  grenade_ball_flash: |
+    ..kkkk..
+    .kIIIIk.
+    ..kAAk..
+    ..kkkk..
+    .kPPffk.
+    kPPfffFk
+    kPffffFk
+    kffffFFk
+    .kfFFFk.
+    ..kkkk..
+
+animations:
+  mag_hud:
+    fps: 1
+    loop: false
+    frames:
+      - [[mag, 2, 0]]
+  mag_pickup:
+    fps: 1
+    loop: false
+    frames:
+      - [[plus, 0, 5], [mag_small, 8, 2]]
+  grenade_hud:
+    fps: 1
+    loop: false
+    frames:
+      - [[grenade_icon, 1, 0]]
+  grenade:
+    fps: 4  # the game speeds this up as the fuse runs out
+    loop: true
+    frames:
+      - [[grenade_ball, 4, 3]]
+      - [[grenade_ball_flash, 4, 3]]

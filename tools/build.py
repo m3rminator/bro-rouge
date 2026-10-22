@@ -99,7 +99,7 @@ def render_frame(layers, parts, size, colors, sprite, where):
     return img
 
 
-def gun_tip(layers, parts, size, gun):
+def gun_tip(layers, parts, size, gun, second=False):
     """Muzzle of one frame: just right of the rightmost pixel drawn in a gun color (`gun` =
     palette symbols), on the middle row of the barrel there. None if the frame has no gun."""
     w, h = size
@@ -110,11 +110,43 @@ def gun_tip(layers, parts, size, gun):
             for rx, ch in enumerate(row):
                 if ch != ".":
                     grid[y + ry][x + rx] = ch
+    if second:
+        return second_gun_tip(grid, gun)
     cols = [x for x in range(w) if any(grid[y][x] in gun for y in range(h))]
     if not cols:
         return None
     tip = max(cols)
     rows = [y for y in range(h) if grid[y][tip] in gun]
+    return (tip + 1, rows[(len(rows) - 1) // 2])
+
+
+def second_gun_tip(grid, gun, min_size=8):
+    """Tip of the other gun in a two-gun frame: the gun-colored blobs (8-connected, at least
+    `min_size` pixels) are the guns; the second-rightmost blob's tip. None with one gun."""
+    h, w = len(grid), len(grid[0])
+    seen, blobs = set(), []
+    for y in range(h):
+        for x in range(w):
+            if grid[y][x] in gun and (x, y) not in seen:
+                stack, blob = [(x, y)], []
+                seen.add((x, y))
+                while stack:
+                    cx, cy = stack.pop()
+                    blob.append((cx, cy))
+                    for dx in (-1, 0, 1):
+                        for dy in (-1, 0, 1):
+                            nx, ny = cx + dx, cy + dy
+                            if 0 <= nx < w and 0 <= ny < h and (nx, ny) not in seen and grid[ny][nx] in gun:
+                                seen.add((nx, ny))
+                                stack.append((nx, ny))
+                if len(blob) >= min_size:
+                    blobs.append(blob)
+    if len(blobs) < 2:
+        return None
+    blobs.sort(key=lambda b: max(p[0] for p in b), reverse=True)
+    blob = blobs[1]
+    tip = max(p[0] for p in blob)
+    rows = sorted(p[1] for p in blob if p[0] == tip)
     return (tip + 1, rows[(len(rows) - 1) // 2])
 
 
@@ -140,6 +172,9 @@ def build_sprite(path, master, sets):
     if spec.get("muzzle_symbols"):
         spec["_muzzles"] = {aname: [gun_tip(layers, parts, (fw, fh), spec["muzzle_symbols"]) for layers in anim["frames"]]
                             for aname, anim in anims.items()}
+        if spec.get("two_guns"):
+            spec["_muzzles2"] = {aname: [gun_tip(layers, parts, (fw, fh), spec["muzzle_symbols"], True) for layers in anim["frames"]]
+                                 for aname, anim in anims.items()}
     return spec, Image.fromarray(sheet, "RGBA"), layout
 
 
@@ -240,7 +275,7 @@ def load_design(sprites, audio):
 
 
 def load_levels(entities):
-    """design/levels/*.txt: one character per 16x16 tile. Symbols come from entities' level_symbols."""
+    """design/levels/*.txt: one character per block-sized tile. Symbols come from entities' level_symbols."""
     symbols = {s for ent in entities.values() for s in ent.get("level_symbols", {})}
     levels = {}
     for path in sorted((DESIGN / "levels").glob("*.txt")):
@@ -267,7 +302,7 @@ def load_levels(entities):
     return levels
 
 
-TALL_SYMBOLS = {"P": 2, "E": 2, "K": 2, "X": 2, "B": 3}  # height in tiles of what stands on that tile
+TALL_SYMBOLS = {"P": 2, "E": 2, "K": 2, "X": 2, "B": 3, "O": 2}  # height in tiles of what stands on that tile
 
 
 def enemy_symbols(entities):
@@ -348,10 +383,11 @@ def render_level(rows, sprites, clearance, entities):
         fw, fh = sp["frame"]
         return img.crop((0, lay[anim] * fh, fw, lay[anim] * fh + fh))
 
-    out = Image.new("RGBA", (len(rows[0]) * 16, len(rows) * 16), hex_to_rgba("#5ab4e8"))
+    T = entities["block"]["stats"]["size"]["value"]
+    out = Image.new("RGBA", (len(rows[0]) * T, len(rows) * T), hex_to_rgba("#5ab4e8"))
     tiles = sorted(level_tiles(rows, variants, clearance), key=lambda t: t[2].startswith("drip"))
     for x, y, anim in tiles:
-        out.alpha_composite(frame("terrain", anim), (x * 16, y * 16))
+        out.alpha_composite(frame("terrain", anim), (x * T, y * T))
     for y, row in enumerate(rows):
         for x, ch in enumerate(row):
             if ch in previews:  # bottom-centered on its tile, like in the game; enemies start facing left
@@ -359,7 +395,7 @@ def render_level(rows, sprites, clearance, entities):
                 sprite = frame(sname, anim)
                 if flip:
                     sprite = sprite.transpose(Image.FLIP_LEFT_RIGHT)
-                px, py = x * 16 + 8 - sprite.width // 2, y * 16 + 16 - sprite.height
+                px, py = x * T + T // 2 - sprite.width // 2, y * T + T - sprite.height
                 out.alpha_composite(sprite, (max(px, 0), max(py, 0)))
     return out
 
@@ -400,6 +436,15 @@ def game_data_gd(controls, entities, sprites, levels, run):
             fw, fh = spec["frame"]
             anims = ", ".join(f'"{a}": [' + ", ".join("null" if t is None else f"Vector2({t[0] + 0.5 - fw / 2}, {t[1] + 0.5 - fh / 2})"
                                                        for t in tips) + "]" for a, tips in spec["_muzzles"].items())
+            lines.append(f'	"{spec["name"]}": {{{anims}}},')
+    lines += ["}", "",
+              "## The second gun's tip per frame, for sprites with two_guns (null = only one gun shows).",
+              "const MUZZLES_2 := {"]
+    for spec, _, _ in sprites:
+        if spec.get("_muzzles2"):
+            fw, fh = spec["frame"]
+            anims = ", ".join(f'"{a}": [' + ", ".join("null" if t is None else f"Vector2({t[0] + 0.5 - fw / 2}, {t[1] + 0.5 - fh / 2})"
+                                                       for t in tips) + "]" for a, tips in spec["_muzzles2"].items())
             lines.append(f'	"{spec["name"]}": {{{anims}}},')
     lines += ["}", "", "## Frame size (width, height) of every sprite (art/sprites/*.yaml).", "const SPRITE_SIZES := {"]
     for spec, _, _ in sprites:
@@ -553,17 +598,18 @@ def catalog_html(master, sets, sprites, storyboards, audio, controls, entities, 
     body.append("</table></div>")
 
     body.append("<h2 id='levels'>Levels</h2><p class='mute'>Source: <code>design/levels/*.txt</code> — one character per "
-                "16×16 block. Rendered with the exact tiles and variant formula the game uses.</p>")
+                "block (24×24 px). Rendered with the exact tiles and variant formula the game uses.</p>")
     legend = {sym: (ent["name"], what) for ent in entities.values() for sym, what in ent.get("level_symbols", {}).items()}
     in_run = {lv["map"]: (i, lv) for i, lv in enumerate(run["levels"], 1)}
     for name, rows in levels.items():
+        T = entities["block"]["stats"]["size"]["value"]
         preview = render_level(rows, sprites, entities["block"]["stats"]["grass_clearance"]["value"], entities)
         data = "data:image/png;base64," + base64.b64encode(png_bytes(preview)).decode()
         counts = {sym: sum(r.count(sym) for r in rows) for sym in legend}
         title = f"Level {in_run[name][0]}: {in_run[name][1]['title']} — {name}" if name in in_run else f"{name} (not in the run)"
         quota = f" · kill quota {in_run[name][1]['kill_quota']}" if name in in_run else ""
         body.append(f"<div class='card' id='map-{e(name)}'><h3 style='margin-top:0'>{e(title)}</h3>"
-                    f"<p class='mute'>{len(rows[0])} × {len(rows)} blocks ({len(rows[0]) * 16} × {len(rows) * 16} px) · "
+                    f"<p class='mute'>{len(rows[0])} × {len(rows)} blocks ({len(rows[0]) * T} × {len(rows) * T} px) · "
                     f"{sum(counts.get(c, 0) for c in foes)} enemies{quota}</p><div class='tbl'><img class='px' src='{data}' "
                     f"style='width:{preview.width * 2}px;max-width:none;border-radius:6px'></div><p>"
                     + " · ".join(f"<kbd>{e(sym)}</kbd> {e(what)} <span class='mute'>×{counts[sym]}</span>"

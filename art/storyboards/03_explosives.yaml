@@ -4,10 +4,10 @@ description: How blasts must read on screen — every size has its own look, and
 panels:
   - title: Spot the barrel
     shot: barrel/idle/0
-    caption: Red drum with a skull, always placed near enemies. One block — you can stand on it.
+    caption: Red drum with a skull and crossbones, always placed near enemies. A bit shorter than the Bro — you can stand on it.
   - title: Light it
     shot: barrel/burning/1
-    caption: One bullet sets it burning — flames on the lid, the drum flashes hot. Under half a second to get clear.
+    caption: One bullet makes it bulge and pop its lid, fire runs up both sides and the drum flashes hot. Under half a second to get clear.
     sfx: barrel_ignite
   - title: Single blast
     shot: explosion/blast_a/2
@@ -29,3 +29,13 @@ panels:
   - title: Chain reaction
     shot: explosion/smoke_0/3
     caption: Barrels further away that sit inside a blast catch fire and go off a moment later — piles ripple.
+  - title: Living grass
+    shot: terrain/grass_0/0
+    caption: The blades on every surface block are alive — they sway in the wind, part around anyone standing in them, whip away from every blast, keep the blood that falls on them, and burst into green bits when their block is blown apart.
+  - title: Torn apart
+    shot: mook/piece_torso/0
+    caption: A soldier caught in a blast is torn into pieces (torn reference) - head, torso, two arms, two legs and scraps of flesh fly off spinning, each trailing blood from its torn end, bounce and stay where they land.
+    sfx: blood_splat
+  - title: Pieces on the ground
+    shot: mook/piece_leg_bent/0
+    caption: Every piece lies flat where it stopped for the rest of the level; the drops it shed on the way stain the blocks.

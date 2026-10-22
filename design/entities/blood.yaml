@@ -3,30 +3,68 @@ id: blood
 name: Blood
 kind: effect
 order: 13
-description: Every bullet hit on an enemy (alive or dead) sprays blood in the bullet's direction (one of three sprays, cycling, plus loose droplets). A death adds a radial burst (one of two). Every loose droplet is a real falling drop — it flies, falls with gravity and, where it hits a block, leaves a stain that stays (on top it splats wider, on walls and ceilings it is a small mark). Stains belong to the block, so they vanish when it is destroyed. When a body comes to rest, a pool (one of three) spreads under it and stays for the rest of the level; it is stuck to the block underneath, so it disappears if that block is destroyed. A kamikaze leaves only a burst and a pool — no body.
+description: Every bullet hit on an enemy (alive or dead) sprays blood in the bullet's direction (one of three sprays, cycling, plus loose droplets). A death adds a radial burst (one of two). Every loose droplet is a real falling drop — it flies, falls with gravity and, where it hits a block, leaves a stain that stays (on top it splats wider, on walls and ceilings it is a small mark). Stains belong to the block, so they vanish when it is destroyed. When a body comes to rest, a pool (one of three) spreads under it and stays for the rest of the level; it is stuck to the block underneath, so it disappears if that block is destroyed. Bursts also throw red chunks of flesh that land on top of blocks and stay there as lumps. A kamikaze (and any body shot to pieces) bursts into a shower of gore and leaves only a pool — no body.
 sprite: blood
 files:
   - game/scripts/blood.gd
+  - game/scripts/gibs.gd
+  - game/scripts/block_chunks.gd
   - game/scripts/blood_drops.gd
   - game/scripts/blood_stains.gd
 spawned_by: [mook, kamikaze, brute]
 
 stats:
   droplets_hit:
-    value: 8
+    value: 28
     unit: particles
     description: Loose droplets per bullet hit (on top of the spray sprite).
   droplets_death:
-    value: 22
+    value: 90
     unit: particles
     description: Loose droplets per death.
 
+  droplets_gore:
+    value: 450
+    unit: particles
+    description: Loose droplets when a kamikaze blows up or a body bursts (both death bursts play at once too) — soaks the ground and walls around.
+  gibs_death:
+    value: 3
+    unit: chunks
+    description: Red chunks of flesh thrown out when an enemy dies. A chunk that lands on top of a block stays there as a lump for the rest of the level.
+  gore_shake:
+    value: 5.0
+    unit: px
+    description: Screen shake whenever a body bursts into gore (shot corpse, knifed corpse, fall splat, kamikaze blast).
+  gibs_gore:
+    value: 14
+    unit: chunks
+    description: Chunks thrown when a kamikaze blows up or a body bursts — they litter the ground around.
+  gib_size_min:
+    value: 2
+    unit: px
+    description: Smallest chunk width. Chunk sizes vary between this and gib_size_max (taller ones are also wider); chunks have no outline and some have an uneven edge.
+  gib_size_max:
+    value: 7
+    unit: px
+    description: Widest chunk.
+  gibs_per_block:
+    value: 6
+    unit: chunks
+    description: Most chunks one block keeps lying on it (oldest go first).
+  drop_size_min:
+    value: 2
+    unit: px
+    description: Smallest loose droplet (a square this many pixels wide).
+  drop_size_max:
+    value: 4
+    unit: px
+    description: Biggest loose droplet. Each drop picks a size between the two; bigger drops leave bigger stains.
   droplet_gravity:
     value: 520.0
     unit: px/s²
     description: How fast droplets fall.
   stains_per_block:
-    value: 48
+    value: 90
     unit: stains
     description: Most stains one block keeps (oldest are replaced), so long fights stay fast.
 

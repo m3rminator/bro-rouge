@@ -29,7 +29,7 @@ stats:
     unit: px/s
     description: Charge speed once he has spotted the Bro (the Bro runs 120, so you can only just outrun him).
   jump_velocity:
-    value: -250.0
+    value: -300.0
     unit: px/s
     description: Jump used to hop over a wall while charging (about 2 blocks high).
   turn_pause:
@@ -40,6 +40,10 @@ stats:
     value: 800.0
     unit: px/s²
     description: Downward acceleration while falling.
+  fall_death_height:
+    value: 72
+    unit: px
+    description: A fall of this much or more (from the highest point of his flight) kills him on landing — three blocks or more (his vest then still goes off). 0 = immune to falls.
   vision_range:
     value: 150.0
     unit: px
@@ -52,6 +56,10 @@ stats:
     value: 0.35
     unit: s
     description: Scream ("!") before he starts running.
+  fuse_after_seen:
+    value: 3.0
+    unit: s
+    description: He blows up this long after he first sees the Bro, wherever he is - running away does not shake him, but he cannot chase forever.
   chase_range:
     value: 260.0
     unit: px
@@ -65,13 +73,17 @@ stats:
     unit: s
     description: Delay between being killed and his vest going off.
   blast_radius:
-    value: 34.0
+    value: 58.0
     unit: px
-    description: Explosion radius (≈ 2 blocks). Blocks whose center is inside are destroyed.
+    description: Explosion radius (≈ 3.5 blocks). Blocks whose center is inside are destroyed.
   blast_damage:
     value: 4
     unit: hp
     description: Damage his blast deals to enemies (kills mooks and other kamikazes outright).
+  blast_shake:
+    value: 14.0
+    unit: px
+    description: Screen shake when his vest goes off (the biggest single shake in the game).
   blast_player_damage:
     value: 3
     unit: hearts

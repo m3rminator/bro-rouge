@@ -94,3 +94,46 @@ colors:
   grunt_sweater_light: "#ab8050"
   grunt_skin_dark:   "#ce8960"
   grunt_skin:        "#dea172"
+  # barrel — sampled from the barrel references (refrences/barrel)
+  barrel_black:      "#040202"
+  barrel_red_dark:   "#6e2119"
+  barrel_red:        "#a0301f"
+  barrel_red_light:  "#c64831"
+  barrel_red_hot:    "#e0663f"
+  barrel_steel_dark: "#4f4c4e"
+  barrel_steel:      "#7e756e"
+  barrel_steel_light: "#a9a29c"
+  barrel_bone:       "#d6c6bc"
+  rambo_trail:       "#6f4d31"  # knife swing trail (refrences/bros/bro rambo/knife 2.jpg)
+  rambo_swoosh_light: "#f2f6f8"  # knife 'wind' swoosh (silver)
+  rambo_swoosh:      "#bac5cd"
+  rambo_swoosh_dark: "#87939d"
+  # magazine — sampled from the magazine reference (refrences/items)
+  mag_black:         "#040101"
+  mag_dark:          "#2b2322"
+  mag_body:          "#564d47"
+  mag_brown:         "#624d40"
+  mag_light:         "#867360"
+  # grenade — sampled from refrences/items (the pineapple grenade); flash = its blink
+  grenade_black:     "#050302"
+  grenade_dark:      "#3e3626"
+  grenade_olive:     "#716546"
+  grenade_light:     "#9d9170"
+  grenade_band:      "#c8a830"
+  lever_dark:        "#5e5e5a"
+  lever_light:       "#a0a09a"
+  grenade_flash_dark: "#8c1c14"
+  grenade_flash:     "#e83a22"
+  grenade_flash_light: "#ff9a7a"
+  # Blala (refrences/bros/balal)
+  blala_hair:         "#17100c"  # buzz cut
+  blala_hair_light:   "#3b2c22"  # buzz cut stubble highlight
+  blala_skin_outline: "#2a160c"
+  blala_skin_dark:    "#4f2e1d"
+  blala_skin:         "#663f29"
+  blala_skin_light:   "#7e5034"
+  blala_tank:         "#d8d0ac"
+  blala_tank_shadow:  "#a89a72"
+  blala_pants_dark:   "#1f2819"
+  blala_pants_shadow: "#34432a"
+  blala_pants:        "#4a6039"

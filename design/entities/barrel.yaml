@@ -3,7 +3,7 @@ id: barrel
 name: Explosive barrel
 kind: hazard
 order: 11
-description: Red drum, one block. A hit from any bullet (or a nearby blast) sets it burning; after fuse_time it explodes. Barrels that touch each other (side by side, stacked or diagonal) explode together as ONE bigger blast — radius and damage grow with every extra barrel, and it looks different (mushroom fireball + shockwave instead of a small blast). Barrels further away that are inside the blast catch fire and go off a moment later (chain reaction). Solid — you can stand on it, and it falls if the ground under it is destroyed.
+description: Red drum with a skull, about 1.4 blocks tall (a bit shorter than the Bro), drawn from refrences/barrel. A hit from any bullet (or a nearby blast) makes it bulge and sets it burning — fire runs up both of its sides — after fuse_time it explodes. Barrels that touch each other (side by side, stacked or diagonal) explode together as ONE bigger blast — radius and damage grow with every extra barrel, and it looks different (mushroom fireball + shockwave instead of a small blast). Barrels further away that are inside the blast catch fire and go off a moment later (chain reaction). Solid — you can stand on it, and it falls if the ground under it is destroyed.
 sprite: barrel
 files:
   - game/scripts/barrel.gd
@@ -24,17 +24,17 @@ stats:
     unit: s
     description: Burning time when set off by another explosion (makes chain reactions ripple).
   blast_radius:
-    value: 30.0
+    value: 58.0
     unit: px
-    description: Blast radius of a single barrel (≈ 2 blocks).
+    description: Blast radius of a single barrel (≈ 3.5 blocks).
   radius_per_extra:
-    value: 10.0
+    value: 18.0
     unit: px
     description: Extra radius for every other barrel in the same touching cluster.
   max_radius:
-    value: 80.0
+    value: 150.0
     unit: px
-    description: Cap on the blast radius, however many barrels (5 blocks).
+    description: Cap on the blast radius, however many barrels (about 6 blocks).
   blast_damage:
     value: 4
     unit: hp
@@ -47,6 +47,18 @@ stats:
     value: 2
     unit: hearts
     description: Hearts the blast takes from the Bro (any cluster size).
+  fire_particles:
+    value: 8
+    unit: particles
+    description: Size of one flame puff on a burning barrel (each puff is randomly half to a bit more than this).
+  fire_puff_interval:
+    value: 0.07
+    unit: s
+    description: Roughly how often a new flame puff breaks out at a random spot on the burning barrel (varied by half either way).
+  fire_speed:
+    value: 65.0
+    unit: px/s
+    description: How fast the side flames shoot up.
   gravity:
     value: 800.0
     unit: px/s²
@@ -54,7 +66,7 @@ stats:
 
 animations:
   idle: Untouched.
-  burning: Hit — flames on the lid, drum flashing hot, about to blow.
+  burning: Hit — the drum bulges and the lid pops up (second reference), flashing hot, with fire particles up both sides, about to blow.
 
 sounds:
   barrel_ignite: It catches fire.

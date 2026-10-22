@@ -2,86 +2,118 @@
 name: exit
 description: "Extraction flag at the end of each level. Red flag at the bottom = locked, green flag at the top = open."
 palette: exit
-frame: [16, 32]
+frame: [24, 48]
 
 parts:
   pole: |
-    oyyo
-    oyyo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    ogGo
-    .oo.
+    ooyyyo
+    ooyyyo
+    ooyyyo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    oogGGo
+    ..ooo.
   base: |
-    ...oooooooo...
-    ..osssssssso..
-    .oosssSssssoo.
-    oSSSSSSSSSSSSo
-    oSSSTSSSTSSSTo
-    oSSSSSSSSSSSSo
-    .oooooooooooo.
+    .....oooooooooooo....
+    .....oooooooooooo....
+    ...oosssssssssssso...
+    ..ooossssSSssssssooo.
+    ..ooossssSSssssssooo.
+    ooSSSSSSSSSSSSSSSSSSo
+    ooSSSSTTSSSSTTSSSSTTo
+    ooSSSSTTSSSSTTSSSSTTo
+    ooSSSSSSSSSSSSSSSSSSo
+    ..oooooooooooooooooo.
   flag_locked: |
-    .oo.oorrro..
-    orrorrrrrro.
-    orrrrrwwwrro
-    orrrwwrrrrro
-    orrwrrRRRrro
-    oRRrRRRRRRro
-    oRRRRRoooRRo
-    .ooRoo...oRo
-    ...o......o.
+    ..ooo.ooorrrrro...
+    ..ooo.ooorrrrro...
+    oorrrorrrrrrrrroo.
+    oorrrrrrrwwwwwrrro
+    oorrrrrrrwwwwwrrro
+    oorrrrwwwrrrrrrrro
+    oorrrwrrrRRRRRrrro
+    oorrrwrrrRRRRRrrro
+    ooRRRrRRRRRRRRRrro
+    ooRRRRRRRoooooRRRo
+    ooRRRRRRRoooooRRRo
+    ..oooRooo.....oRRo
+    .....o.........oo.
+    .....o.........oo.
   flag_open_a: |
-    .oo.oofffo..
-    offoffffwfo.
-    offfwffwfffo
-    offffwwffffo
-    offfffFFFffo
-    oFFfFFFFFFfo
-    oFFFFFoooFFo
-    .ooFoo...oFo
-    ...o......o.
+    ..ooo.ooofffffo...
+    ..ooo.ooofffffo...
+    oofffoffffffwwfoo.
+    ooffffwwfffwfffffo
+    ooffffwwfffwfffffo
+    ooffffffwwwffffffo
+    oofffffffFFFFFfffo
+    oofffffffFFFFFfffo
+    ooFFFfFFFFFFFFFffo
+    ooFFFFFFFoooooFFFo
+    ooFFFFFFFoooooFFFo
+    ..oooFooo.....oFFo
+    .....o.........oo.
+    .....o.........oo.
   flag_open_b: |
-    .oooffoo....
-    offfwfffooo.
-    offffwfffffo
-    offffffwwffo
-    offfFFwffffo
-    oFFFFFFFfffo
-    oFFFooFFFFFo
-    .ooo..ooFFFo
-    ........ooo.
+    ..oooofffooo......
+    ..oooofffooo......
+    ooffffwwffffooooo.
+    ooffffffwffffffffo
+    ooffffffwffffffffo
+    oofffffffffwwwfffo
+    ooffffFFFwwffffffo
+    ooffffFFFwwffffffo
+    ooFFFFFFFFFFfffffo
+    ooFFFFoooFFFFFFFFo
+    ooFFFFoooFFFFFFFFo
+    ..oooo...oooFFFFFo
+    ............ooooo.
+    ............ooooo.
 
 animations:
   locked:
     fps: 1
     loop: false
     frames:
-      - [[base, 1, 25], [pole, 2, 4], [flag_locked, 4, 15]]
+      - [[base, 2, 38], [pole, 3, 6], [flag_locked, 6, 22]]
   open:
     fps: 5
     loop: true
     frames:
-      - [[base, 1, 25], [pole, 2, 4], [flag_open_a, 4, 4]]
-      - [[base, 1, 25], [pole, 2, 4], [flag_open_b, 4, 4]]
+      - [[base, 2, 38], [pole, 3, 6], [flag_open_a, 6, 6]]
+      - [[base, 2, 38], [pole, 3, 6], [flag_open_b, 6, 6]]

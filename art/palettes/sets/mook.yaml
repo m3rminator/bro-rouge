@@ -14,3 +14,6 @@ symbols:
   L: grunt_sweater_light
   S: grunt_skin_dark
   s: grunt_skin
+  r: blood_bright        # torn flesh (body pieces)
+  R: blood
+  D: blood_dark
