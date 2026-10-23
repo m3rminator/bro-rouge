@@ -341,15 +341,18 @@ def load_storyboards(sprites, audio):
     return boards
 
 
-def tile_variant(x, y, count):
-    """Same formula as level code in the game (main.gd) — keeps previews and game identical."""
-    return ((x * 73) ^ (y * 151)) % count
+def tile_hash(x, y, salt=0):
+    """Same integer hash as scripts/main.gd (tile_hash) - random-looking, but the same level always looks the same."""
+    n = (x * 374761393 + y * 668265263 + salt * 1274126177) & 0xFFFFFFFF
+    n = ((n ^ (n >> 13)) * 1274126177) & 0xFFFFFFFF
+    return n ^ (n >> 16)
 
 
 def tile_variants(sprites):
     anims = next(lay for sp, _, lay in sprites if sp["name"] == "terrain")
     names = [l[0] for l in anims]
-    return {kind: sum(1 for n in names if n.startswith(kind + "_")) for kind in ("earth", "grass")}
+    kinds = ("earth", "subsoil", "pebble", "flint", "rock", "grass", "stonetop", "stone", "deep")
+    return {kind: sum(1 for n in names if n.startswith(kind + "_")) for kind in kinds}
 
 
 def has_sky(rows, x, y, clearance):
@@ -357,19 +360,53 @@ def has_sky(rows, x, y, clearance):
     return all(rows[yy][x] != "#" for yy in range(max(0, y - clearance), y))
 
 
-def level_tiles(rows, variants, clearance):
-    """Yield (x, y, anim) for every terrain sprite to draw, including grass strands."""
+def air_distance(rows, x, y, reach=3, not_above=False):
+    """Same rule as main.gd: 1 = touches open air, up to reach+1 = buried deep. not_above ignores air higher up (the sky over the ground)."""
+    def air(ax, ay):
+        if ay < 0:
+            return True
+        if ax < 0 or ax >= len(rows[0]) or ay >= len(rows):
+            return False  # the map edge counts as solid ground
+        return rows[ay][ax] != "#"
+    for r in range(1, reach + 1):
+        for dy in range(0 if not_above else -r, r + 1):
+            for dx in range(-r, r + 1):
+                if max(abs(dx), abs(dy)) == r and air(x + dx, y + dy):
+                    return r
+    return reach + 1
+
+
+def pick_tile(rows, x, y, variants, clearance, biome="earth"):
+    """Same rules as main.gd (_add_block): returns (anim, drip anim or None, flip_h, flip_v)."""
+    h = tile_hash(x, y)
+    flip_h = bool((h >> 3) & 1)
+    flip_v = bool((h >> 4) & 1)
+    pick = lambda kind: f"{kind}_{tile_hash(x, y, 1) % variants[kind]}"
+    sky = has_sky(rows, x, y, clearance)
+    d = air_distance(rows, x, y)
+    if biome == "stone":
+        if sky:
+            return pick("stonetop"), None, flip_h, False
+        return (pick("stone") if d <= 2 else pick("deep")), None, flip_h, flip_v
+    if sky:
+        k = tile_hash(x, y, 1) % variants["grass"]
+        return f"grass_{k}", (f"drip_{k}" if y + 1 < len(rows) else None), flip_h, False
+    roll = tile_hash(x, y, 2) % 100
+    if d <= 3:  # the second layer (two rows deep): some clods, now and then a stone
+        return (pick("pebble") if roll < 14 else pick("earth")), None, flip_h, flip_v
+    return (pick("flint") if roll < 7 else pick("subsoil")), None, flip_h, flip_v  # the third layer and deeper: low detail
+
+
+def level_tiles(rows, variants, clearance, biome="earth"):
+    """Yield (x, y, anim, flip_h, flip_v) for every terrain sprite to draw, including grass strands."""
     for y, row in enumerate(rows):
         for x, ch in enumerate(row):
             if ch != "#":
                 continue
-            if has_sky(rows, x, y, clearance):
-                k = tile_variant(x, y, variants["grass"])
-                yield x, y, f"grass_{k}"
-                if y + 1 < len(rows):
-                    yield x, y + 1, f"drip_{k}"
-            else:
-                yield x, y, f"earth_{tile_variant(x, y, variants['earth'])}"
+            anim, drip, fh, fv = pick_tile(rows, x, y, variants, clearance, biome)
+            yield x, y, anim, fh, fv
+            if drip:
+                yield x, y + 1, drip, fh, False
 
 
 def render_level(rows, sprites, clearance, entities):
@@ -386,8 +423,13 @@ def render_level(rows, sprites, clearance, entities):
     T = entities["block"]["stats"]["size"]["value"]
     out = Image.new("RGBA", (len(rows[0]) * T, len(rows) * T), hex_to_rgba("#5ab4e8"))
     tiles = sorted(level_tiles(rows, variants, clearance), key=lambda t: t[2].startswith("drip"))
-    for x, y, anim in tiles:
-        out.alpha_composite(frame("terrain", anim), (x * T, y * T))
+    for x, y, anim, fh, fv in tiles:
+        tile = frame("terrain", anim)
+        if fh:
+            tile = tile.transpose(Image.FLIP_LEFT_RIGHT)
+        if fv:
+            tile = tile.transpose(Image.FLIP_TOP_BOTTOM)
+        out.alpha_composite(tile, (x * T, y * T))
     for y, row in enumerate(rows):
         for x, ch in enumerate(row):
             if ch in previews:  # bottom-centered on its tile, like in the game; enemies start facing left
@@ -452,7 +494,7 @@ def game_data_gd(controls, entities, sprites, levels, run):
     lines += ["}", ""]
     variants = tile_variants(sprites)
     lines += ["## Number of terrain variants per kind (art/sprites/terrain.yaml).",
-              "## A tile's variant is ((x * 73) ^ (y * 151)) % count — same formula as the catalog preview.",
+              "## Which one a block gets: scripts/main.gd (same rules as tools/build.py pick_tile) - by distance to open air and a position hash.",
               "const TILE_VARIANTS := {" + ", ".join(f'"{k}": {v}' for k, v in variants.items()) + "}", "",
               "## Level maps (design/levels/*.txt)", "const LEVELS := {"]
     for name, rows in levels.items():

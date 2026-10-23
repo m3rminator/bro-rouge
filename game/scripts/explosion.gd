@@ -29,6 +29,8 @@ static func detonate(parent: Node, center: Vector2, blast_power: Dictionary, bla
 
 func _ready() -> void:
 	z_index = 4
+	power = power.duplicate()
+	power["tri"] = _random_triangle()
 	var extra := sources.size() - 1
 	_hit_everything()
 	Grass.blast(get_tree(), global_position, power.radius)
@@ -49,7 +51,7 @@ func _ready() -> void:
 
 func _hit_everything() -> void:
 	var circle := CircleShape2D.new()
-	circle.radius = power.radius
+	circle.radius = power.radius * (1.0 + STATS.tri_reach)  # reaches the triangle's points; non-blocks are cut to the plain radius below
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = circle
 	query.transform = Transform2D(0.0, global_position)
@@ -60,7 +62,20 @@ func _hit_everything() -> void:
 		if body == null or seen.has(body) or not body.has_method("on_blast"):
 			continue
 		seen[body] = true
+		if not body is Block and body.global_position.distance_to(global_position) > power.radius:
+			continue
 		body.on_blast(global_position, power)
+
+
+## The crater is a random triangle (any rotation, each point 1.0 to 1+tri_reach times the radius
+## away) joined with a small round core, so no two blasts dig the same hole.
+func _random_triangle() -> Array:
+	var start := randf() * TAU
+	var points := []
+	for i in 3:
+		var angle := start + i * TAU / 3.0 + randf_range(-STATS.tri_jitter, STATS.tri_jitter)
+		points.append(global_position + Vector2.from_angle(angle) * power.radius * randf_range(1.0, 1.0 + STATS.tri_reach))
+	return points
 
 
 ## Cluster: fireball + shockwave at the bottom of the pile, a small blast on every barrel.

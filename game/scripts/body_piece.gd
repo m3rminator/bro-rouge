@@ -89,6 +89,13 @@ func _ready() -> void:
 	_trail.emitting = true
 
 
+## Is there still a block right under the piece?
+func _supported() -> bool:
+	var reach := maxf(_half.x, _half.y) + 3.0
+	var query := PhysicsRayQueryParameters2D.create(global_position, global_position + Vector2(0, reach), WORLD_MASK)
+	return not get_world_2d().direct_space_state.intersect_ray(query).is_empty()
+
+
 func _physics_process(delta: float) -> void:
 	_bleed -= delta
 	_trail.emitting = _bleed > 0.0
@@ -96,6 +103,10 @@ func _physics_process(delta: float) -> void:
 	if _bleed > 0.0 and _drip <= 0.0:  # real drops too, so its path is stained
 		_drip = STATS.drip_interval
 		BloodDrops.emit(get_parent(), global_position, Vector2.UP, STATS.drip_droplets, 70.0, 60.0)
+	if _resting and _rest_time < STATS.rest_time and not _supported():  # the block under it was blown away: fall again
+		_resting = false
+		_rest_time = 0.0
+		velocity = Vector2.ZERO
 	if _resting:
 		_rest_time += delta
 		var left: float = STATS.rest_time + STATS.fade_time - _rest_time

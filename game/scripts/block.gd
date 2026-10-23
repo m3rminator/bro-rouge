@@ -7,7 +7,8 @@ extends StaticBody2D
 const SIZE: int = GameData.BLOCK.size
 const FRAMES := preload("res://assets/sprites/terrain_frames.tres")
 const CRACK_FRAMES := preload("res://assets/sprites/cracks_frames.tres")
-const DEBRIS_COLOR := Color("4a4a2c")  # master palette: earth
+const EARTH_DEBRIS := Color("4a4a2c")  # master palette: earth
+const STONE_DEBRIS := Color("6c6e60")  # master palette: stone
 
 ## Tuning numbers live in design/entities/block.yaml (generated into GameData.BLOCK).
 var hp: int = GameData.BLOCK.hp
@@ -15,17 +16,22 @@ var _sprite: AnimatedSprite2D
 var _stains: BloodStains
 var _chunks: BlockChunks
 var _cracks: AnimatedSprite2D
+var _debris_color := EARTH_DEBRIS
 
 
-func setup(tile_anim: String, drip_anim := "") -> Block:
+func setup(tile_anim: String, drip_anim := "", flip_h := false, flip_v := false, debris_color := EARTH_DEBRIS) -> Block:
+	_debris_color = debris_color
 	_sprite = AnimatedSprite2D.new()
 	_sprite.sprite_frames = FRAMES
 	_sprite.animation = tile_anim
+	_sprite.flip_h = flip_h
+	_sprite.flip_v = flip_v
 	add_child(_sprite)
 	if drip_anim != "":
 		var drip := AnimatedSprite2D.new()
 		drip.sprite_frames = FRAMES
 		drip.animation = drip_anim
+		drip.flip_h = flip_h
 		drip.position = Vector2(0, SIZE)
 		drip.z_index = 1  # in front of the block below
 		add_child(drip)
@@ -87,9 +93,15 @@ func _crack() -> void:
 ## Explosions: destroyed if the blast covers the block's center (the explosion plays the sound).
 func on_blast(center: Vector2, power: Dictionary) -> void:
 	var d := global_position.distance_to(center)
-	var edge: float = power.radius * (1.0 + GameData.BLOCK.blast_ragged)
-	if d <= power.radius or (d <= edge and randf() < 1.0 - (d - power.radius) / (edge - power.radius)):
+	if d <= power.radius * GameData.EXPLOSION.core_share or (power.has("tri") and _in_triangle(global_position, power.tri)):
 		destroy()
+
+
+static func _in_triangle(p: Vector2, t: Array) -> bool:
+	var d1: float = (p - t[1]).cross(t[0] - t[1])
+	var d2: float = (p - t[2]).cross(t[1] - t[2])
+	var d3: float = (p - t[0]).cross(t[2] - t[0])
+	return not ((d1 < 0 or d2 < 0 or d3 < 0) and (d1 > 0 or d2 > 0 or d3 > 0))
 
 
 func destroy() -> void:
@@ -111,7 +123,7 @@ func destroy() -> void:
 	debris.gravity = Vector2(0, 500)
 	debris.scale_amount_min = 2.0
 	debris.scale_amount_max = 3.0
-	debris.color = DEBRIS_COLOR
+	debris.color = _debris_color
 	debris.position = position
 	debris.z_index = 2
 	debris.finished.connect(debris.queue_free)

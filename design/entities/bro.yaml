@@ -83,6 +83,14 @@ stats:
     value: 45.0
     unit: px/s
     description: Cap on the built-up recoil push, so sustained fire does not shove him far.
+  recoil_air:
+    value: 1.0
+    unit: ×
+    description: Multiplier on the recoil push (and its cap) while he is in the air.
+  shoot_shake:
+    value: 1.2
+    unit: px
+    description: Screen shake on every shot (the strongest of recent shakes wins, so fast fire does not stack).
   recoil_decay:
     value: 160.0
     unit: px/s²
@@ -163,6 +171,18 @@ stats:
     value: 0.0
     unit: degrees
     description: Random aim error on every shot, always (the Bro's rifle is dead straight). Characters with a sloppy gun set this higher.
+  pellets:
+    value: 1
+    unit: bullets
+    description: Bullets fired by one trigger pull (1 = a rifle; a shotgun fires several in a fan, see pellet_spread). One pull still uses one round.
+  pellet_spread:
+    value: 0.0
+    unit: degrees
+    description: With more than one pellet, each leaves the gun up to this many degrees up or down from the aim line.
+  pellet_speed_var:
+    value: 0.0
+    unit: ×
+    description: With more than one pellet, each flies up to this share slower than full bullet speed, so the pellets spread out in depth too.
   bullet_lifetime:
     value: 0.8
     unit: s
@@ -175,6 +195,14 @@ stats:
     value: 0.0
     unit: s
     description: When the knife needs more than one hit, how long an enemy stands stunned (no moving, no shooting) after a hit that did not kill.
+  shot_sound:
+    value: shoot
+    unit: sound
+    description: The sound of every shot (audio/catalog.yaml) - each character's own gun.
+  melee_hit_sound:
+    value: knife_stab
+    unit: sound
+    description: The sound when his melee hits an enemy (the knife stab; Blala's gun bash).
   tint:
     value: [1.0, 1.0, 1.0]
     unit: rgb
@@ -191,13 +219,13 @@ animations:
   crouch_shoot: Crouched and firing — the gun kicks back 1 px.
   flip: Kicking off a wall he hangs on - a forward somersault away from it, the tucked ball turning a quarter turn per frame.
   climb: Not used yet (crouched landing frames drawn with the flip).
-  cling: Hanging on a wall from his knife (knife level, driven into the wall), one arm up; his body and legs sway slowly under it.
+  cling: Hanging on a wall from his knife (knife level, driven into the wall), one arm up; the other hand holds his rifle pointed at the wall (Blala - one SMG, hanging on by his bare hand). His body, legs and gun sway slowly under it.
   hurt: Dead — the body is knocked back and falls over.
   knife: Knife attack, traced from the knife references — knife drawn (held 3 frames), then the arm up with a silver swing trail that fades over 3 frames. The hit lands on the first arm-up frame.
   items/mag_pickup: Floats over his head for mag_popup_time after a knife kill gave him a magazine.
 
 sounds:
-  shoot: Every shot.
+  shoot: Every shot of the Bro's rifle (shot_sound; Blala has blala_shoot).
   jump: When a jump starts.
   land: When touching the ground after being in the air.
   footstep: Run animation frames 0 and 2.
@@ -207,4 +235,6 @@ sounds:
   dry_fire: Trigger pulled with an empty gun.
   bro_shout: Held fire while running past spread_after shots — he yells and the aim goes wild.
   knife_swing: Every knife attack (the whoosh).
-  knife_stab: The knife hits an enemy or a body.
+  knife_stab: The knife hits an enemy or a body (melee_hit_sound; Blala plays gun_bash on an enemy).
+  blala_shoot: Blala's shots (shot_sound).
+  gun_bash: Blala's gun bash lands on an enemy (melee_hit_sound).

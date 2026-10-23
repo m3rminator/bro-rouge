@@ -22,6 +22,7 @@ config/features=PackedStringArray("4.7")
 
 Controls="*res://scripts/controls.gd"
 Run="*res://scripts/run.gd"
+TouchControls="*res://scripts/touch_controls.gd"
 
 [display]
 

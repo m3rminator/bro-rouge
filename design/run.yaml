@@ -2,7 +2,7 @@
 # Generated into GameData.RUN. The build checks that every map exists, has an exit
 # ("X") and enough enemies to meet its kill quota.
 name: Run loop
-description: A run is endless and every level is generated fresh (scripts/level_gen.gd) - fight, fight, BOSS (a Brute), then a safe-house HUB where the Bro can walk around and restock ammo, refill hearts and lives, and refill grenades - then it starts again, every level with real height - hills with stairs, valleys, narrow gaps and towers of floating platforms, enemies on every level of it - and every level a little bigger, fuller and tougher (more enemies, more kamikazes, higher kill quota, more barrels). Each level has at least min_enemies enemies; the exit flag opens after the kill quota (a boss level needs every enemy dead, the Brute included). Hearts and ammo carry over from level to level, so the hub matters. Dying costs one life and restarts the current level (same layout, kills reset, hearts refilled); losing the last life ends the run and you start again from the first fight with full lives. The three hand-made maps listed under 'levels' are no longer part of the run - they stay as reference and test maps.
+description: A run is endless and every level is generated fresh (scripts/level_gen.gd) - fight, fight, BOSS (a Brute), then a safe-house HUB where the Bro can walk around and restock ammo, refill hearts and lives, and refill grenades - then it starts again, every level with real height - hills with stairs, valleys, narrow gaps and towers of floating platforms, enemies on every level of it - and every loop (not every level) a little bigger, fuller and tougher (more enemies, more kamikazes, higher kill quota, more barrels). Each level has at least min_enemies enemies; the exit flag opens after the kill quota (a boss level needs every enemy dead, the Brute included). Hearts and ammo carry over from level to level, so the hub matters. Dying costs one life and restarts the current level (same layout, kills reset, hearts refilled); losing the last life ends the run and you start again from the first fight with full lives. The three hand-made maps listed under 'levels' are no longer part of the run - they stay as reference and test maps.
 
 stats:
   lives:
@@ -27,6 +27,10 @@ stats:
     value: 3
     unit: levels
     description: Every this many fights the last one is a boss level (a Brute), and a hub follows it.
+  stone_biome_chance:
+    value: 0.35
+    unit: chance
+    description: Chance that a generated fight level is a stone level - grey rock all the way through, no grass - instead of the usual jungle earth (rocky near open air, earthy deeper in, a few stones scattered through it). The safe house is always earth.
   min_enemies:
     value: 15
     unit: enemies
@@ -34,7 +38,7 @@ stats:
   enemies_per_depth:
     value: 2
     unit: enemies
-    description: Extra enemies for every fight already cleared in this run (plus a random 0-3).
+    description: Extra enemies for every fight of the loops already completed (a loop = boss_every fights; difficulty steps up once per loop, not per level) (plus a random 0-3).
   max_enemies:
     value: 70
     unit: enemies
@@ -46,7 +50,7 @@ stats:
   width_per_depth:
     value: 6
     unit: tiles
-    description: Extra width for every fight already cleared.
+    description: Extra width for every fight of the loops already completed (steps up once per loop).
   width_max:
     value: 260
     unit: tiles
@@ -62,7 +66,7 @@ stats:
   platform_towers_per_depth:
     value: 0.5
     unit: towers
-    description: Extra towers for every fight cleared.
+    description: Extra towers for every fight of the loops already completed (steps up once per loop).
   platform_towers_max:
     value: 14
     unit: towers
@@ -74,7 +78,7 @@ stats:
   kamikaze_per_depth:
     value: 0.02
     unit: share
-    description: Extra kamikaze share for every fight cleared.
+    description: Extra kamikaze share for every fight of the loops already completed (steps up once per loop).
   kamikaze_max:
     value: 0.4
     unit: share
@@ -86,7 +90,7 @@ stats:
   barrel_clusters_per_depth:
     value: 0.5
     unit: clusters
-    description: Extra barrel clusters for every fight cleared.
+    description: Extra barrel clusters for every fight of the loops already completed (steps up once per loop).
   quota_base:
     value: 0.6
     unit: share
@@ -94,7 +98,7 @@ stats:
   quota_per_depth:
     value: 0.02
     unit: share
-    description: Extra share required for every fight cleared.
+    description: Extra share required for every fight of the loops already completed (steps up once per loop).
   quota_max:
     value: 0.9
     unit: share

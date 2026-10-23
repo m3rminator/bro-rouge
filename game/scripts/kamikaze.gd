@@ -96,6 +96,11 @@ func _dead_process(delta: float) -> void:
 			_explode()
 
 
+## A body shot to bits still carries the vest: it goes off instead of just bursting.
+func _burst_body(_dir := 0) -> void:
+	_explode()
+
+
 ## Vest goes off: blast where he stands, nothing left but blood.
 func _explode() -> void:
 	if _exploded:

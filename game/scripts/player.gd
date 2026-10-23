@@ -28,6 +28,8 @@ var _dir := 0.0  # move input this frame
 var sprite_y := 0.0  # the frame is centered on the node; this offset puts the feet on the tile bottom (+half a block)
 var fire_cooldown := 0.0
 var shooting := 0.0
+var _pump_due := false  # a shotgun Bro cycles the pump after each shot (if his sprite has a "pump" animation)
+var _pumping := false
 var _invulnerable := 0.0
 var _stagger := 0.0  # knocked back by a blast: input ignored
 var _shake := 0.0
@@ -45,6 +47,7 @@ var _cling_cooldown := 0.0  # no re-grab right after letting go
 var _flipping := 0.0  # > 0 while somersaulting after kicking off a wall (the flip animation)
 var _flash_2: MuzzleFlash  # the second gun's flash (two-gun Bros like Blala)
 var _gun := 0  # two guns: which one fires next (0 main, 1 second), they take turns
+var _crouch_knife := -1.0  # seconds into a knife stab thrown from a crouch (-1 = none); timed, so it needs no animation
 var _knifing := false  # the knife animation is playing: no shooting, slow shuffle only
 
 
@@ -56,7 +59,9 @@ func _ready() -> void:
 		spare_mags = Run.loadout.get("spare_mags", spare_mags)
 	hp_changed.emit.call_deferred(hp, STATS.max_hp)
 	_bullet_stats.lifetime = STATS.bullet_lifetime
-	sprite.sprite_frames = load("res://assets/sprites/%s_frames.tres" % Run.character)  # each Bro has his own sprite
+	if STATS.get("muzzle_flash", "") != "":  # a character with his own flash picture (shotgun)
+		flash.sprite_frames = load("res://assets/sprites/%s_frames.tres" % STATS.muzzle_flash)
+	sprite.sprite_frames = load("res://assets/sprites/%s_frames.tres" % Run.look())  # each Bro has his own sprite
 	var tint: Array = STATS.tint
 	sprite.self_modulate = Color(tint[0], tint[1], tint[2])
 	z_index = 2
@@ -94,6 +99,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if Input.is_action_just_pressed("knife"):
 		_start_knife()
+	_crouch_knife_step(delta)
 	if Input.is_action_just_pressed("grenade") and not _knifing:
 		_throw_grenade()
 	if not _knifing:
@@ -225,6 +231,8 @@ func _shoot(aim := 0) -> void:
 	_flipping = 0.0  # firing straightens him out of the flip
 	fire_cooldown = STATS.fire_interval
 	shooting = 0.15
+	_pumping = false
+	_pump_due = sprite.sprite_frames.has_animation("pump")
 	ammo -= 1
 	ammo_changed.emit(ammo, spare_mags, false)
 	_update_animation(_dir)  # the pose the bullet leaves from (run, crouch, shoot...)
@@ -241,15 +249,24 @@ func _shoot(aim := 0) -> void:
 			_shout_timer = STATS.shout_interval
 			Sfx.play(self, "bro_shout", -2.0, 0.05)
 			shake(1.5)
-	var two_guns := not MuzzleFlash.second_tips(Run.character).is_empty()
+	var two_guns := not MuzzleFlash.second_tips(Run.look()).is_empty()
 	if two_guns:
 		_gun = 1 - _gun  # the guns take turns
-	var muzzle := MuzzleFlash.gun_tip(sprite, Run.character, aim_dir, _gun == 1)
-	Bullet.spawn(get_parent(), position + muzzle, aim_dir, _bullet_stats, "bro_shot", BULLET_MASK, angle)
+	var muzzle := MuzzleFlash.gun_tip(sprite, Run.look(), aim_dir, _gun == 1)
+	for i in STATS.pellets:  # a shotgun throws several pellets in a fan, each a little different
+		var pellet := _bullet_stats
+		var fan := 0.0
+		if STATS.pellets > 1:
+			fan = randf_range(-STATS.pellet_spread, STATS.pellet_spread)
+			pellet = _bullet_stats.duplicate()
+			pellet.speed *= randf_range(1.0 - STATS.pellet_speed_var, 1.0)
+		Bullet.spawn(get_parent(), position + muzzle, aim_dir, pellet, "bro_shot", BULLET_MASK, angle + fan)
 	(_flash_2 if two_guns and _gun == 1 else flash).fire(muzzle, aim_dir)
-	Sfx.play(self, "shoot", -8.0)
+	Sfx.play(self, STATS.shot_sound, -8.0)
+	shake(STATS.shoot_shake)
 	if not _clinging:
-		_recoil = clampf(_recoil - aim_dir * STATS.recoil, -STATS.recoil_max, STATS.recoil_max)
+		var air: float = 1.0 if is_on_floor() else STATS.recoil_air  # the kick throws him further when airborne
+		_recoil = clampf(_recoil - aim_dir * STATS.recoil * air, -STATS.recoil_max * air, STATS.recoil_max * air)
 	if ammo == 0:
 		_start_reload()
 
@@ -295,14 +312,38 @@ func _use_grenade() -> void:
 func _start_knife() -> void:
 	if _knifing or _stagger > 0.0:
 		return
-	if crouching:
-		if _ceiling_above():
-			return
-		_set_stance(false)
+	if crouching:  # stabs from the crouch: stays low, same hit and reach as the standing knife
+		_knifing = true
+		_crouch_knife = 0.0
+		if sprite.sprite_frames.has_animation("crouch_knife"):
+			sprite.play("crouch_knife")  # optional art; the timing below does not depend on it
+		Sfx.play(self, "knife_swing", -4.0, 0.08)
+		return
 	_knifing = true
 	_flipping = 0.0
 	sprite.play("knife")
 	Sfx.play(self, "knife_swing", -4.0, 0.08)
+
+
+## A crouched stab runs on a timer made from the standing knife animation (its hit frame and
+## length), so it lands and ends exactly like the standing one.
+func _crouch_knife_step(delta: float) -> void:
+	if _crouch_knife < 0.0:
+		return
+	if not _knifing:  # cancelled (death, reset)
+		_crouch_knife = -1.0
+		return
+	var speed: float = sprite.sprite_frames.get_animation_speed("knife")
+	var hit_at := KNIFE_HIT_FRAME / speed
+	var total: float = sprite.sprite_frames.get_frame_count("knife") / speed
+	var before := _crouch_knife
+	_crouch_knife += delta
+	if before < hit_at and _crouch_knife >= hit_at:
+		_knife_strike()
+	if _crouch_knife >= total:
+		_crouch_knife = -1.0
+		_knifing = false
+		_update_animation(_dir)
 
 
 ## The blade lands: the nearest enemy (or else body) within knife_range in front gets it;
@@ -334,7 +375,7 @@ func _knife_strike() -> void:
 		if heads > 0:
 			Sfx.play(self, "knife_stab", -2.0, 0.08)
 		return
-	Sfx.play(self, "knife_stab", -2.0, 0.08)
+	Sfx.play(self, STATS.melee_hit_sound, -2.0, 0.08)
 	shake(2.0)
 	if target.stab(facing, STATS.knife_boss_damage, STATS.knife_knockback, STATS.knife_hop, STATS.knife_blood, STATS.knife_hits, STATS.knife_stun):
 		_gain_mag()
@@ -365,7 +406,7 @@ func _gain_mag() -> void:
 		return
 	spare_mags += 1
 	ammo_changed.emit(ammo, spare_mags, _reload > 0.0)
-	MagPopup.show_over(self, sprite_y - GameData.SPRITE_SIZES[Run.character].y / 2.0)
+	MagPopup.show_over(self, sprite_y - GameData.SPRITE_SIZES[Run.look()].y / 2.0)
 	if ammo == 0:
 		_start_reload()
 
@@ -394,6 +435,7 @@ func _start_cling(side: int) -> void:
 	_clinging = true
 	_cling_time = 0.0
 	_cling_side = side
+	_recoil = 0.0  # the shot's momentum ends when he grabs the wall
 	facing = side
 	sprite.flip_h = facing < 0
 	velocity = Vector2.ZERO
@@ -423,7 +465,7 @@ func _cling_process(delta: float, dir: float) -> void:
 	_burst_gap += delta
 	_update_reload(delta)
 	if Input.is_action_pressed("shoot") and fire_cooldown <= 0.0 and _reload <= 0.0 and ammo > 0:
-		_shoot(-_cling_side)
+		_shoot(_cling_side)
 	_invulnerable -= delta
 	sprite.visible = _invulnerable <= 0.0 or fmod(_invulnerable, 0.12) < 0.06
 	if Input.is_action_just_pressed("jump"):
@@ -461,6 +503,9 @@ func _update_animation(dir: float) -> void:
 		return
 	if _flipping > 0.0 and not is_on_floor():
 		return  # the somersault plays out
+	if _pumping and sprite.animation == _pump_name(dir) and is_on_floor():
+		return  # the pump plays out (standing up, running or stopping cuts it short)
+	_pumping = false
 	var anim := "idle"
 	if not is_on_floor():
 		anim = "jump"
@@ -470,8 +515,19 @@ func _update_animation(dir: float) -> void:
 		anim = "run_shoot" if shooting > 0.0 else "run"
 	elif shooting > 0.0:
 		anim = "shoot"
-	if sprite.animation != anim:
+	if _pump_due and shooting <= 0.0 and is_on_floor():  # cycle the pump after the shot
+		var pump := _pump_name(dir)
+		_pump_due = false
+		if sprite.sprite_frames.has_animation(pump):
+			_pumping = true
+			anim = pump
+	if sprite.animation != anim or anim.ends_with("pump"):
 		sprite.play(anim)
+
+
+## The pump animation for what he is doing: crouch_pump (crouched, walking or not), run_pump, pump.
+func _pump_name(dir: float) -> String:
+	return "crouch_pump" if crouching else ("run_pump" if dir != 0.0 else "pump")
 
 
 ## Hold Crouch on the ground to shrink to one block. Letting go only stands up when there is
@@ -512,6 +568,9 @@ func _on_frame_changed() -> void:
 
 
 func _on_animation_finished() -> void:
+	if sprite.animation.ends_with("pump"):
+		_pumping = false
+		_update_animation(_dir)
 	if sprite.animation == "knife":
 		_knifing = false
 		_update_animation(_dir)

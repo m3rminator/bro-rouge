@@ -4,6 +4,11 @@
     "file_sha": "bcb0b5cea4d35d47f90336df9fcf6002f2e9b24ba0aaae585570abb502d99ab5",
     "spec_sha": "afeecccc2434a051b53f07afd0742c8e9cee333a475293025a118883c7ac43f2"
   },
+  "sfx/blala_shoot": {
+    "file": "game/assets/sfx/blala_shoot.mp3",
+    "file_sha": "08762e140f4467806880b2dabaeebecd5143dad56434fcd8e72878621aba2262",
+    "spec_sha": "49ae4ef26ce343eea9bc254770ba59aaa2e48d59f364be01801987d7c998af2b"
+  },
   "sfx/block_break": {
     "file": "game/assets/sfx/block_break.mp3",
     "file_sha": "50a3988badbea646af7bf9c38be5e32fdf09fbd22abbc53c9517c3680279083f",
@@ -88,6 +93,11 @@
     "file": "game/assets/sfx/grenade_throw.mp3",
     "file_sha": "4f26e10e1211bc7330c36a0049d67a1c39de25bfaac218fea6f8867bb53f78d5",
     "spec_sha": "6a0fe51ad082c93a705150c38f5e98c3ff769322c72bb340f894437263eb38eb"
+  },
+  "sfx/gun_bash": {
+    "file": "game/assets/sfx/gun_bash.mp3",
+    "file_sha": "3d8d26ade37d3b70c1379ecd417e7408fcb7b5785268a400981cbcf3ebcd4820",
+    "spec_sha": "f6e52613ff4732df494852f6d4232700fbf4d0ef918f07aa067fb89d1f5ac017"
   },
   "sfx/jump": {
     "file": "game/assets/sfx/jump.mp3",

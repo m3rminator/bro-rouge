@@ -3,7 +3,7 @@ id: grenade
 name: Grenade
 kind: weapon
 order: 2.5
-description: The Bro carries grenades_per_level grenades (Grenade key). They come back only when he finishes a level — dying and restarting the level keeps whatever he had left. A thrown grenade is a small round ball with its lever on top (the pin is pulled), drawn from the pineapple grenade reference (refrences/items). It flies in an arc, bounces off blocks and rolls, blinking red faster and faster, and after fuse_time explodes with the power of one explosive barrel (same radius, same damage, breaks blocks, hurts the Bro too if he is close). Enemies that see a live grenade near them panic after flee_reaction and run away from it until it is gone. Throwing a grenade while hanging on a wall is a mistake - it goes off in his hand at once, right next to him.
+description: The Bro carries grenades_per_level grenades (Grenade key). They come back only when he finishes a level — dying and restarting the level keeps whatever he had left. A thrown grenade is a small round ball with its lever on top (the pin is pulled), drawn from the pineapple grenade reference (refrences/items). It flies in an arc, bounces off blocks and rolls, blinking red faster and faster, and after fuse_time explodes with the power of one explosive barrel (same radius, same damage, breaks blocks, hurts the Bro too if he is close). Enemies that see a live grenade near them may notice it (notice_chance) and may panic (flee_chance); those panic after flee_reaction and run away from it until it is gone, the others ignore it. A grenade that touches a living enemy goes off at that moment, without waiting for the fuse. Throwing a grenade while hanging on a wall is a mistake - it goes off in his hand at once, right next to him.
 sprite: items
 files:
   - game/scripts/grenade.gd
@@ -52,7 +52,7 @@ stats:
     unit: blinks/s
     description: Blink rate right after the throw, and just before it explodes (speeds up in between).
   blast_radius:
-    value: 30.0
+    value: 58.0
     unit: px
     description: Blast radius - the same as one explosive barrel (barrel.yaml blast_radius).
   blast_damage:
@@ -67,6 +67,18 @@ stats:
     value: 96.0
     unit: px
     description: Enemies closer than this to a live grenade (and able to see it) panic (4 blocks).
+  notice_chance:
+    value: 0.7
+    unit: chance
+    description: Chance that an enemy who has a live grenade in sight actually notices it (rolled once per enemy and grenade) - the others just stand there.
+  flee_chance:
+    value: 0.6
+    unit: chance
+    description: Chance that an enemy who noticed the grenade runs from it instead of holding his ground (rolled once per grenade).
+  last_notice:
+    value: 1.0
+    unit: s
+    description: An enemy who ignored the grenade finally notices it in the last this-many seconds of the fuse - "!" and a gasp, but he stays where he is and is blown up.
   flee_reaction:
     value: 0.6
     unit: s

@@ -38,7 +38,8 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 		rng = RandomNumberGenerator.new()
 		rng.randomize()
 	var boss := is_boss(depth)
-	var width := mini(R.width_base + R.width_per_depth * depth, R.width_max)
+	var tier := depth / R.boss_every * R.boss_every  # difficulty only steps up when a whole loop is done
+	var width := mini(R.width_base + R.width_per_depth * tier, R.width_max)
 	if boss:
 		width = mini(R.boss_width + R.width_per_depth * (depth / R.boss_every), R.width_max)
 	_gaps = {}
@@ -49,7 +50,7 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 		for x in width:
 			row.append("#" if y >= heights[x] else ".")
 		grid.append(row)
-	var towers := mini(R.platform_towers_base + int(R.platform_towers_per_depth * depth), R.platform_towers_max)
+	var towers := mini(R.platform_towers_base + int(R.platform_towers_per_depth * tier), R.platform_towers_max)
 	_platform_towers(grid, heights, rng, towers, START_COLS + 2, width - (40 if boss else 16))
 
 	var start_row: int = heights[3] - 1
@@ -57,8 +58,8 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 	grid[heights[width - 4] - 1][width - 4] = "X"
 
 	var taken := {}  # Vector2i(x, row) of things already standing somewhere
-	var enemies := mini(R.min_enemies + R.enemies_per_depth * depth + rng.randi_range(0, 3), R.max_enemies)
-	var kamikaze_share := minf(R.kamikaze_base + R.kamikaze_per_depth * depth, R.kamikaze_max)
+	var enemies := mini(R.min_enemies + R.enemies_per_depth * tier + rng.randi_range(0, 3), R.max_enemies)
+	var kamikaze_share := minf(R.kamikaze_base + R.kamikaze_per_depth * tier, R.kamikaze_max)
 	var placed := enemies
 	if boss:
 		var bx := width - 24
@@ -68,7 +69,7 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 		_barrels(grid, taken, rng, 5, width - 48, width - 12)
 		placed += 1
 	else:
-		_barrels(grid, taken, rng, R.barrel_clusters_base + int(R.barrel_clusters_per_depth * depth), 16, width - 10)
+		_barrels(grid, taken, rng, R.barrel_clusters_base + int(R.barrel_clusters_per_depth * tier), 16, width - 10)
 	var spots := _spots_by_row(grid, taken, 14, width - 10, 1)
 	for i in enemies:
 		var spot := _pick(spots, rng)
@@ -82,13 +83,14 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 	var rows: Array = []
 	for row in grid:
 		rows.append("".join(row))
-	var quota := placed if boss else mini(placed, ceili(placed * minf(R.quota_base + R.quota_per_depth * depth, R.quota_max)))
+	var quota := placed if boss else mini(placed, ceili(placed * minf(R.quota_base + R.quota_per_depth * tier, R.quota_max)))
 	return {
 		"rows": rows,
 		"title": "Brute Arena" if boss else TITLES[rng.randi() % TITLES.size()],
 		"kill_quota": quota,
 		"kind": "boss" if boss else "level",
 		"depth": depth,
+		"biome": "stone" if rng.randf() < R.stone_biome_chance else "earth",
 	}
 
 

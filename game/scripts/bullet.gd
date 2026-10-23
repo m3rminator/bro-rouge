@@ -11,6 +11,7 @@ var stats: Dictionary
 var anim := "bro_shot"
 var _velocity := Vector2.ZERO
 var _age := 0.0
+var _sprite: AnimatedSprite2D
 
 
 ## Fires a bullet from `pos` (in `parent`'s space). `mask` = physics layers it can hit.
@@ -32,12 +33,12 @@ func _ready() -> void:
 	z_index = 3
 	var turn := deg_to_rad(angle)
 	_velocity = Vector2(direction, 0).rotated(turn) * stats.speed
-	var sprite := AnimatedSprite2D.new()
-	sprite.sprite_frames = FRAMES
-	sprite.flip_h = direction < 0
-	sprite.rotation = turn
-	add_child(sprite)
-	sprite.play(anim)
+	_sprite = AnimatedSprite2D.new()
+	_sprite.sprite_frames = FRAMES
+	_sprite.flip_h = direction < 0
+	_sprite.rotation = turn
+	add_child(_sprite)
+	_sprite.play(anim)
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
 	rect.size = Vector2(stats.size[0], stats.size[1])
@@ -52,6 +53,8 @@ func _physics_process(delta: float) -> void:
 	_age += delta
 	if _age > stats.lifetime:
 		queue_free()
+	elif _age > stats.lifetime - GameData.BULLET.fade_time:  # thins out instead of vanishing
+		_sprite.modulate.a = (stats.lifetime - _age) / GameData.BULLET.fade_time
 
 
 func _on_body_entered(body: Node) -> void:

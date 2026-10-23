@@ -7,10 +7,16 @@ panels:
     caption: Black buzz cut, white tank top, green pants - and an SMG in each hand, one across his chest and one held out front.
   - title: Spray
     shot: blala/shoot/0
-    caption: Twice the Bro's fire rate and a 60-round magazine, but the bullets fan out wide and die after about 5 blocks. Get close.
+    caption: The two SMGs take turns, each flashing at its own muzzle. Twice the Bro's fire rate and a 60-round magazine, but the bullets fan out wide and die after about 5 blocks. Get close.
   - title: On the move
     shot: blala/run_shoot/0
     caption: He runs faster and jumps higher than the Bro, and keeps spraying while he runs.
-  - title: Two stabs
+  - title: Gun bash
+    shot: blala/knife/0
+    caption: No knife - one SMG goes up over his head...
+  - title: Stunned
     shot: blala/knife/3
-    caption: His knife needs two hits - the first knocks the enemy back and leaves him stunned, the second kills.
+    caption: ...and comes down on the enemy. The first hit knocks him back stunned (blinking white, birds round his head), the second kills.
+  - title: Birds
+    shot: stun/circle/0
+    caption: A stunned enemy cannot move or shoot until the birds are gone.

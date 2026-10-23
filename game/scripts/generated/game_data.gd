@@ -33,6 +33,8 @@ const BRO := {
 	"reload_time": 1.4,
 	"recoil": 22.0,
 	"recoil_max": 45.0,
+	"recoil_air": 1.0,
+	"shoot_shake": 1.2,
 	"recoil_decay": 160.0,
 	"spread_after": 3,
 	"spread_degrees": 7.0,
@@ -53,9 +55,14 @@ const BRO := {
 	"cling_cooldown": 0.25,
 	"flip_time": 0.25,
 	"base_spread": 0.0,
+	"pellets": 1,
+	"pellet_spread": 0.0,
+	"pellet_speed_var": 0.0,
 	"bullet_lifetime": 0.8,
 	"knife_hits": 1,
 	"knife_stun": 0.0,
+	"shot_sound": "shoot",
+	"melee_hit_sound": "knife_stab",
 	"tint": [1.0, 1.0, 1.0],
 }
 
@@ -68,13 +75,36 @@ const BLALA := {
 	"speed": 150.0,
 	"jump_velocity": -400.0,
 	"knife_hits": 2,
+	"shot_sound": "blala_shoot",
+	"melee_hit_sound": "gun_bash",
 	"knife_stun": 2.0,
+	"shoot_shake": 0.5,
+}
+
+## Sharif (playable Bro) (design/entities/sharif.yaml)
+const SHARIF := {
+	"speed": 95.0,
+	"muzzle_flash": "shotgun_flash",
+	"pellets": 7,
+	"pellet_spread": 13.0,
+	"pellet_speed_var": 0.25,
+	"fire_interval": 0.7,
+	"magazine_size": 6,
+	"magazines": 1,
+	"reload_time": 1.8,
+	"bullet_lifetime": 0.35,
+	"recoil": 230.0,
+	"recoil_max": 230.0,
+	"recoil_decay": 520.0,
+	"recoil_air": 1.9,
+	"shoot_shake": 4.5,
 }
 
 ## Bro rifle bullet (design/entities/bullet.yaml)
 const BULLET := {
 	"speed": 420.0,
 	"lifetime": 0.8,
+	"fade_time": 0.25,
 	"damage": 1,
 	"size": [10, 6],
 	"behead": "headshot",
@@ -91,10 +121,13 @@ const GRENADE := {
 	"bounce": 0.45,
 	"roll_friction": 220.0,
 	"blink_speed": [4.0, 20.0],
-	"blast_radius": 30.0,
+	"blast_radius": 58.0,
 	"blast_damage": 4,
 	"blast_player_damage": 2,
 	"flee_range": 96.0,
+	"notice_chance": 0.7,
+	"flee_chance": 0.6,
+	"last_notice": 1.0,
 	"flee_reaction": 0.6,
 	"flee_speed": 85.0,
 }
@@ -183,7 +216,6 @@ const BLOCK := {
 	"crack_stages": 4,
 	"grass_clearance": 3,
 	"debris_amount": 34,
-	"blast_ragged": 0.45,
 	"chain_break": 0.3,
 }
 
@@ -206,6 +238,9 @@ const BARREL := {
 ## Explosion (design/entities/explosion.yaml)
 const EXPLOSION := {
 	"small_radius_ref": 36.0,
+	"tri_reach": 0.7,
+	"tri_jitter": 0.5,
+	"core_share": 0.55,
 	"big_scale_per_extra": 0.18,
 	"secondary_delay": 0.06,
 	"smoke_puffs": 2,
@@ -321,6 +356,16 @@ const BODY_PIECES := {
 const HUD := {
 }
 
+## Stunned enemy (design/entities/stun.yaml)
+const STUN := {
+	"blink_interval": 0.08,
+	"birds_above_head": 5.0,
+}
+
+## Shotgun blast (design/entities/shotgun_flash.yaml)
+const SHOTGUN_FLASH := {
+}
+
 ## Sprite anchors relative to the frame center, in pixels (art/sprites/*.yaml)
 const ANCHORS := {
 	"barrel": {"center": Vector2(0.5, 2.5)},
@@ -334,14 +379,23 @@ const ANCHORS := {
 	"kamikaze": {"eye": Vector2(4.0, -7.5), "fuse": Vector2(10.0, -5.5)},
 	"mook": {"eye": Vector2(1.0, -8.5)},
 	"projectiles": {"center": Vector2(0.5, 0.5)},
+	"sharif": {"feet": Vector2(0.0, 17.5)},
+	"shotgun_flash": {"center": Vector2(0.5, 0.0)},
+	"stun": {"center": Vector2(0.0, 0.0)},
 }
 
 ## Gun tip of every frame, relative to the frame center (null = no gun in that frame).
 ## Found by tools/build.py from each sprite's muzzle_symbols, so bullets always leave the barrel.
 const MUZZLES := {
-	"blala": {"idle": [Vector2(16.0, 2.5), Vector2(16.0, 3.5)], "run": [Vector2(15.0, 2.5), Vector2(16.0, 3.5)], "jump": [Vector2(16.0, -0.5)], "shoot": [Vector2(17.0, -2.5), Vector2(18.0, -2.5)], "crouch": [Vector2(16.0, 1.5), Vector2(16.0, 2.5)], "crouch_walk": [Vector2(16.0, 2.5), Vector2(16.0, 1.5), Vector2(16.0, 2.5), Vector2(16.0, 1.5)], "crouch_shoot": [Vector2(16.0, 1.5), Vector2(17.0, 1.5)], "hurt": [Vector2(7.0, 10.5)], "knife": [null, null, null, Vector2(17.0, -9.5), Vector2(17.0, -9.5), Vector2(17.0, -9.5)], "run_shoot": [Vector2(15.0, 2.5), Vector2(16.0, 2.5), Vector2(16.0, 3.5), Vector2(17.0, 3.5)], "cling": [Vector2(7.0, -13.5), Vector2(7.0, -13.5), Vector2(7.0, -13.5), Vector2(7.0, -13.5)], "flip": [Vector2(16.0, -0.5), Vector2(2.0, 8.5), Vector2(10.0, -1.5), Vector2(7.0, 5.5)], "climb": [Vector2(16.0, 3.5), Vector2(16.0, 2.5), Vector2(16.0, 1.5)]},
-	"bro": {"idle": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "run": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "jump": [Vector2(14.0, -0.5)], "shoot": [Vector2(14.0, -2.5), Vector2(15.0, -2.5)], "crouch": [Vector2(14.0, 1.5), Vector2(14.0, 2.5)], "crouch_walk": [Vector2(14.0, 2.5), Vector2(14.0, 1.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)], "crouch_shoot": [Vector2(14.0, 1.5), Vector2(15.0, 1.5)], "hurt": [Vector2(11.0, 15.5)], "knife": [null, null, null, Vector2(17.0, -9.5), Vector2(17.0, -9.5), Vector2(17.0, -9.5)], "run_shoot": [Vector2(13.0, 2.5), Vector2(14.0, 2.5), Vector2(13.0, 3.5), Vector2(14.0, 3.5)], "cling": [Vector2(7.0, -13.5), Vector2(7.0, -13.5), Vector2(7.0, -13.5), Vector2(7.0, -13.5)], "flip": [Vector2(14.0, -0.5), Vector2(2.0, 13.5), Vector2(8.0, -2.5), Vector2(7.0, -2.5)], "climb": [Vector2(14.0, 3.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)]},
+	"blala": {"idle": [Vector2(16.0, 2.5), Vector2(16.0, 3.5)], "run": [Vector2(15.0, 2.5), Vector2(16.0, 3.5)], "jump": [Vector2(16.0, 1.5)], "shoot": [Vector2(17.0, -2.5), Vector2(18.0, -2.5)], "crouch": [Vector2(16.0, 4.5), Vector2(16.0, 5.5)], "crouch_walk": [Vector2(16.0, 5.5), Vector2(16.0, 4.5), Vector2(16.0, 5.5), Vector2(16.0, 4.5)], "crouch_shoot": [Vector2(16.0, 4.5), Vector2(17.0, 4.5)], "hurt": [Vector2(7.0, 10.5)], "knife": [Vector2(16.0, 5.5), Vector2(16.0, -14.5), Vector2(18.0, 2.5), Vector2(16.0, 9.5), Vector2(16.0, 9.5), Vector2(16.0, 9.5)], "run_shoot": [Vector2(15.0, 2.5), Vector2(16.0, 2.5), Vector2(16.0, 3.5), Vector2(17.0, 3.5)], "cling": [Vector2(-2.0, 2.5), Vector2(-2.0, 2.5), Vector2(-1.0, 2.5), Vector2(-1.0, 2.5)], "flip": [Vector2(16.0, -0.5), Vector2(2.0, 8.5), Vector2(10.0, -1.5), Vector2(7.0, 5.5)], "climb": [Vector2(16.0, 6.5), Vector2(16.0, 5.5), Vector2(16.0, 4.5)], "crouch_knife": [Vector2(16.0, 8.5), Vector2(16.0, -11.5), Vector2(18.0, 5.5), Vector2(16.0, 12.5), Vector2(16.0, 12.5), Vector2(16.0, 12.5)]},
+	"bro": {"idle": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "run": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "jump": [Vector2(14.0, -0.5)], "shoot": [Vector2(14.0, -2.5), Vector2(15.0, -2.5)], "crouch": [Vector2(14.0, 1.5), Vector2(14.0, 2.5)], "crouch_walk": [Vector2(14.0, 2.5), Vector2(14.0, 1.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)], "crouch_shoot": [Vector2(14.0, 1.5), Vector2(15.0, 1.5)], "hurt": [Vector2(11.0, 15.5)], "knife": [null, null, null, Vector2(17.0, -9.5), Vector2(17.0, -9.5), Vector2(17.0, -9.5)], "run_shoot": [Vector2(13.0, 2.5), Vector2(14.0, 2.5), Vector2(13.0, 3.5), Vector2(14.0, 3.5)], "cling": [Vector2(4.0, 0.5), Vector2(4.0, 0.5), Vector2(5.0, 0.5), Vector2(5.0, 0.5)], "flip": [Vector2(14.0, -0.5), Vector2(2.0, 13.5), Vector2(8.0, -2.5), Vector2(7.0, -2.5)], "climb": [Vector2(14.0, 3.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)], "crouch_knife": [null, null, null, Vector2(17.0, -4.5), Vector2(17.0, -4.5), Vector2(17.0, -4.5)]},
 	"mook": {"idle": [Vector2(15.0, 1.5), Vector2(15.0, 2.5)], "walk": [Vector2(14.0, 1.5), Vector2(15.0, 2.5)], "shoot": [Vector2(15.0, -3.5), Vector2(14.0, -3.5)], "fall": [Vector2(15.0, -1.5)], "hurt": [Vector2(8.0, 15.5)], "dead_a": [null], "dead_b": [null], "headless_a": [null], "headless_b": [null], "head_a": [null], "head_b": [null], "piece_torso": [null], "piece_arm": [null], "piece_leg": [null], "piece_leg_bent": [null], "piece_bit_a": [null], "piece_bit_b": [null]},
+	"sharif": {"idle": [Vector2(13.0, 3.5), Vector2(13.0, 4.5)], "run": [Vector2(12.0, 3.5), Vector2(13.0, 4.5)], "shoot": [Vector2(11.0, 3.5), Vector2(12.0, 3.5)], "pump": [Vector2(13.0, 3.5), Vector2(13.0, 3.5), Vector2(13.0, 3.5), Vector2(13.0, 3.5)], "run_shoot": [Vector2(10.0, 3.5), Vector2(11.0, 3.5), Vector2(11.0, 4.5), Vector2(12.0, 4.5)], "run_pump": [Vector2(12.0, 3.5), Vector2(13.0, 4.5), Vector2(12.0, 3.5), Vector2(13.0, 4.5)], "jump": [Vector2(13.0, 1.5)], "hurt": [Vector2(13.0, 1.5)], "crouch": [Vector2(13.0, 6.5), Vector2(13.0, 7.5)], "crouch_walk": [Vector2(13.0, 7.5), Vector2(13.0, 6.5), Vector2(13.0, 7.5), Vector2(13.0, 6.5)], "crouch_shoot": [Vector2(11.0, 6.5), Vector2(12.0, 6.5)], "crouch_pump": [Vector2(13.0, 6.5), Vector2(13.0, 6.5), Vector2(13.0, 6.5), Vector2(13.0, 6.5)], "knife": [Vector2(-2.0, 3.5), Vector2(-5.0, 2.5), Vector2(1.0, 3.5), Vector2(8.0, 3.5), Vector2(8.0, 3.5), Vector2(8.0, 3.5)], "cling": [Vector2(4.0, 3.5), Vector2(4.0, 3.5), Vector2(5.0, 3.5), Vector2(5.0, 3.5)], "flip": [Vector2(14.0, 0.5), Vector2(1.0, 13.5), Vector2(6.0, -1.5), Vector2(2.0, -3.5)], "climb": [Vector2(13.0, 8.5), Vector2(13.0, 7.5), Vector2(13.0, 6.5)], "crouch_knife": [Vector2(-2.0, 6.5), Vector2(-5.0, 5.5), Vector2(1.0, 6.5), Vector2(8.0, 6.5), Vector2(8.0, 6.5), Vector2(8.0, 6.5)]},
+}
+
+## The second gun's tip per frame, for sprites with two_guns (null = only one gun shows).
+const MUZZLES_2 := {
+	"blala": {"idle": [Vector2(3.0, 4.5), Vector2(3.0, 5.5)], "run": [Vector2(2.0, 4.5), Vector2(3.0, 5.5)], "jump": [Vector2(3.0, 3.5)], "shoot": [Vector2(4.0, -0.5), Vector2(5.0, -0.5)], "crouch": [Vector2(3.0, 6.5), Vector2(3.0, 7.5)], "crouch_walk": [Vector2(3.0, 7.5), Vector2(3.0, 6.5), Vector2(3.0, 7.5), Vector2(3.0, 6.5)], "crouch_shoot": [Vector2(3.0, 6.5), Vector2(4.0, 6.5)], "hurt": [Vector2(-3.0, 6.5)], "knife": [Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5)], "run_shoot": [Vector2(2.0, 4.5), Vector2(3.0, 4.5), Vector2(3.0, 5.5), Vector2(4.0, 5.5)], "cling": [null, null, null, null], "flip": [Vector2(3.0, 1.5), Vector2(0.0, -4.5), Vector2(-3.0, 0.5), Vector2(0.0, -8.5)], "climb": [Vector2(3.0, 8.5), Vector2(3.0, 7.5), Vector2(3.0, 6.5)], "crouch_knife": [Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5)]},
 }
 
 ## Frame size (width, height) of every sprite (art/sprites/*.yaml).
@@ -361,12 +415,15 @@ const SPRITE_SIZES := {
 	"kamikaze": Vector2(35, 34),
 	"mook": Vector2(47, 34),
 	"projectiles": Vector2(16, 10),
+	"sharif": Vector2(39, 36),
+	"shotgun_flash": Vector2(24, 15),
+	"stun": Vector2(21, 9),
 	"terrain": Vector2(24, 24),
 }
 
 ## Number of terrain variants per kind (art/sprites/terrain.yaml).
-## A tile's variant is ((x * 73) ^ (y * 151)) % count — same formula as the catalog preview.
-const TILE_VARIANTS := {"earth": 4, "grass": 3}
+## Which one a block gets: scripts/main.gd (same rules as tools/build.py pick_tile) - by distance to open air and a position hash.
+const TILE_VARIANTS := {"earth": 12, "subsoil": 6, "pebble": 6, "flint": 4, "rock": 12, "grass": 6, "stonetop": 6, "stone": 12, "deep": 10}
 
 ## Level maps (design/levels/*.txt)
 const LEVELS := {
@@ -436,6 +493,7 @@ const RUN := {
 	"run_over_delay": 3.0,
 	"background_parallax": 0.3,
 	"boss_every": 3,
+	"stone_biome_chance": 0.35,
 	"min_enemies": 15,
 	"enemies_per_depth": 2,
 	"max_enemies": 70,

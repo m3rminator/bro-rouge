@@ -15,6 +15,7 @@ const OUTLINE := Color("14101e")
 const CHARACTERS := [
 	{"id": "bro", "title": "BRO", "line": "ALL ROUNDER", "stats": {}},
 	{"id": "blala", "title": "BALAL", "line": "GLASS CANNON", "stats": GameData.BLALA},
+	{"id": "sharif", "title": "SHARIF", "line": "SHOTGUNNER", "stats": GameData.SHARIF},
 ]
 
 var _index := 0
@@ -65,7 +66,7 @@ func _add_card(i: int, at: Vector2) -> void:
 	card.add_child(panel)
 
 	var sprite := AnimatedSprite2D.new()
-	sprite.sprite_frames = load("res://assets/sprites/%s_frames.tres" % data.id)
+	sprite.sprite_frames = load("res://assets/sprites/%s_frames.tres" % Run.look_of(data.id))
 	sprite.position = Vector2(CARD.x / 2.0, 38)
 	sprite.scale = Vector2(2, 2)
 	var tint: Array = stats.tint

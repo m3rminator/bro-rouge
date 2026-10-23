@@ -1,0 +1,14 @@
+# Entity: Sharif's shotgun muzzle flash.
+id: shotgun_flash
+name: Shotgun blast
+kind: effect
+order: 31
+description: Sharif's muzzle flash - far bigger than the rifle's - a fireball with pellet streaks, a smaller puff, then a dying spark. Shown at the shotgun's tip on every blast (player.gd loads it into the Bro's MuzzleFlash when his muzzle_flash stat names it).
+sprite: shotgun_flash
+files:
+  - game/scripts/player.gd
+  - game/scripts/muzzle_flash.gd
+spawned_by: [sharif]
+
+animations:
+  shotgun_flash/muzzle: Three frames at 20 fps (0.15 s), then it hides.

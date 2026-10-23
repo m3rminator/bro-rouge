@@ -15,6 +15,7 @@ symbols:
   t: rambo_green        # tank top
   G: rambo_steel_dark   # rifle
   g: rambo_steel
+  j: rambo_steel_dark   # knife blade base in the cling pose: same color, but not a gun symbol (the gun tip ignores it)
   W: rambo_swoosh_light # knife swoosh: bright edge
   v: rambo_swoosh       # knife swoosh
   V: rambo_swoosh_dark  # knife swoosh: fading

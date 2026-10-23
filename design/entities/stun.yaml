@@ -3,7 +3,7 @@ id: stun
 name: Stunned enemy
 kind: effect
 order: 30
-description: An enemy that survives a melee hit that needs more than one (Blala's gun bash, knife_hits 2) is thrown back and stands stunned for knife_stun seconds - no walking, no shooting. While stunned his whole sprite blinks white and three little yellow birds circle over his head (the ones passing behind the head are darker). Both stop the moment the stun ends or he dies. Bosses are never stunned.
+description: An enemy that survives a melee hit that needs more than one (Blala's gun bash, knife_hits 2) is thrown back and stands stunned for knife_stun seconds - no walking, no shooting. While stunned his whole sprite blinks white and three little white birds circle over his head (the ones passing behind the head are grey). Both stop the moment the stun ends or he dies. Bosses are never stunned.
 sprite: stun
 files:
   - game/scripts/enemy.gd

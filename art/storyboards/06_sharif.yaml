@@ -1,0 +1,19 @@
+# Storyboard: Sharif, the third Bro - who he is at a glance.
+title: Sharif
+description: The shotgun sheriff. One slow, devastating blast at a time - huge up close, nothing far away - and a pump rack after every shot.
+panels:
+  - title: The sheriff
+    shot: sharif/idle/0
+    caption: Cowboy hat, silver hair and mustache, khaki shirt, brown vest with a gold star, jeans, boots - and a pump shotgun at the hip.
+  - title: Blast
+    shot: sharif/shoot/0
+    caption: Seven pellets fan out in a huge fireball and die after about 6 blocks. The kick shoves his whole upper body back - and him with it.
+  - title: Rack it
+    shot: sharif/pump/1
+    caption: After every blast he pulls the forend back and pumps a new shell in - standing, running or crouched. One shot every 0.7 s, six shells a magazine.
+  - title: Stock bash
+    shot: sharif/knife/3
+    caption: Up close he turns the shotgun around and rams the wooden stock into the enemy.
+  - title: Shotgun blast
+    shot: shotgun_flash/muzzle/0
+    caption: His muzzle flash, far bigger than the rifle's.

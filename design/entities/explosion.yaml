@@ -3,7 +3,7 @@ id: explosion
 name: Explosion
 kind: effect
 order: 12
-description: Everything inside the radius is hit at once — blocks are destroyed (so a blast always opens a hole several blocks wide), enemies take blast damage, the Bro loses hearts, barrels catch fire, and bodies are tossed. One source (a single barrel or a kamikaze) uses one of three small blasts (picked from its map position, so the same barrel always looks the same). A cluster of touching barrels instead plays a mushroom fireball plus a ground shockwave scaled to the cluster, with a small blast on every barrel in it, more smoke, more fire and a harder screen shake.
+description: Everything inside the radius is hit at once — blocks are destroyed (so a blast always opens a hole several blocks wide - the hole is a random jagged triangle, never a neat circle), enemies take blast damage, the Bro loses hearts, barrels catch fire, and bodies are tossed. One source (a single barrel or a kamikaze) uses one of three small blasts (picked from its map position, so the same barrel always looks the same). A cluster of touching barrels instead plays a mushroom fireball plus a ground shockwave scaled to the cluster, with a small blast on every barrel in it, more smoke, more fire and a harder screen shake.
 sprite: explosion
 files:
   - game/scripts/explosion.gd
@@ -14,6 +14,18 @@ stats:
     value: 36.0
     unit: px
     description: The small blast picture is drawn for this radius; a bigger blast radius scales the picture up (to 2.5x).
+  tri_reach:
+    value: 0.7
+    unit: ×
+    description: The crater is a random triangle whose points lie between 1x and (1 + this)x the blast radius away from the center, pointing in random directions (plus a round core of core_share x radius), so every blast digs a different, jagged hole.
+  tri_jitter:
+    value: 0.5
+    unit: rad
+    description: How far (in radians) each triangle point may wander from an even 120 degree spread.
+  core_share:
+    value: 0.55
+    unit: ×
+    description: Blocks closer than this share of the radius are always destroyed, whatever way the triangle points.
   big_scale_per_extra:
     value: 0.18
     unit: ×

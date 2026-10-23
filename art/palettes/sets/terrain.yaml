@@ -1,4 +1,4 @@
-# Palette set for terrain tiles (earth clods + hanging grass).
+# Palette set for terrain tiles (earth clods, rock, stone + hanging grass).
 symbols:
   o: outline
   l: earth_light
@@ -9,3 +9,7 @@ symbols:
   g: grass_light
   G: grass
   h: grass_dark
+  r: stone_light
+  s: stone
+  t: stone_dark
+  u: stone_deep

@@ -86,6 +86,12 @@ sfx:
   knife_stab:
     prompt: "Brutal knife stab into flesh, wet meaty thud with a short squelch, retro action video game hit"
     duration: 0.5
+  blala_shoot:
+    prompt: "Single retro 16-bit submachine gun shot, light snappy high-pitched pop, much shorter and thinner than a rifle, punchy, no reverb"
+    duration: 0.5
+  gun_bash:
+    prompt: "Heavy metal submachine gun smashed into an enemy soldier's head, hard blunt metallic clonk with a meaty thud, short, retro action video game hit, no voice"
+    duration: 0.5
   grenade_throw:
     prompt: "Grenade pin pulled with a metallic ping and the spoon flicking off, then a quick throwing whoosh, short, retro action video game"
     duration: 0.6

@@ -7,6 +7,7 @@ extends CharacterBody2D
 const STATS := GameData.GRENADE
 const FRAMES := preload("res://assets/sprites/items_frames.tres")
 const WORLD_MASK := 1
+const ENEMY_MASK := 4
 
 var _fuse: float = STATS.fuse_time
 var _spin := 0.0
@@ -49,6 +50,20 @@ func _ready() -> void:
 	add_child(_sprite)
 
 
+## A live enemy touching the ball sets it off at once.
+func _touches_enemy() -> bool:
+	var circle := CircleShape2D.new()
+	circle.radius = STATS.radius + 2.0
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = circle
+	query.transform = Transform2D(0.0, global_position)
+	query.collision_mask = ENEMY_MASK
+	for result in get_world_2d().direct_space_state.intersect_shape(query, 8):
+		if result.collider is Enemy and not result.collider.dead:
+			return true
+	return false
+
+
 func _physics_process(delta: float) -> void:
 	velocity.y += STATS.gravity * delta
 	var hit := move_and_collide(velocity * delta)
@@ -63,6 +78,10 @@ func _physics_process(delta: float) -> void:
 				Sfx.play(self, "grenade_bounce", -8.0, 0.1)
 			velocity = velocity.bounce(n) * STATS.bounce
 	_sprite.rotation += _spin * delta
+	if _touches_enemy():
+		blow(get_parent(), position)
+		queue_free()
+		return
 	_fuse -= delta
 	var t := 1.0 - _fuse / STATS.fuse_time
 	# 2 frames per blink: frames per second = 2 x blinks per second

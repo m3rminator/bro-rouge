@@ -1,0 +1,95 @@
+# Entity: Sharif, a playable Bro (the third character).
+# Only the numbers that differ from the default Bro live here; everything else comes from
+# design/entities/bro.yaml. Generated into GameData.SHARIF and laid over GameData.BRO by Run.bro_stats().
+id: sharif
+name: Sharif (playable Bro)
+kind: player
+order: 1.6
+description: A shotgun Bro - a silver-haired sheriff in a cowboy hat, khaki shirt, brown vest with a gold star, jeans and brown boots. Every pull of the trigger throws a fan of pellets that spread out and die at short range - devastating up close, weak far away. Slow to fire (one blast about every 0.7 seconds), six shells in a magazine, and a slow reload. Every blast kicks his upper body back with a huge muzzle flash, then he racks the pump - standing, running or crouched. His melee is drawn as a shotgun-stock bash (turns the gun around and rams the wooden stock forward); its numbers are the default Bro's knife. Grenades and wall cling are the default Bro's (he hangs on by his bare fist, shotgun in the other hand). Pick him on the character select screen.
+sprite: sharif
+files:
+  - game/scripts/character_select.gd
+  - game/scripts/run.gd
+  - game/scripts/player.gd
+  - game/scripts/muzzle_flash.gd
+controls: [move_left, move_right, jump, crouch, shoot, reload, knife, grenade]
+
+stats:
+  speed:
+    value: 95.0
+    unit: px/s
+    description: Run speed - slower than the default Bro (who runs at 120); the shotgun is heavy.
+  muzzle_flash:
+    value: shotgun_flash
+    unit: sprite
+    description: His muzzle flash is the big shotgun blast (art/sprites/shotgun_flash.yaml) instead of the rifle's small one.
+  pellets:
+    value: 7
+    unit: bullets
+    description: Pellets thrown by one shot.
+  pellet_spread:
+    value: 13.0
+    unit: degrees
+    description: Each pellet leaves up to this many degrees up or down from the aim line - a wide fan.
+  pellet_speed_var:
+    value: 0.25
+    unit: ×
+    description: Each pellet is up to a quarter slower than full speed, so the cloud stretches out as it flies.
+  fire_interval:
+    value: 0.7
+    unit: s
+    description: Time between shots while holding Shoot (a pump-action pace).
+  magazine_size:
+    value: 6
+    unit: rounds
+    description: Shells in one magazine (the default Bro has 30).
+  magazines:
+    value: 1
+    unit: magazines
+    description: Magazines carried at the start.
+  reload_time:
+    value: 1.8
+    unit: s
+    description: Time to reload the shells.
+  bullet_lifetime:
+    value: 0.35
+    unit: s
+    description: Pellets vanish after this long, so the range is only about 150 px (~6 blocks).
+  recoil:
+    value: 230.0
+    unit: px/s
+    description: Kick back on every blast - a big shove backwards.
+  recoil_max:
+    value: 230.0
+    unit: px/s
+    description: Cap on the push (one blast already reaches it).
+  recoil_decay:
+    value: 520.0
+    unit: px/s²
+    description: The push fades quickly, so he slides back a short way and stops.
+  recoil_air:
+    value: 1.9
+    unit: ×
+    description: In the air the blast throws him back almost twice as hard.
+  shoot_shake:
+    value: 4.5
+    unit: px
+    description: Heavy screen shake on every blast - far more than the others.
+
+animations:
+  idle: Standing with the pump shotgun at the hip, breathing (the upper body bobs 1px).
+  run: Bro's run - the stride (back leg bent, boot kicked up, front leg straight) and the passing pose.
+  shoot: Every blast kicks his whole upper body back 2px, then 1px, over planted legs.
+  pump: After a shot, standing - the front hand slides the wooden forend back along the tube and returns.
+  run_shoot: The same kick on the run.
+  run_pump: The pump racked while he keeps running.
+  jump: Bro's tucked jump legs.
+  crouch: One block tall - hat, head and belly, upper chest left out; breathing.
+  crouch_walk: Bro's crouch-walk legs.
+  crouch_shoot: The kick, crouched.
+  crouch_pump: The pump racked while crouched (still or walking).
+  knife: Shotgun-stock bash - turns the shotgun around, pulls it back, then rams the wooden stock forward with a swoosh (hit on frame 3).
+  cling: Hanging on a wall by his bare fist (the Bro's raised arm with a short sleeve), shotgun in the hanging hand pointed at the wall; sways slowly.
+  flip: The tucked jump pose turning a full somersault in four quarter turns.
+  hurt: Dead - for now the jump pose (the death pose gets redrawn for all three Bros together).
+  climb: Unused by the game (same as the Bro's).

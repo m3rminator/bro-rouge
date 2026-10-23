@@ -5,12 +5,13 @@ id: blala
 name: Balal (playable Bro)
 kind: player
 order: 1.5
-description: A glass-cannon Bro. His rifle fires twice as fast as the default Bro's and the magazine holds 60 rounds, but the bullets die out after a short range and fly all over the place. He runs faster and jumps higher. His knife needs two hits - the first one throws the enemy back and leaves him stunned, standing in a corner unable to move or shoot for about two seconds, the second one kills. Has his own sprite (art/sprites/blala.yaml) - dark skin, short black hair, white tank top, green pants - for now in the default Bro's poses. Pick him on the character select screen at the start of the game.
+description: A glass-cannon Bro with an SMG in each hand. He fires twice as fast as the default Bro (the two guns take turns, each with its own muzzle flash) and the magazine holds 60 rounds, but the bullets die out after a short range and fly all over the place. He runs faster and jumps higher. He carries no knife - his melee swings one SMG up over his head and slams it down on the enemy; it needs two hits - the first throws the enemy back and stuns him (he blinks white with birds circling his head, unable to move or shoot for about two seconds, see stun.yaml), the second kills. Hanging on a wall he holds on with his bare hand. Has his own sprite (art/sprites/blala.yaml) - dark skin, black buzz cut, white tank top, green pants. Pick him on the character select screen at the start of the game.
 sprite: blala
 files:
   - game/scripts/character_select.gd
   - game/scripts/run.gd
   - game/scripts/player.gd
+  - game/scripts/muzzle_flash.gd
 controls: [move_left, move_right, jump, crouch, shoot, reload, knife, grenade]
 
 stats:
@@ -42,7 +43,19 @@ stats:
     value: 2
     unit: hits
     description: Knife hits needed to kill an ordinary enemy.
+  shot_sound:
+    value: blala_shoot
+    unit: sound
+    description: His SMGs - a lighter, snappier pop than the Bro's rifle.
+  melee_hit_sound:
+    value: gun_bash
+    unit: sound
+    description: The SMG slammed into an enemy - a metallic clonk instead of a knife stab.
   knife_stun:
     value: 2.0
     unit: s
     description: After the first knife hit the enemy is thrown back and stands stunned this long - no walking, no shooting.
+  shoot_shake:
+    value: 0.5
+    unit: px
+    description: Screen shake per shot - small, because he fires so fast.

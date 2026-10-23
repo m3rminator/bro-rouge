@@ -1,0 +1,36 @@
+# Palette set for Sharif, the sheriff Bro: brown cowboy hat, silver hair and mustache, khaki shirt,
+# brown vest with a gold star, jeans, brown boots, pump shotgun with a wooden stock.
+# Skin, outline and steel are shared with the default Bro. "." is always transparent.
+symbols:
+  o: rambo_black          # outline
+  Y: sharif_hat_dark
+  y: sharif_hat
+  u: sharif_hat_light
+  H: sharif_silver        # hair
+  h: sharif_silver_dark
+  M: sharif_silver        # mustache
+  m: sharif_silver_dark
+  e: rambo_brown          # skin outline
+  S: rambo_skin_dark
+  s: rambo_skin
+  L: rambo_skin_light
+  x: sharif_shirt_outline
+  c: sharif_shirt
+  C: sharif_shirt_shadow
+  v: sharif_vest
+  V: sharif_vest_dark
+  A: sharif_badge         # star, belt buckle
+  b: sharif_leather_dark  # belt
+  d: sharif_jeans_dark    # jeans outline
+  J: sharif_jeans_shadow
+  j: sharif_jeans
+  w: sharif_vest          # boots
+  W: sharif_leather_dark  # boot edges
+  G: rambo_steel_dark     # shotgun barrels
+  g: rambo_steel
+  i: sharif_barrel_light  # top barrel highlight
+  f: sharif_wood          # stock and forend
+  F: sharif_wood_dark
+  Z: rambo_swoosh_light   # stock-bash swoosh
+  z: rambo_swoosh
+  Q: rambo_swoosh_dark

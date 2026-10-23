@@ -25,7 +25,18 @@ func bro_stats() -> Dictionary:
 	var stats: Dictionary = GameData.BRO.duplicate()
 	if character == "blala":
 		stats.merge(GameData.BLALA, true)
+	elif character == "sharif":
+		stats.merge(GameData.SHARIF, true)
 	return stats
+
+
+## The sprite sheet a character is drawn with: his own once it exists, else the default Bro's.
+func look_of(id: String) -> String:
+	return id if ResourceLoader.exists("res://assets/sprites/%s_frames.tres" % id) else "bro"
+
+
+func look() -> String:
+	return look_of(character)
 
 
 ## The level being played (scripts/level_gen.gd), generated the first time it is asked for.
@@ -69,6 +80,7 @@ func next_level() -> void:
 		in_hub = false
 	else:
 		depth += 1
+		loop = depth / RULES.boss_every + 1  # fight, fight, boss + hub = one loop
 		in_hub = depth % RULES.boss_every == 0  # a boss level was just cleared
 
 

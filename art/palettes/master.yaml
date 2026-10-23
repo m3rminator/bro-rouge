@@ -47,6 +47,11 @@ colors:
   earth_dark:   "#34331f"
   earth_deep:   "#24241a"
   grass_bright: "#a2e24c"
+  # stone (rocky ground and the stone biome; grey with a hint of olive to sit with the jungle)
+  stone_light:  "#9a9c8a"
+  stone:        "#6c6e60"
+  stone_dark:   "#474a40"
+  stone_deep:   "#2c2e28"
   # khaki (enemy uniforms)
   khaki_light:  "#c8a878"
   khaki:        "#9a7a4e"
@@ -137,3 +142,22 @@ colors:
   blala_pants_dark:   "#1f2819"
   blala_pants_shadow: "#34432a"
   blala_pants:        "#4a6039"
+  # Sharif, the sheriff Bro (third playable character, drawn with the user)
+  sharif_hat_dark:     "#4e3218"
+  sharif_hat:          "#7a5230"
+  sharif_hat_light:    "#9a6a40"
+  sharif_silver:       "#d4d8e0"  # hair and mustache
+  sharif_silver_dark:  "#959aa8"
+  sharif_shirt:        "#d8c08c"
+  sharif_shirt_shadow: "#a88e5c"
+  sharif_shirt_outline: "#5c4426"
+  sharif_vest:         "#6e4328"  # vest and boots
+  sharif_vest_dark:    "#4a2a16"
+  sharif_badge:        "#f0c43c"  # gold star and belt buckle
+  sharif_leather_dark: "#3a2414"  # belt, boot edges
+  sharif_jeans_dark:   "#141c2c"
+  sharif_jeans_shadow: "#283e5e"
+  sharif_jeans:        "#3e5c86"
+  sharif_barrel_light: "#6e7780"
+  sharif_wood:         "#a0663a"  # shotgun stock and forend
+  sharif_wood_dark:    "#6a3e1e"

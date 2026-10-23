@@ -34,12 +34,16 @@ var _dead_anim := "dead"  # lying pose; sprites with two (dead_a / dead_b) get o
 var tears_apart := true  # a blast rips the body into pieces (BodyPiece); kamikazes keep theirs for the fuse
 var _stab_hits := 0  # knife hits taken that did not kill (a slower knife needs knife_hits of them)
 var _shoved := 0.0  # > 0 while sliding back from a knife hit he survived (no AI meanwhile)
+var _stunned := 0.0  # > 0 while stunned by a melee hit (design/entities/stun.yaml): blinks white, birds over the head
+var _stun_birds: AnimatedSprite2D
 var _headless := false  # his head was blown off (Head): headless poses, blood fountain from the neck
 var _fountain: CPUParticles2D
 var _fountain_left := 0.0
 var _fountain_drip := 0.0
 var _fountain_side := 1  # which way the neck points in the unrotated sprite
 var _grenade_seen := 0.0  # how long a live grenade has been in sight (he panics at GRENADE.flee_reaction)
+var _grenade_calm := {}  # grenade instance id -> true if he ignores that grenade (rolled once)
+var _grenade_late := {}  # grenades he only noticed in the last second
 var _fleeing: Node2D = null  # the grenade he is running from
 
 
@@ -63,6 +67,8 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _stunned > 0.0:
+		_update_stun(delta)
 	if not is_on_floor():
 		velocity.y += stats.gravity * delta
 	if dead:
@@ -111,6 +117,16 @@ func _flee(delta: float) -> bool:
 		_fleeing = null
 	if _fleeing == null:
 		var g := _grenade_in_sight()
+		if g != null and not _grenade_calm.has(g.get_instance_id()):
+			var panics := randf() < GameData.GRENADE.notice_chance * GameData.GRENADE.flee_chance
+			_grenade_calm[g.get_instance_id()] = not panics
+		if g != null and _grenade_calm[g.get_instance_id()]:
+			if g._fuse <= GameData.GRENADE.last_notice and not _grenade_late.has(g.get_instance_id()):
+				_grenade_late[g.get_instance_id()] = true  # the last second: he finally sees it - too late to run
+				show_alert(true)
+				Sfx.play(self, "enemy_alert", -6.0)
+				get_tree().create_timer(GameData.GRENADE.last_notice + 0.2).timeout.connect(show_alert.bind(false))
+			g = null  # he did not notice it, or does not care
 		if g == null:
 			_grenade_seen = 0.0
 			return false
@@ -251,6 +267,31 @@ func ray(from: Vector2, to: Vector2) -> Dictionary:
 	return get_world_2d().direct_space_state.intersect_ray(query)
 
 
+## Stunned for `time` seconds: the sprite blinks white and birds circle over his head.
+func _stun(time: float) -> void:
+	_stunned = time
+	if _stun_birds == null:
+		_stun_birds = AnimatedSprite2D.new()
+		_stun_birds.sprite_frames = load("res://assets/sprites/stun_frames.tres")
+		_stun_birds.position = Vector2(0, Block.SIZE / 2.0 - stats.hitbox[1] - GameData.STUN.birds_above_head)
+		_stun_birds.z_index = 1
+		add_child(_stun_birds)
+	_stun_birds.visible = true
+	_stun_birds.play("circle")
+
+
+func _update_stun(delta: float) -> void:
+	_stunned -= delta
+	if _stunned <= 0.0 or dead:
+		_stunned = 0.0
+		sprite.modulate = Color.WHITE
+		_stun_birds.visible = false
+		_stun_birds.stop()
+		return
+	var bright := int(_stunned / GameData.STUN.blink_interval) % 2 == 0
+	sprite.modulate = Color(3, 3, 3) if bright else Color.WHITE
+
+
 func show_alert(on: bool) -> void:
 	_bubble.visible = on
 
@@ -321,6 +362,7 @@ func stab(direction: int, boss_damage: int, knockback: float, hop: float, blood:
 			velocity = throw
 			_shoved = stun
 			show_alert(false)
+			_stun(stun)
 			return false
 	hit(boss_damage if is_in_group("bosses") else hp, direction)
 	if dead:

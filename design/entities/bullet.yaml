@@ -18,6 +18,10 @@ stats:
     value: 0.8
     unit: s
     description: Disappears after this long if it hits nothing (range ≈ speed × lifetime ≈ 336 px ≈ 21 tiles).
+  fade_time:
+    value: 0.25
+    unit: s
+    description: Every bullet (the Bro's, enemies', the minigun's) fades out gradually over the last part of its flight instead of vanishing at once; a bullet with a shorter life fades over all of it. It still hurts until it is gone.
   damage:
     value: 1
     unit: hp

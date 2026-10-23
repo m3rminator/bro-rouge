@@ -1,7 +1,7 @@
-# Stun birds: three little yellow birds circling over a stunned enemy's head (Blala's gun
+# Stun birds: three little white birds circling over a stunned enemy's head (Blala's gun
 # bash stuns; the enemy also blinks white). Placed over the head by enemy.gd.
 name: stun
-description: Three little birds circling over the head of a stunned enemy - the ones passing behind the head are darker. Loops for as long as the stun lasts.
+description: Three little white birds circling over the head of a stunned enemy - the ones passing behind the head are grey. Loops for as long as the stun lasts.
 palette: fx
 frame: [21, 9]
 anchors:
@@ -9,13 +9,13 @@ anchors:
 
 parts:
   bird: |
-    .YY..
-    YYYYO
-    .Y.Y.
+    .ww..
+    wwwwO
+    .w.w.
   bird_back: |
-    .OO..
-    OOOO.
-    .O.O.
+    .gg..
+    gggg.
+    .g.g.
 
 animations:
   circle:

@@ -32,7 +32,7 @@ func _ready() -> void:
 			var pos := Vector2(x * tile + tile / 2.0, y * tile + tile / 2.0)
 			var ch := row[x]
 			if ch == "#":
-				_add_block(rows, x, y, pos)
+				_add_block(rows, x, y, pos, lv.get("biome", "earth"))
 			elif ch == "P":
 				player.position = pos
 			elif ch == "O":
@@ -152,16 +152,40 @@ func _on_player_died() -> void:
 	get_tree().reload_current_scene()
 
 
-## Same rules as the catalog preview (tools/build.py: level_tiles / tile_variant).
-func _add_block(rows: Array, x: int, y: int, pos: Vector2) -> void:
+## Same rules as the catalog preview (tools/build.py: pick_tile). Earth: grass on top, two rows of normal-detail earth
+## (a stone now and then), then low-detail earth. Rock tiles are never picked here (they are for hand-placed stone);
+## in the stone biome it is all rock, darker the deeper it lies.
+func _add_block(rows: Array, x: int, y: int, pos: Vector2, biome: String) -> void:
 	var block := Block.new()
-	if _has_sky(rows, x, y):
-		var k := _variant(x, y, GameData.TILE_VARIANTS.grass)
-		var drip := "drip_%d" % k if y + 1 < rows.size() else ""
-		block.setup("grass_%d" % k, drip)
+	var h := tile_hash(x, y)
+	var flip_h := (h >> 3) & 1 == 1
+	var flip_v := (h >> 4) & 1 == 1
+	var sky := _has_sky(rows, x, y)
+	var d := _air_distance(rows, x, y)
+	var roll := tile_hash(x, y, 2) % 100
+	var anim: String
+	var drip := ""
+	var debris := Block.EARTH_DEBRIS
+	if biome == "stone":
+		debris = Block.STONE_DEBRIS
+		if sky:
+			anim = _pick("stonetop", x, y)
+			flip_v = false
+		else:
+			anim = _pick("stone", x, y) if d <= 2 else _pick("deep", x, y)
+	elif sky:
+		var k := tile_hash(x, y, 1) % GameData.TILE_VARIANTS.grass
+		anim = "grass_%d" % k
+		if y + 1 < rows.size():
+			drip = "drip_%d" % k
+		flip_v = false
+	elif d <= 3:  # the second layer (two rows deep): some clods, now and then a stone
+		anim = _pick("pebble", x, y) if roll < 14 else _pick("earth", x, y)
+	else:  # the third layer and deeper: low detail
+		anim = _pick("flint", x, y) if roll < 7 else _pick("subsoil", x, y)
+	block.setup(anim, drip, flip_h, flip_v, debris)
+	if sky and biome != "stone":
 		block.add_child(Grass.new())  # living blades on top (grass.gd)
-	else:
-		block.setup("earth_%d" % _variant(x, y, GameData.TILE_VARIANTS.earth))
 	block.position = pos
 	add_child(block)
 
@@ -174,8 +198,33 @@ func _has_sky(rows: Array, x: int, y: int) -> bool:
 	return true
 
 
-func _variant(x: int, y: int, count: int) -> int:
-	return ((x * 73) ^ (y * 151)) % count
+## 1 = the tile touches open air ... reach + 1 = buried deeper than that. not_above ignores air higher up (the sky over the ground).
+func _air_distance(rows: Array, x: int, y: int, reach := 3, not_above := false) -> int:
+	for r in range(1, reach + 1):
+		for dy in range(0 if not_above else -r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) == r and _is_air(rows, x + dx, y + dy):
+					return r
+	return reach + 1
+
+
+func _is_air(rows: Array, x: int, y: int) -> bool:
+	if y < 0:
+		return true
+	if x < 0 or y >= rows.size() or x >= rows[0].length():
+		return false  # the map edge counts as solid ground
+	return rows[y][x] != "#"
+
+
+func _pick(kind: String, x: int, y: int) -> String:
+	return "%s_%d" % [kind, tile_hash(x, y, 1) % GameData.TILE_VARIANTS[kind]]
+
+
+## Random-looking but fixed per map position (same hash as tools/build.py tile_hash).
+static func tile_hash(x: int, y: int, salt := 0) -> int:
+	var n := (x * 374761393 + y * 668265263 + salt * 1274126177) & 0xFFFFFFFF
+	n = ((n ^ (n >> 13)) * 1274126177) & 0xFFFFFFFF
+	return n ^ (n >> 16)
 
 
 ## A hub station was used (hub_station.gd).
