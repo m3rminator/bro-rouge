@@ -7,6 +7,8 @@ extends Node2D
 const ENEMY_SCENES := {
 	"E": preload("res://scenes/mook.tscn"),
 	"K": preload("res://scenes/kamikaze.tscn"),
+	"V": preload("res://scenes/vest.tscn"),
+	"H": preload("res://scenes/helmet.tscn"),
 	"B": preload("res://scenes/brute.tscn"),
 }
 const MUSIC := "res://assets/music/level_jungle.mp3"
@@ -15,9 +17,11 @@ const MUSIC := "res://assets/music/level_jungle.mp3"
 
 var hud: Hud
 var exit_flag: LevelExit
+var walls: BackWall  # the dark earth behind every block: what shows where one is shot away
 var _ending := false
 var _locked_cooldown := 0.0
 var _fall_limit := 0.0
+var _level_width := 0.0
 
 
 func _ready() -> void:
@@ -26,6 +30,8 @@ func _ready() -> void:
 	var hub: bool = lv.kind == "hub"
 	Run.begin_level()
 	var tile := Block.SIZE
+	walls = BackWall.new()
+	add_child(walls)
 	for y in rows.size():
 		var row: String = rows[y]
 		for x in row.length():
@@ -62,6 +68,7 @@ func _ready() -> void:
 	cam.limit_right = rows[0].length() * tile
 	cam.limit_bottom = rows.size() * tile
 	_fall_limit = rows.size() * tile + 48.0
+	_level_width = rows[0].length() * tile
 
 	var background := Background.new()
 	add_child(background)
@@ -74,7 +81,7 @@ func _ready() -> void:
 	if hub:
 		hud.show_hub()
 		exit_flag.set_open(true)
-		hud.message("SAFE HOUSE", Hud.GREEN, 3.0, "RESTOCK, THEN TAKE THE DOOR >")
+		hud.message("SAFE HOUSE", Hud.GREEN, 3.0, "RESTOCK, THEN BOARD THE TRUCK >")
 	else:
 		hud.show_level(Run.depth + 1, Run.loop, lv.title)
 		hud.set_kills(0, Run.quota())
@@ -84,6 +91,8 @@ func _ready() -> void:
 	player.died.connect(_on_player_died)
 	for boss in get_tree().get_nodes_in_group("bosses"):
 		boss.engaged.connect(hud.track_boss)
+
+	add_child(PauseMenu.new())
 
 	if ResourceLoader.exists(MUSIC):
 		var music := AudioStreamPlayer.new()
@@ -101,7 +110,9 @@ func _exit_tree() -> void:
 
 func _physics_process(delta: float) -> void:
 	_locked_cooldown -= delta
-	if not player.dead and player.position.y > _fall_limit:  # fell through a blasted-out floor
+	var out := player.position.y > _fall_limit or player.position.x < -32.0 or player.position.x > _level_width + 32.0
+	if not player.dead and out:  # fell through a blasted-out floor, or was blown off the side
+		BloodFountain.start(self, Vector2(clampf(player.position.x, 4.0, _level_width - 4.0), minf(player.position.y, _fall_limit - 40.0)))
 		player.kill()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		if enemy.position.y > _fall_limit:
@@ -110,7 +121,7 @@ func _physics_process(delta: float) -> void:
 
 func _on_quota_reached() -> void:
 	exit_flag.set_open(true)
-	hud.message("EXIT OPEN", Hud.GREEN, 2.5, "GET TO THE FLAG >")
+	hud.message("EXIT OPEN", Hud.GREEN, 2.5, "GET TO THE TRUCK >")
 	Sfx.play(self, "quota_reached")
 
 
@@ -125,6 +136,7 @@ func _on_exit_touched() -> void:
 		return
 	_ending = true
 	player.freeze()
+	exit_flag.board(player)
 	Run.store_loadout(player)
 	if Run.in_hub:
 		hud.message("GOOD LUCK", Hud.YELLOW, 0.0)
@@ -152,19 +164,19 @@ func _on_player_died() -> void:
 	get_tree().reload_current_scene()
 
 
-## Same rules as the catalog preview (tools/build.py: pick_tile). Earth: grass on top, two rows of normal-detail earth
-## (a stone now and then), then low-detail earth. Rock tiles are never picked here (they are for hand-placed stone);
-## in the stone biome it is all rock, darker the deeper it lies.
+## Same rules as the catalog preview (tools/build.py: pick_tile). Earth: grass on the top block only (everything of it
+## stays inside that block), two rows of calm earth under it (a stone now and then), a mixed transition, then flat dark
+## earth. Rock tiles are never picked here (they are for hand-placed stone); in the stone biome it is all rock, flatter
+## and darker the deeper it lies.
 func _add_block(rows: Array, x: int, y: int, pos: Vector2, biome: String) -> void:
 	var block := Block.new()
 	var h := tile_hash(x, y)
 	var flip_h := (h >> 3) & 1 == 1
 	var flip_v := (h >> 4) & 1 == 1
 	var sky := _has_sky(rows, x, y)
-	var d := _air_distance(rows, x, y)
+	var d := _air_distance(rows, x, y, 4)
 	var roll := tile_hash(x, y, 2) % 100
 	var anim: String
-	var drip := ""
 	var debris := Block.EARTH_DEBRIS
 	if biome == "stone":
 		debris = Block.STONE_DEBRIS
@@ -174,20 +186,22 @@ func _add_block(rows: Array, x: int, y: int, pos: Vector2, biome: String) -> voi
 		else:
 			anim = _pick("stone", x, y) if d <= 2 else _pick("deep", x, y)
 	elif sky:
-		var k := tile_hash(x, y, 1) % GameData.TILE_VARIANTS.grass
-		anim = "grass_%d" % k
-		if y + 1 < rows.size():
-			drip = "drip_%d" % k
+		anim = _pick("grass", x, y)
 		flip_v = false
-	elif d <= 3:  # the second layer (two rows deep): some clods, now and then a stone
+	elif d <= 3:  # layer 2 (two rows under the grass): calm earth, the odd stone
 		anim = _pick("pebble", x, y) if roll < 14 else _pick("earth", x, y)
-	else:  # the third layer and deeper: low detail
+	elif d == 4:  # one row of gradient tiles: layer-2 earth fading into flat earth
+		anim = _pick("mid", x, y) if roll < 90 else _pick("earth", x, y)
+		flip_v = false
+	else:  # layer 3 and deeper: flat dark
 		anim = _pick("flint", x, y) if roll < 7 else _pick("subsoil", x, y)
-	block.setup(anim, drip, flip_h, flip_v, debris)
+	block.setup(anim, flip_h, flip_v, debris)
 	if sky and biome != "stone":
 		block.add_child(Grass.new())  # living blades on top (grass.gd)
 	block.position = pos
 	add_child(block)
+	if not sky:  # a broken surface block opens onto the sky, not onto a wall
+		walls.add(pos, "%s_%d" % ["stonewall" if biome == "stone" else "wall", tile_hash(x, y, 3) % GameData.TILE_VARIANTS["stonewall" if biome == "stone" else "wall"]], (h >> 5) & 1 == 1, (h >> 6) & 1 == 1)
 
 
 ## Grass grows only where GameData.BLOCK.grass_clearance tiles above are all air.
@@ -241,7 +255,7 @@ func _on_station_used(kind: String) -> void:
 			hud.message("HEARTS AND LIVES REFILLED", Hud.GREEN, 1.5)
 			Sfx.play(self, "quota_reached", -6.0)
 		"G":
-			Run.grenades = GameData.GRENADE.grenades_per_level
+			Run.grenades = Run.grenade_max()
 			player.grenades_changed.emit(Run.grenades)
 			hud.message("GRENADES REFILLED", Hud.GREEN, 1.5)
 			Sfx.play(self, "reload", -4.0)

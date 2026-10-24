@@ -351,7 +351,7 @@ def tile_hash(x, y, salt=0):
 def tile_variants(sprites):
     anims = next(lay for sp, _, lay in sprites if sp["name"] == "terrain")
     names = [l[0] for l in anims]
-    kinds = ("earth", "subsoil", "pebble", "flint", "rock", "grass", "stonetop", "stone", "deep")
+    kinds = ("earth", "mid", "subsoil", "pebble", "flint", "rock", "grass", "stonetop", "stone", "deep", "wall", "stonewall")
     return {kind: sum(1 for n in names if n.startswith(kind + "_")) for kind in kinds}
 
 
@@ -377,36 +377,33 @@ def air_distance(rows, x, y, reach=3, not_above=False):
 
 
 def pick_tile(rows, x, y, variants, clearance, biome="earth"):
-    """Same rules as main.gd (_add_block): returns (anim, drip anim or None, flip_h, flip_v)."""
+    """Same rules as main.gd (_add_block): returns (anim, flip_h, flip_v)."""
     h = tile_hash(x, y)
     flip_h = bool((h >> 3) & 1)
     flip_v = bool((h >> 4) & 1)
     pick = lambda kind: f"{kind}_{tile_hash(x, y, 1) % variants[kind]}"
-    sky = has_sky(rows, x, y, clearance)
-    d = air_distance(rows, x, y)
+    if has_sky(rows, x, y, clearance):
+        if biome == "stone":
+            return pick("stonetop"), flip_h, False
+        return pick("grass"), flip_h, False
+    d = air_distance(rows, x, y, 4)
     if biome == "stone":
-        if sky:
-            return pick("stonetop"), None, flip_h, False
-        return (pick("stone") if d <= 2 else pick("deep")), None, flip_h, flip_v
-    if sky:
-        k = tile_hash(x, y, 1) % variants["grass"]
-        return f"grass_{k}", (f"drip_{k}" if y + 1 < len(rows) else None), flip_h, False
+        return (pick("stone") if d <= 2 else pick("deep")), flip_h, flip_v
     roll = tile_hash(x, y, 2) % 100
-    if d <= 3:  # the second layer (two rows deep): some clods, now and then a stone
-        return (pick("pebble") if roll < 14 else pick("earth")), None, flip_h, flip_v
-    return (pick("flint") if roll < 7 else pick("subsoil")), None, flip_h, flip_v  # the third layer and deeper: low detail
+    if d <= 3:  # layer 2 (two rows under the grass): calm earth, the odd stone
+        return (pick("pebble") if roll < 14 else pick("earth")), flip_h, flip_v
+    if d == 4:  # one row of gradient tiles: layer-2 earth fading into flat earth
+        return (pick("mid") if roll < 90 else pick("earth")), flip_h, False
+    return (pick("flint") if roll < 7 else pick("subsoil")), flip_h, flip_v  # layer 3 and deeper: flat dark
 
 
 def level_tiles(rows, variants, clearance, biome="earth"):
-    """Yield (x, y, anim, flip_h, flip_v) for every terrain sprite to draw, including grass strands."""
+    """Yield (x, y, anim, flip_h, flip_v) for every terrain sprite to draw."""
     for y, row in enumerate(rows):
         for x, ch in enumerate(row):
-            if ch != "#":
-                continue
-            anim, drip, fh, fv = pick_tile(rows, x, y, variants, clearance, biome)
-            yield x, y, anim, fh, fv
-            if drip:
-                yield x, y + 1, drip, fh, False
+            if ch == "#":
+                anim, fh, fv = pick_tile(rows, x, y, variants, clearance, biome)
+                yield x, y, anim, fh, fv
 
 
 def render_level(rows, sprites, clearance, entities):
@@ -422,8 +419,7 @@ def render_level(rows, sprites, clearance, entities):
 
     T = entities["block"]["stats"]["size"]["value"]
     out = Image.new("RGBA", (len(rows[0]) * T, len(rows) * T), hex_to_rgba("#5ab4e8"))
-    tiles = sorted(level_tiles(rows, variants, clearance), key=lambda t: t[2].startswith("drip"))
-    for x, y, anim, fh, fv in tiles:
+    for x, y, anim, fh, fv in level_tiles(rows, variants, clearance):
         tile = frame("terrain", anim)
         if fh:
             tile = tile.transpose(Image.FLIP_LEFT_RIGHT)

@@ -1,13 +1,23 @@
 {
+  "airstrike": {
+    "docs/previews/airstrike.png": "9bd25ef01a533a74db98eeb206af940e5e5cfc7ee24e4244f1f4366895176baf",
+    "game/assets/sprites/airstrike.png": "41f761dd65c30f00cd4d5fa949179778c6bbac3c42139cf5fa47bb8a370eb5bd",
+    "game/assets/sprites/airstrike_frames.tres": "7560cd3dd79828234351df2b3184a9f487604edde629c8dfd62f7d84efecfbdb"
+  },
   "barrel": {
     "docs/previews/barrel.png": "c5fb9816c27be71ef5f0fe9dc6d62ed82045e3a34b25d4f9c53ee5f5e01897aa",
     "game/assets/sprites/barrel.png": "7733f1329c0f965da70bc622e085e52ef2b54c216229459cdaabf2ab555bc022",
     "game/assets/sprites/barrel_frames.tres": "d0345c5c79a709499a79834e8427c38f0061149a16db8ed365a1705a7c4cc91c"
   },
   "blala": {
-    "docs/previews/blala.png": "f167f151efb7d6f47c9ac0edeb2941ef6a68ecaa6227e2b3cb7d0bda05fe0185",
-    "game/assets/sprites/blala.png": "be1c9a102f0c32f72cc8d726adbc266df7c4f2cf6ec9c2f253ef0f69459cbee4",
-    "game/assets/sprites/blala_frames.tres": "266cbceebfdbd2489e60e97f032b6f28f68a7276052a123fef98b20230a9843d"
+    "docs/previews/blala.png": "dd8478816fa134c335218a81a1002482f26c9b502ae9c412163941a14302efd3",
+    "game/assets/sprites/blala.png": "7659fe25659069f38f752460c3f02c761d836cafd37b71c7e8b47765c83d1ed7",
+    "game/assets/sprites/blala_frames.tres": "2bb03ec65fefc2c5701fc3d28a9794964b5ea729d1ba71915d5736f05b669944"
+  },
+  "blala_dead": {
+    "docs/previews/blala_dead.png": "92c9b5a3390ef681c8a3876b221c7f1ee1302905ad6c82e35052989de5461d97",
+    "game/assets/sprites/blala_dead.png": "bb7cb9687275781cb2922e2bccc6c53bca60d26eb875e23135109551df2a6ec9",
+    "game/assets/sprites/blala_dead_frames.tres": "603065aaf38f2a46e3f3831e2a2b728feadddc7abbf8af04283bb8c7651ee81d"
   },
   "blood": {
     "docs/previews/blood.png": "d82cef3d724685a4edfa000d8aff5c748b35651ceb886d6820ac04796c59c8a9",
@@ -15,9 +25,14 @@
     "game/assets/sprites/blood_frames.tres": "34ae4822738da8b0429e9dd00db41331bafe78268b02cdf0f5c5a93ff4df2202"
   },
   "bro": {
-    "docs/previews/bro.png": "01db4998ae4690cefb30d57a0d718e9b49522aebac824583de2aa3ca2db1b136",
-    "game/assets/sprites/bro.png": "ea7dde508d534dd65a1921578b51187fdece4fc5a5422f0ff0d7d3592ee523ec",
-    "game/assets/sprites/bro_frames.tres": "6f9ead15f8409fd8f06dc97507659ff334221e008e2c038d27a6e27295cd28f6"
+    "docs/previews/bro.png": "9bda01b659b8b4b0098b9ba978b2fe09c5bf07ff3881beeabb786e67d3c61e5b",
+    "game/assets/sprites/bro.png": "98915708de931b9684eb19fbf4770a660fed52278dd88eaebad1b67464dad353",
+    "game/assets/sprites/bro_frames.tres": "7a77f9b67ea961eaedf9f2802e569c82cd6acc9ada4487c36ca07add33c86704"
+  },
+  "bro_dead": {
+    "docs/previews/bro_dead.png": "f25d31d88692dbcc37bef8a40990b76c3d1623bb2d7003b7b026fd380a40f2ea",
+    "game/assets/sprites/bro_dead.png": "611ab3aca8ce03e5bff27b21539810c75a304ddcc386e9a9a65622f9e4953c9c",
+    "game/assets/sprites/bro_dead_frames.tres": "599bef1dc4e2d335145469db2bfd881294550ec46c3e3b37eea557688494ca9b"
   },
   "brute": {
     "docs/previews/brute.png": "28f7811f4966ba79d5a4489b26b955134bb88664ffb8f9420b55f9bbc656eea8",
@@ -54,19 +69,44 @@
     "game/assets/sprites/fx.png": "cfc89fd5a2787700414c4f1d5a9e80346411f9d2dad14a5d91367e1bbfa2bdce",
     "game/assets/sprites/fx_frames.tres": "dd4d435619bace4af8e9e97e101b55208b6f43dc902e95db50b1cee84650d015"
   },
+  "gibs": {
+    "docs/previews/gibs.png": "8b83838a16729ea3f71bb34e919dfadb4a64c6aa928705b3bb559415f179bcb1",
+    "game/assets/sprites/gibs.png": "87d3bb5cd50e77fe7ed2b4cf5c507493d798125a510f8d6cb057444f70aa04fe",
+    "game/assets/sprites/gibs_frames.tres": "c0870eb62c49b220b2d25a13d8b331d51e6aa8116b09f818b1064012d6feb7b8"
+  },
+  "heavy": {
+    "docs/previews/heavy.png": "5a4f3a85e08b97285787ddec863f0389d25464f7a223b5b2db7bbd494e3b76a5",
+    "game/assets/sprites/heavy.png": "6dbe08cf7d5c43b41a9a289ba1f6f2e74cab256e7fec2f7f74e39a44eb704752",
+    "game/assets/sprites/heavy_frames.tres": "0cb166c1b9d6dd3c57183c1e0cf64065effc0e3a8bbd4e284cfa9eaae4182620"
+  },
+  "heavy_dead": {
+    "docs/previews/heavy_dead.png": "7f38bfd1cd4ce0528fba0b47f64b2dbfe930692037106d6b109b11a99365c5b3",
+    "game/assets/sprites/heavy_dead.png": "427daa45b1c39769ce5206a075b99045f101b90cc8ba2b0067d8c710f0f82e43",
+    "game/assets/sprites/heavy_dead_frames.tres": "2004a04f88f48048e9b392a9c778dcd7d4285f02dfcbf5f13355bcdcc4c60f20"
+  },
+  "helmet": {
+    "docs/previews/helmet.png": "64990bda5e2c8d37a5ea396b8c337fd1295821474bb116134761cc91f69986cd",
+    "game/assets/sprites/helmet.png": "4730223cfc71f1a546215d9b35b1031d0f7b2206cfaeced6b2a46946c784020e",
+    "game/assets/sprites/helmet_frames.tres": "29c9988d2d13d4274fb49b0b6336a4c66a2ed8a1161a12a9304c2abb03bc1bc0"
+  },
   "items": {
-    "docs/previews/items.png": "6eab52f3c9d2fbe0a0bcfce200e9b5909d2a9d4ce72fe51452654f710329f222",
-    "game/assets/sprites/items.png": "37834462b9267fe5d0bce1d4dc58aa50c1f5e526439b47671d48aecd1f967f4c",
-    "game/assets/sprites/items_frames.tres": "af23653e69e9e99470b252881189b1280919162733362e146eff81b25e09a855"
+    "docs/previews/items.png": "0f43c02bb1b5fa7b480850d43b87065fa915e7f27e9bc993eb42db4d564818c4",
+    "game/assets/sprites/items.png": "35ab675a12e6144d313374a2017dd54accab5e9566c69872346bd7ae2bc6bdf0",
+    "game/assets/sprites/items_frames.tres": "43e3796a7f286db40d3c1b58da0c647f29b6856319ab8888ddaab949af86cc2f"
   },
   "kamikaze": {
-    "docs/previews/kamikaze.png": "efb67ae0d7bb22d4d7d1b8c0fe62975c194c37ff0e0fb73b0ba9850ac9b1ca56",
-    "game/assets/sprites/kamikaze.png": "5f4e75e71e1c3fb94dd61d85ac393e28e4b83eb32f9f58810f40e904cc24ef54",
+    "docs/previews/kamikaze.png": "de6d5ef0aaf9c57a72eaae72280af11d7e35a1fdeba203be75a313b13c1fc847",
+    "game/assets/sprites/kamikaze.png": "c0d16eefd6b3210c77816176b9be99d230e2e3df2d405749619787cc05bd5176",
     "game/assets/sprites/kamikaze_frames.tres": "491e34c305548419d534b45af0add61231341c0d39f59461f55974f8f4bd472f"
   },
+  "minigun_flash": {
+    "docs/previews/minigun_flash.png": "5bf882ed0f9ef2aa3ffcda812ea5ddfb189f161e49db6de11a748a5173134bbe",
+    "game/assets/sprites/minigun_flash.png": "22e1ec1d2ed4714b2a435114af6639efae6b30300b73b453377d07842946cf60",
+    "game/assets/sprites/minigun_flash_frames.tres": "22e375702d8511211ec34c1911c06c93f5df841c3856b4744170e30666e2c028"
+  },
   "mook": {
-    "docs/previews/mook.png": "3347f490caffa13e1e245713bdf6ac78a3dca2098f6b576e023531bbbdc9d66b",
-    "game/assets/sprites/mook.png": "56c47fe0d431dbb7ea21a19d0664392e7b7b284a23fded4f17501b776f1bd40f",
+    "docs/previews/mook.png": "31c6df77ffe8c1787a3e39ed472ba029e851e45187157dff58d100ee671b4b4b",
+    "game/assets/sprites/mook.png": "5deff7256b5b66b57bd78731df88da83118cbc10814f476f7b1be438ce8df30d",
     "game/assets/sprites/mook_frames.tres": "37f651998683aae9f2fb6a5d3cc85ee67190052307da5c22845314668877a0fa"
   },
   "projectiles": {
@@ -74,10 +114,25 @@
     "game/assets/sprites/projectiles.png": "16954e2c6e79a39351f18fe0023664daf3eb5d5c12631a0de292fd4e8b77f3d6",
     "game/assets/sprites/projectiles_frames.tres": "e261eb29ce4ea8374c34dfdb19731e00e5ef0e61bc29659e30351048fedbfd92"
   },
+  "revolver_bullet": {
+    "docs/previews/revolver_bullet.png": "a2b434fa6c5c60cbdda3719fe59302c08d33383dc7c3aec9174bdf47e062e611",
+    "game/assets/sprites/revolver_bullet.png": "51177c2b027f159d5ac632a3086c693d4c9a3847a87fabc59f4aece37742eb3b",
+    "game/assets/sprites/revolver_bullet_frames.tres": "0249720febda9df8e64c5b629b322062eefef955ad9d5cb0a19034dc18fa32ed"
+  },
+  "revolver_flash": {
+    "docs/previews/revolver_flash.png": "f1b1ceb97558d94c93f2c4e3bc2b4da4eb7d4887ed59ab251fdf2d40e3294052",
+    "game/assets/sprites/revolver_flash.png": "6e6da68ae005f1501e42ff69e80b5e7b8ee1743b67fbd4d73d5a36845577e537",
+    "game/assets/sprites/revolver_flash_frames.tres": "91c4fe43b8a5e3ea741c377adb43a9afac7e8419140a372ede163d13005c49b5"
+  },
   "sharif": {
-    "docs/previews/sharif.png": "3a5221b1e2dc107e83cb0083add8607273876ea59456c70a241d3beb5f1f175c",
-    "game/assets/sprites/sharif.png": "c7e45da39d9e88c7e6e4fd9953c0091d021a80e0f13ac05937d590980a1c3666",
-    "game/assets/sprites/sharif_frames.tres": "fba8c9d443e2cb6fd10b94571a9a746d263e81bb127871512f12b4ca6ec74240"
+    "docs/previews/sharif.png": "3dac92fe6965b88632364af8a7c522667987143c047e7d7e331c840e28a98b3f",
+    "game/assets/sprites/sharif.png": "e03472752e5df9dde3ee46093010f3cb89119ea80bb6b8bbdccb8a87a46f1456",
+    "game/assets/sprites/sharif_frames.tres": "58d0a4db2e6a93578adde3c4376fb68ad8f188ce429f26b43112f54850c44e99"
+  },
+  "sharif_dead": {
+    "docs/previews/sharif_dead.png": "0746f3b476dbf11cb562aa0319bcf872eb929c604b66dd0e3f0c9ddc49fda162",
+    "game/assets/sprites/sharif_dead.png": "22fc8a5c7ab660e79b8a9ef9ac1bd4c797febc986473f528b9e7d20de9d19a82",
+    "game/assets/sprites/sharif_dead_frames.tres": "b57b22b49262adcccbf1de00291a5517acba6bdd7bb58ccdffba395abf9f4e29"
   },
   "shotgun_flash": {
     "docs/previews/shotgun_flash.png": "1de6d6a20760a7a74613b2a473db7abbf4898aca47f89087ff2b653dd4ce20d3",
@@ -90,8 +145,18 @@
     "game/assets/sprites/stun_frames.tres": "6f2e3822f2d34a4739020456ca98835d5e35cfac006e2771424bed6904b20880"
   },
   "terrain": {
-    "docs/previews/terrain.png": "334217d657832584f13a4ce3f451f8ba02bb445596e033ce700b84ae9aac3e83",
-    "game/assets/sprites/terrain.png": "974faeeae10368bb24e76d451ad689cbb68037566fdcdb0469f6d6085edd020d",
-    "game/assets/sprites/terrain_frames.tres": "edd271f0b2a4818166720493f219e6fa62e4c470f296149eda482ce990399de2"
+    "docs/previews/terrain.png": "3f4662c45106a3e806fc5f51abcf8967321d90eed9f4895c39255d4b933284ea",
+    "game/assets/sprites/terrain.png": "3c3372c043fbe47bd3089ed8f91b272670159f1b06d1020f3418260d618442a7",
+    "game/assets/sprites/terrain_frames.tres": "6795a20400fd86c3266a39ec9c1caf5d570ec90d8152fcb41698a556b683cd0f"
+  },
+  "truck": {
+    "docs/previews/truck.png": "aa4fe0719ef38578aa96f3fa9202fc222ea1236127bbc0adfb44369550459a6a",
+    "game/assets/sprites/truck.png": "c36d87c69e81b2f96b65083ca35aa513a786da7d13bd1c39f6f4085c650b9c39",
+    "game/assets/sprites/truck_frames.tres": "e0fea93bc2566e473c5202322ef053547ac3e481aba777c33ec9eca40d77d2a1"
+  },
+  "vest": {
+    "docs/previews/vest.png": "02784c73901cba1a650b0e4049ad756029d7b1aa9b283dd01e88bceb868c3d2f",
+    "game/assets/sprites/vest.png": "2b0e8252f0149679bb32d5b807a3d27462c4b2a9df79ca8122e419f79ecda0ed",
+    "game/assets/sprites/vest_frames.tres": "bf61b059bf8ea627e0f8b1f23f680dba8e0600147f5521fd1f2dfa3437227a95"
   }
 }

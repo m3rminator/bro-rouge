@@ -19,6 +19,8 @@ var _phase := PackedFloat32Array()
 var _blood := PackedInt32Array()  # red pixels at the tip
 var _blood_color: Array[Color] = []
 var _crush := PackedFloat32Array()  # 0 standing .. 1 pressed down under a lying body
+var _rim := PackedInt32Array()  # per column of the block: how many pixels the green rim stands above the top edge
+var _vines := []  # [x, length, loop width (0 = a single strand)] hanging down the block face
 var _time := 0.0
 
 
@@ -27,11 +29,25 @@ func _ready() -> void:
 	z_index = 3  # in front of feet and bodies: they stand in the grass
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(Vector2i(global_position))  # same grass every time the level loads
+	for x in int(Block.SIZE):  # ragged rim: runs of 1-3 columns at the same height
+		var left := x % 3
+		_rim.append(_rim[x - 1] if left != 0 and x > 0 else rng.randi_range(0, STATS.get("rim_height", 2)))
+	if rng.randf() < STATS.get("vine_chance", 0.55):
+		for v in rng.randi_range(1, 2):
+			var length := rng.randi_range(3, STATS.get("vine_max", 8))
+			var loop: int = rng.randi_range(3, 6) if rng.randf() < STATS.get("loop_chance", 0.5) else 0
+			_vines.append([rng.randi_range(2, int(Block.SIZE) - 3 - loop), length, loop])
 	var n: int = STATS.blades_per_block
+	var bare_from: float = rng.randf_range(-10.0, 6.0) if rng.randf() < STATS.bare_chance else 99.0  # a bare patch in the tuft
+	var tall_from: float = rng.randf_range(-10.0, 4.0) if rng.randf() < STATS.tall_chance else 99.0  # a clump of taller blades
 	for i in n:
 		var slot := (i + rng.randf_range(0.1, 0.9)) / n  # spread evenly, a little jitter
-		_x.append(floorf(lerpf(-Block.SIZE / 2.0 + 1.0, Block.SIZE / 2.0 - 2.0, slot)))
-		_h.append(rng.randi_range(STATS.height_min, STATS.height_max))
+		var bx := floorf(lerpf(-Block.SIZE / 2.0 + 1.0, Block.SIZE / 2.0 - 2.0, slot))
+		if bx >= bare_from and bx < bare_from + STATS.bare_width:
+			continue
+		_x.append(bx)
+		var tall: bool = bx >= tall_from and bx < tall_from + STATS.tall_width
+		_h.append(rng.randi_range(STATS.height_max, STATS.tall_height_max) if tall else rng.randi_range(STATS.height_min, STATS.height_max))
 		_shade.append(rng.randi_range(0, 2))  # dark, mid or light green blade
 		_lean.append(0.0)
 		_vel.append(0.0)
@@ -82,6 +98,23 @@ func _pushers() -> Array:
 func _draw() -> void:
 	var root: int = STATS.root_depth
 	draw_rect(Rect2(-Block.SIZE / 2.0, TOP, Block.SIZE, root), COLORS[3])  # closes the notches in the tile's top row
+	for x in _rim.size():  # the thin lit rim: bright on top, a mid green below it
+		var rim := _rim[x]
+		var px := -Block.SIZE / 2.0 + x
+		if rim > 0:
+			draw_rect(Rect2(px, TOP - rim, 1, rim), COLORS[3] if rim == _rim[maxi(x - 1, 0)] or rim == 1 else COLORS[2])
+		draw_rect(Rect2(px, TOP + root, 1, 1), COLORS[2] if x % 2 == 0 else COLORS[1])
+	for v in _vines:  # short vines and loops on the face, inside this block only
+		var vx: float = -Block.SIZE / 2.0 + v[0]
+		var sway := roundf(sin(_time * 1.3 + v[0]) * 0.6)
+		for k in v[1]:
+			var c: Color = COLORS[1] if k % 3 != 2 else COLORS[0]
+			draw_rect(Rect2(vx + (sway if k > 2 else 0.0), TOP + root + 1 + k, 1, 1), c)
+			if v[2] > 0:
+				draw_rect(Rect2(vx + v[2] + (sway if k > 2 else 0.0), TOP + root + 1 + k, 1, 1), c)
+		if v[2] > 0:
+			for w in range(1, v[2]):
+				draw_rect(Rect2(vx + w + sway, TOP + root + v[1], 1, 1), COLORS[1])
 	for i in _x.size():
 		var h := _h[i] - roundi(_h[i] * (1.0 - STATS.crushed_share) * _crush[i])
 		for k in h + root:

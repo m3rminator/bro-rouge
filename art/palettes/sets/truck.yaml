@@ -1,0 +1,21 @@
+# Palette set for the army truck (olive body, steel glass and bumper, khaki crates and hubs, red shell cans and tail lights).
+# "." is always transparent.
+symbols:
+  o: outline
+  a: olive_light
+  A: olive
+  B: olive_dark
+  g: steel_light
+  G: steel
+  D: steel_dark
+  w: khaki_light
+  W: khaki
+  V: khaki_dark
+  r: red_light
+  R: red
+  y: fire_yellow
+  f: grass_light
+  F: grass
+  t: khaki_light  # canvas tarp
+  T: khaki
+  U: khaki_dark

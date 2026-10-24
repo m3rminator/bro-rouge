@@ -3,7 +3,7 @@ id: block
 name: Terrain block
 kind: terrain
 order: 10
-description: 24×24 solid tile that levels are built from. Bullets (player and enemy) chip it — every hit adds more cracks across its face — and at 0 HP it bursts into debris and is gone for good. Any block whose center is inside an explosion is destroyed at once. The look depends on where the block sits. In the usual earth level, blocks with open sky above (grass_clearance air tiles) become grass with hanging strands; the two rows of earth under the grass (and beside any open air) are normal-detail earth with the odd stone embedded; from the third row down the earth is low-detail, almost flat dark colour. Rocky blocks (rock_N) are never generated inside earth - they are kept for hand-placed stone in the level editor. A stone level (a chance per generated fight, see run.yaml) is grey rock throughout - lit tops, slabs near the air, dark rock deeper in. Variants, mirroring and the earth/rock mix come from a hash of the block's map position, so tiles never repeat in a pattern and the same level always looks the same.
+description: "24×24 solid tile that levels are built from. Bullets (player and enemy) chip it — every hit adds more cracks across its face — and at 0 HP it bursts into debris and is gone for good. Any block whose center is inside an explosion is destroyed at once. Behind every block sits a darker back wall (wall_N, not solid, drawn by scripts/back_wall.gd): when a block is shot away only that layer is gone and the dark wall shows where it was, as in Broforce. The look depends on where the block sits. In the usual earth level, blocks with open sky above (grass_clearance air tiles) become grass: one block with its own grass rim, vine loops, strands or moss, everything inside that single block (the tuft of living blades on top varies per block, see grass.yaml). The two rows of earth under the grass (and beside any open air) are calm dark earth with tiny tufts and the odd stone; the next two rows are a mix of mid earth and the layers above and below it so there is no hard line; from there down the earth is flat dark colour. Rocky blocks (rock_N) are never generated inside earth - they are kept for hand-placed stone in the level editor. A stone level (a chance per generated fight, see run.yaml) is grey rock throughout - lit tops, slabs near the air, flat dark rock deeper in. Variants, mirroring and the earth mix come from a hash of the block's map position, so tiles never repeat in a pattern and the same level always looks the same."
 sprite: terrain
 files:
   - game/scripts/block.gd
@@ -40,34 +40,44 @@ stats:
     description: Chance that the block directly above a breaking block breaks too, a moment later (that one can chain again).
 
 animations:
-  earth_0: "Second layer, normal-detail earth (the two rows under the grass), variant 0: some rounded clods in three flat tones."
-  earth_1: "Second layer, normal-detail earth (the two rows under the grass), variant 1: some rounded clods in three flat tones."
-  earth_2: "Second layer, normal-detail earth (the two rows under the grass), variant 2: some rounded clods in three flat tones."
-  earth_3: "Second layer, normal-detail earth (the two rows under the grass), variant 3: some rounded clods in three flat tones."
-  earth_4: "Second layer, normal-detail earth (the two rows under the grass), variant 4: some rounded clods in three flat tones."
-  earth_5: "Second layer, normal-detail earth (the two rows under the grass), variant 5: some rounded clods in three flat tones."
-  earth_6: "Second layer, normal-detail earth (the two rows under the grass), variant 6: some rounded clods in three flat tones."
-  earth_7: "Second layer, normal-detail earth (the two rows under the grass), variant 7: some rounded clods in three flat tones."
-  earth_8: "Second layer, normal-detail earth (the two rows under the grass), variant 8: some rounded clods in three flat tones."
-  earth_9: "Second layer, normal-detail earth (the two rows under the grass), variant 9: some rounded clods in three flat tones."
-  earth_10: "Second layer, normal-detail earth (the two rows under the grass), variant 10: some rounded clods in three flat tones."
-  earth_11: "Second layer, normal-detail earth (the two rows under the grass), variant 11: some rounded clods in three flat tones."
-  subsoil_0: "Low-detail earth, variant 0: almost flat dark colour. Used from the third layer down (three rows under the surface and deeper)."
-  subsoil_1: "Low-detail earth, variant 1: almost flat dark colour. Used from the third layer down (three rows under the surface and deeper)."
-  subsoil_2: "Low-detail earth, variant 2: almost flat dark colour. Used from the third layer down (three rows under the surface and deeper)."
-  subsoil_3: "Low-detail earth, variant 3: almost flat dark colour. Used from the third layer down (three rows under the surface and deeper)."
-  subsoil_4: "Low-detail earth, variant 4: almost flat dark colour. Used from the third layer down (three rows under the surface and deeper)."
-  subsoil_5: "Low-detail earth, variant 5: almost flat dark colour. Used from the third layer down (three rows under the surface and deeper)."
-  pebble_0: "Shallow earth with a few stones embedded, variant 0. About 1 in 7 of those blocks."
-  pebble_1: "Shallow earth with a few stones embedded, variant 1. About 1 in 7 of those blocks."
-  pebble_2: "Shallow earth with a few stones embedded, variant 2. About 1 in 7 of those blocks."
-  pebble_3: "Shallow earth with a few stones embedded, variant 3. About 1 in 7 of those blocks."
-  pebble_4: "Shallow earth with a few stones embedded, variant 4. About 1 in 7 of those blocks."
-  pebble_5: "Shallow earth with a few stones embedded, variant 5. About 1 in 7 of those blocks."
-  flint_0: "Deep earth with a single stone in it, variant 0. About 1 in 14 of those blocks."
-  flint_1: "Deep earth with a single stone in it, variant 1. About 1 in 14 of those blocks."
-  flint_2: "Deep earth with a single stone in it, variant 2. About 1 in 14 of those blocks."
-  flint_3: "Deep earth with a single stone in it, variant 3. About 1 in 14 of those blocks."
+  earth_0: "Layer 2 earth (the two rows under the grass), variant 0: calm dark earth with tiny tufts and a few flat patches."
+  earth_1: "Layer 2 earth (the two rows under the grass), variant 1: calm dark earth with tiny tufts and a few flat patches."
+  earth_2: "Layer 2 earth (the two rows under the grass), variant 2: calm dark earth with tiny tufts and a few flat patches."
+  earth_3: "Layer 2 earth (the two rows under the grass), variant 3: calm dark earth with tiny tufts and a few flat patches."
+  earth_4: "Layer 2 earth (the two rows under the grass), variant 4: calm dark earth with tiny tufts and a few flat patches."
+  earth_5: "Layer 2 earth (the two rows under the grass), variant 5: calm dark earth with tiny tufts and a few flat patches."
+  earth_6: "Layer 2 earth (the two rows under the grass), variant 6: calm dark earth with tiny tufts and a few flat patches."
+  earth_7: "Layer 2 earth (the two rows under the grass), variant 7: calm dark earth with tiny tufts and a few flat patches."
+  earth_8: "Layer 2 earth (the two rows under the grass), variant 8: calm dark earth with tiny tufts and a few flat patches."
+  earth_9: "Layer 2 earth (the two rows under the grass), variant 9: calm dark earth with tiny tufts and a few flat patches."
+  earth_10: "Layer 2 earth (the two rows under the grass), variant 10: calm dark earth with tiny tufts and a few flat patches."
+  earth_11: "Layer 2 earth (the two rows under the grass), variant 11: calm dark earth with tiny tufts and a few flat patches."
+  mid_0: "Transition earth, variant 0: big dark patches, mixed in between layer 2 and the flat layer so there is no hard line."
+  mid_1: "Transition earth, variant 1: big dark patches, mixed in between layer 2 and the flat layer so there is no hard line."
+  mid_2: "Transition earth, variant 2: big dark patches, mixed in between layer 2 and the flat layer so there is no hard line."
+  mid_3: "Transition earth, variant 3: big dark patches, mixed in between layer 2 and the flat layer so there is no hard line."
+  mid_4: "Transition earth, variant 4: big dark patches, mixed in between layer 2 and the flat layer so there is no hard line."
+  mid_5: "Transition earth, variant 5: big dark patches, mixed in between layer 2 and the flat layer so there is no hard line."
+  mid_6: "Transition earth, variant 6: big dark patches, mixed in between layer 2 and the flat layer so there is no hard line."
+  mid_7: "Transition earth, variant 7: big dark patches, mixed in between layer 2 and the flat layer so there is no hard line."
+  subsoil_0: "Flat dark earth, variant 0: almost no detail. Used from the third layer down."
+  subsoil_1: "Flat dark earth, variant 1: almost no detail. Used from the third layer down."
+  subsoil_2: "Flat dark earth, variant 2: almost no detail. Used from the third layer down."
+  subsoil_3: "Flat dark earth, variant 3: almost no detail. Used from the third layer down."
+  subsoil_4: "Flat dark earth, variant 4: almost no detail. Used from the third layer down."
+  subsoil_5: "Flat dark earth, variant 5: almost no detail. Used from the third layer down."
+  subsoil_6: "Flat dark earth, variant 6: almost no detail. Used from the third layer down."
+  subsoil_7: "Flat dark earth, variant 7: almost no detail. Used from the third layer down."
+  pebble_0: "Layer 2 earth with a few stones embedded, variant 0. About 1 in 7 of those blocks."
+  pebble_1: "Layer 2 earth with a few stones embedded, variant 1. About 1 in 7 of those blocks."
+  pebble_2: "Layer 2 earth with a few stones embedded, variant 2. About 1 in 7 of those blocks."
+  pebble_3: "Layer 2 earth with a few stones embedded, variant 3. About 1 in 7 of those blocks."
+  pebble_4: "Layer 2 earth with a few stones embedded, variant 4. About 1 in 7 of those blocks."
+  pebble_5: "Layer 2 earth with a few stones embedded, variant 5. About 1 in 7 of those blocks."
+  flint_0: "Flat dark earth with a single stone in it, variant 0. About 1 in 14 of those blocks."
+  flint_1: "Flat dark earth with a single stone in it, variant 1. About 1 in 14 of those blocks."
+  flint_2: "Flat dark earth with a single stone in it, variant 2. About 1 in 14 of those blocks."
+  flint_3: "Flat dark earth with a single stone in it, variant 3. About 1 in 14 of those blocks."
   rock_0: "Rocky ground, variant 0: stone slabs packed with earth. Not generated automatically - kept for hand-placed stone (level editor)."
   rock_1: "Rocky ground, variant 1: stone slabs packed with earth. Not generated automatically - kept for hand-placed stone (level editor)."
   rock_2: "Rocky ground, variant 2: stone slabs packed with earth. Not generated automatically - kept for hand-placed stone (level editor)."
@@ -80,78 +90,58 @@ animations:
   rock_9: "Rocky ground, variant 9: stone slabs packed with earth. Not generated automatically - kept for hand-placed stone (level editor)."
   rock_10: "Rocky ground, variant 10: stone slabs packed with earth. Not generated automatically - kept for hand-placed stone (level editor)."
   rock_11: "Rocky ground, variant 11: stone slabs packed with earth. Not generated automatically - kept for hand-placed stone (level editor)."
-  grass_0: "Surface block (air above), variant 0. Its strands continue in drip_0."
-  grass_1: "Surface block (air above), variant 1. Its strands continue in drip_1."
-  grass_2: "Surface block (air above), variant 2. Its strands continue in drip_2."
-  grass_3: "Surface block (air above), variant 3. Its strands continue in drip_3."
-  grass_4: "Surface block (air above), variant 4. Its strands continue in drip_4."
-  grass_5: "Surface block (air above), variant 5. Its strands continue in drip_5."
-  drip_0: "Grass strands hanging over the block (or air) below grass_0. Decoration only - disappears when the grass block breaks."
-  drip_1: "Grass strands hanging over the block (or air) below grass_1. Decoration only - disappears when the grass block breaks."
-  drip_2: "Grass strands hanging over the block (or air) below grass_2. Decoration only - disappears when the grass block breaks."
-  drip_3: "Grass strands hanging over the block (or air) below grass_3. Decoration only - disappears when the grass block breaks."
-  drip_4: "Grass strands hanging over the block (or air) below grass_4. Decoration only - disappears when the grass block breaks."
-  drip_5: "Grass strands hanging over the block (or air) below grass_5. Decoration only - disappears when the grass block breaks."
-  stonetop_0: "Stone biome: lit top of the ground with a little moss, variant 0."
-  stonetop_1: "Stone biome: lit top of the ground with a little moss, variant 1."
-  stonetop_2: "Stone biome: lit top of the ground with a little moss, variant 2."
-  stonetop_3: "Stone biome: lit top of the ground with a little moss, variant 3."
-  stonetop_4: "Stone biome: lit top of the ground with a little moss, variant 4."
-  stonetop_5: "Stone biome: lit top of the ground with a little moss, variant 5."
-  stone_0: "Stone biome: grey slabs, variant 0. Used within two tiles of open air."
-  stone_1: "Stone biome: grey slabs, variant 1. Used within two tiles of open air."
-  stone_2: "Stone biome: grey slabs, variant 2. Used within two tiles of open air."
-  stone_3: "Stone biome: grey slabs, variant 3. Used within two tiles of open air."
-  stone_4: "Stone biome: grey slabs, variant 4. Used within two tiles of open air."
-  stone_5: "Stone biome: grey slabs, variant 5. Used within two tiles of open air."
-  stone_6: "Stone biome: grey slabs, variant 6. Used within two tiles of open air."
-  stone_7: "Stone biome: grey slabs, variant 7. Used within two tiles of open air."
-  stone_8: "Stone biome: grey slabs, variant 8. Used within two tiles of open air."
-  stone_9: "Stone biome: grey slabs, variant 9. Used within two tiles of open air."
-  stone_10: "Stone biome: grey slabs, variant 10. Used within two tiles of open air."
-  stone_11: "Stone biome: grey slabs, variant 11. Used within two tiles of open air."
-  deep_0: "Stone biome: dark deep rock, variant 0. Used when buried three or more tiles."
-  deep_1: "Stone biome: dark deep rock, variant 1. Used when buried three or more tiles."
-  deep_2: "Stone biome: dark deep rock, variant 2. Used when buried three or more tiles."
-  deep_3: "Stone biome: dark deep rock, variant 3. Used when buried three or more tiles."
-  deep_4: "Stone biome: dark deep rock, variant 4. Used when buried three or more tiles."
-  deep_5: "Stone biome: dark deep rock, variant 5. Used when buried three or more tiles."
-  deep_6: "Stone biome: dark deep rock, variant 6. Used when buried three or more tiles."
-  deep_7: "Stone biome: dark deep rock, variant 7. Used when buried three or more tiles."
-  deep_8: "Stone biome: dark deep rock, variant 8. Used when buried three or more tiles."
-  deep_9: "Stone biome: dark deep rock, variant 9. Used when buried three or more tiles."
-  cracks/crack_0_1: Crack overlay, pattern 0 (fork), stage 1 of 4.
-  cracks/crack_0_2: Crack overlay, pattern 0 (fork), stage 2 of 4.
-  cracks/crack_0_3: Crack overlay, pattern 0 (fork), stage 3 of 4.
-  cracks/crack_0_4: Crack overlay, pattern 0 (fork), stage 4 of 4.
-  cracks/crack_1_1: Crack overlay, pattern 1 (web), stage 1 of 4.
-  cracks/crack_1_2: Crack overlay, pattern 1 (web), stage 2 of 4.
-  cracks/crack_1_3: Crack overlay, pattern 1 (web), stage 3 of 4.
-  cracks/crack_1_4: Crack overlay, pattern 1 (web), stage 4 of 4.
-  cracks/crack_2_1: Crack overlay, pattern 2 (zig-zag), stage 1 of 4.
-  cracks/crack_2_2: Crack overlay, pattern 2 (zig-zag), stage 2 of 4.
-  cracks/crack_2_3: Crack overlay, pattern 2 (zig-zag), stage 3 of 4.
-  cracks/crack_2_4: Crack overlay, pattern 2 (zig-zag), stage 4 of 4.
-  cracks/crack_3_1: Crack overlay, pattern 3 (corner), stage 1 of 4.
-  cracks/crack_3_2: Crack overlay, pattern 3 (corner), stage 2 of 4.
-  cracks/crack_3_3: Crack overlay, pattern 3 (corner), stage 3 of 4.
-  cracks/crack_3_4: Crack overlay, pattern 3 (corner), stage 4 of 4.
-  cracks/crack_4_1: Crack overlay, pattern 4 (tree), stage 1 of 4.
-  cracks/crack_4_2: Crack overlay, pattern 4 (tree), stage 2 of 4.
-  cracks/crack_4_3: Crack overlay, pattern 4 (tree), stage 3 of 4.
-  cracks/crack_4_4: Crack overlay, pattern 4 (tree), stage 4 of 4.
-  cracks/crack_5_1: Crack overlay, pattern 5 (cross), stage 1 of 4.
-  cracks/crack_5_2: Crack overlay, pattern 5 (cross), stage 2 of 4.
-  cracks/crack_5_3: Crack overlay, pattern 5 (cross), stage 3 of 4.
-  cracks/crack_5_4: Crack overlay, pattern 5 (cross), stage 4 of 4.
-  cracks/crack_6_1: Crack overlay, pattern 6 (side), stage 1 of 4.
-  cracks/crack_6_2: Crack overlay, pattern 6 (side), stage 2 of 4.
-  cracks/crack_6_3: Crack overlay, pattern 6 (side), stage 3 of 4.
-  cracks/crack_6_4: Crack overlay, pattern 6 (side), stage 4 of 4.
-  cracks/crack_7_1: Crack overlay, pattern 7 (chip), stage 1 of 4.
-  cracks/crack_7_2: Crack overlay, pattern 7 (chip), stage 2 of 4.
-  cracks/crack_7_3: Crack overlay, pattern 7 (chip), stage 3 of 4.
-  cracks/crack_7_4: Crack overlay, pattern 7 (chip), stage 4 of 4.
+  grass_0: "Surface block of the earth biome, variant 0: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_1: "Surface block of the earth biome, variant 1: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_2: "Surface block of the earth biome, variant 2: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_3: "Surface block of the earth biome, variant 3: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_4: "Surface block of the earth biome, variant 4: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_5: "Surface block of the earth biome, variant 5: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_6: "Surface block of the earth biome, variant 6: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_7: "Surface block of the earth biome, variant 7: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_8: "Surface block of the earth biome, variant 8: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_9: "Surface block of the earth biome, variant 9: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_10: "Surface block of the earth biome, variant 10: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  grass_11: "Surface block of the earth biome, variant 11: one block with its own grass (rim, vine loops, strands or moss) - nothing hangs onto the block below."
+  stonetop_0: "Stone biome, lit top surface, variant 0."
+  stonetop_1: "Stone biome, lit top surface, variant 1."
+  stonetop_2: "Stone biome, lit top surface, variant 2."
+  stonetop_3: "Stone biome, lit top surface, variant 3."
+  stonetop_4: "Stone biome, lit top surface, variant 4."
+  stonetop_5: "Stone biome, lit top surface, variant 5."
+  stone_0: "Stone biome, slabs near open air, variant 0."
+  stone_1: "Stone biome, slabs near open air, variant 1."
+  stone_2: "Stone biome, slabs near open air, variant 2."
+  stone_3: "Stone biome, slabs near open air, variant 3."
+  stone_4: "Stone biome, slabs near open air, variant 4."
+  stone_5: "Stone biome, slabs near open air, variant 5."
+  stone_6: "Stone biome, slabs near open air, variant 6."
+  stone_7: "Stone biome, slabs near open air, variant 7."
+  stone_8: "Stone biome, slabs near open air, variant 8."
+  stone_9: "Stone biome, slabs near open air, variant 9."
+  stone_10: "Stone biome, slabs near open air, variant 10."
+  stone_11: "Stone biome, slabs near open air, variant 11."
+  deep_0: "Stone biome, flat dark rock deeper in, variant 0."
+  deep_1: "Stone biome, flat dark rock deeper in, variant 1."
+  deep_2: "Stone biome, flat dark rock deeper in, variant 2."
+  deep_3: "Stone biome, flat dark rock deeper in, variant 3."
+  deep_4: "Stone biome, flat dark rock deeper in, variant 4."
+  deep_5: "Stone biome, flat dark rock deeper in, variant 5."
+  deep_6: "Stone biome, flat dark rock deeper in, variant 6."
+  deep_7: "Stone biome, flat dark rock deeper in, variant 7."
+  wall_0: "Back wall of the earth biome, variant 0: very dark flat earth shown where a block was shot away. Not solid."
+  wall_1: "Back wall of the earth biome, variant 1: very dark flat earth shown where a block was shot away. Not solid."
+  wall_2: "Back wall of the earth biome, variant 2: very dark flat earth shown where a block was shot away. Not solid."
+  wall_3: "Back wall of the earth biome, variant 3: very dark flat earth shown where a block was shot away. Not solid."
+  wall_4: "Back wall of the earth biome, variant 4: very dark flat earth shown where a block was shot away. Not solid."
+  wall_5: "Back wall of the earth biome, variant 5: very dark flat earth shown where a block was shot away. Not solid."
+  wall_6: "Back wall of the earth biome, variant 6: very dark flat earth shown where a block was shot away. Not solid."
+  wall_7: "Back wall of the earth biome, variant 7: very dark flat earth shown where a block was shot away. Not solid."
+  stonewall_0: "Back wall of the stone biome, variant 0: very dark flat rock shown where a block was shot away. Not solid."
+  stonewall_1: "Back wall of the stone biome, variant 1: very dark flat rock shown where a block was shot away. Not solid."
+  stonewall_2: "Back wall of the stone biome, variant 2: very dark flat rock shown where a block was shot away. Not solid."
+  stonewall_3: "Back wall of the stone biome, variant 3: very dark flat rock shown where a block was shot away. Not solid."
+  stonewall_4: "Back wall of the stone biome, variant 4: very dark flat rock shown where a block was shot away. Not solid."
+  stonewall_5: "Back wall of the stone biome, variant 5: very dark flat rock shown where a block was shot away. Not solid."
 
 sounds:
   block_hit: A bullet hits the block but it survives (it also flashes white).

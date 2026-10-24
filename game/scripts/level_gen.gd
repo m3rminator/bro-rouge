@@ -55,11 +55,13 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 
 	var start_row: int = heights[3] - 1
 	grid[start_row][3] = "P"
-	grid[heights[width - 4] - 1][width - 4] = "X"
+	grid[heights[width - 5] - 1][width - 5] = "X"  # the truck is 5 blocks long, centred on this tile
 
 	var taken := {}  # Vector2i(x, row) of things already standing somewhere
 	var enemies := mini(R.min_enemies + R.enemies_per_depth * tier + rng.randi_range(0, 3), R.max_enemies)
 	var kamikaze_share := minf(R.kamikaze_base + R.kamikaze_per_depth * tier, R.kamikaze_max)
+	var vest_share := minf(R.vest_base + R.vest_per_depth * tier, R.vest_max)
+	var helmet_share := minf(R.helmet_base + R.helmet_per_depth * tier, R.helmet_max)
 	var placed := enemies
 	if boss:
 		var bx := width - 24
@@ -76,7 +78,15 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 		if spot.x < 0:
 			placed -= enemies - i
 			break
-		grid[spot.y][spot.x] = "K" if rng.randf() < kamikaze_share else "E"
+		var roll := rng.randf()
+		var kind := "E"
+		if roll < kamikaze_share:
+			kind = "K"
+		elif roll < kamikaze_share + helmet_share:
+			kind = "H"
+		elif roll < kamikaze_share + helmet_share + vest_share:
+			kind = "V"
+		grid[spot.y][spot.x] = kind
 		_take(taken, spot, 1)
 		_drop(spots, spot)
 
@@ -112,7 +122,7 @@ static func hub() -> Dictionary:
 	put.call(16, "A")
 	put.call(26, "H")
 	put.call(36, "G")
-	put.call(48, "X")
+	put.call(47, "X")
 	return {"rows": rows, "title": "Safe House", "kill_quota": 0, "kind": "hub", "depth": -1}
 
 

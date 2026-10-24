@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=82 format=3]
+[gd_resource type="SpriteFrames" load_steps=104 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/terrain.png" id="1"]
 
@@ -322,6 +322,94 @@ region = Rect2(0, 1872, 24, 24)
 atlas = ExtResource("1")
 region = Rect2(0, 1896, 24, 24)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_80"]
+atlas = ExtResource("1")
+region = Rect2(0, 1920, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_81"]
+atlas = ExtResource("1")
+region = Rect2(0, 1944, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_82"]
+atlas = ExtResource("1")
+region = Rect2(0, 1968, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_83"]
+atlas = ExtResource("1")
+region = Rect2(0, 1992, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_84"]
+atlas = ExtResource("1")
+region = Rect2(0, 2016, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_85"]
+atlas = ExtResource("1")
+region = Rect2(0, 2040, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_86"]
+atlas = ExtResource("1")
+region = Rect2(0, 2064, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_87"]
+atlas = ExtResource("1")
+region = Rect2(0, 2088, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_88"]
+atlas = ExtResource("1")
+region = Rect2(0, 2112, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_89"]
+atlas = ExtResource("1")
+region = Rect2(0, 2136, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_90"]
+atlas = ExtResource("1")
+region = Rect2(0, 2160, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_91"]
+atlas = ExtResource("1")
+region = Rect2(0, 2184, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_92"]
+atlas = ExtResource("1")
+region = Rect2(0, 2208, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_93"]
+atlas = ExtResource("1")
+region = Rect2(0, 2232, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_94"]
+atlas = ExtResource("1")
+region = Rect2(0, 2256, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_95"]
+atlas = ExtResource("1")
+region = Rect2(0, 2280, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_96"]
+atlas = ExtResource("1")
+region = Rect2(0, 2304, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_97"]
+atlas = ExtResource("1")
+region = Rect2(0, 2328, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_98"]
+atlas = ExtResource("1")
+region = Rect2(0, 2352, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_99"]
+atlas = ExtResource("1")
+region = Rect2(0, 2376, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_100"]
+atlas = ExtResource("1")
+region = Rect2(0, 2400, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_101"]
+atlas = ExtResource("1")
+region = Rect2(0, 2424, 24, 24)
+
 [resource]
 animations = [{
 "frames": [{
@@ -425,7 +513,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_12")
 }],
 "loop": true,
-"name": &"subsoil_0",
+"name": &"mid_0",
 "speed": 8.0
 }, {
 "frames": [{
@@ -433,7 +521,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_13")
 }],
 "loop": true,
-"name": &"subsoil_1",
+"name": &"mid_1",
 "speed": 8.0
 }, {
 "frames": [{
@@ -441,7 +529,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_14")
 }],
 "loop": true,
-"name": &"subsoil_2",
+"name": &"mid_2",
 "speed": 8.0
 }, {
 "frames": [{
@@ -449,7 +537,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_15")
 }],
 "loop": true,
-"name": &"subsoil_3",
+"name": &"mid_3",
 "speed": 8.0
 }, {
 "frames": [{
@@ -457,7 +545,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_16")
 }],
 "loop": true,
-"name": &"subsoil_4",
+"name": &"mid_4",
 "speed": 8.0
 }, {
 "frames": [{
@@ -465,7 +553,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_17")
 }],
 "loop": true,
-"name": &"subsoil_5",
+"name": &"mid_5",
 "speed": 8.0
 }, {
 "frames": [{
@@ -473,7 +561,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_18")
 }],
 "loop": true,
-"name": &"pebble_0",
+"name": &"mid_6",
 "speed": 8.0
 }, {
 "frames": [{
@@ -481,7 +569,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_19")
 }],
 "loop": true,
-"name": &"pebble_1",
+"name": &"mid_7",
 "speed": 8.0
 }, {
 "frames": [{
@@ -489,7 +577,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_20")
 }],
 "loop": true,
-"name": &"pebble_2",
+"name": &"subsoil_0",
 "speed": 8.0
 }, {
 "frames": [{
@@ -497,7 +585,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_21")
 }],
 "loop": true,
-"name": &"pebble_3",
+"name": &"subsoil_1",
 "speed": 8.0
 }, {
 "frames": [{
@@ -505,7 +593,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_22")
 }],
 "loop": true,
-"name": &"pebble_4",
+"name": &"subsoil_2",
 "speed": 8.0
 }, {
 "frames": [{
@@ -513,7 +601,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_23")
 }],
 "loop": true,
-"name": &"pebble_5",
+"name": &"subsoil_3",
 "speed": 8.0
 }, {
 "frames": [{
@@ -521,7 +609,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_24")
 }],
 "loop": true,
-"name": &"flint_0",
+"name": &"subsoil_4",
 "speed": 8.0
 }, {
 "frames": [{
@@ -529,7 +617,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_25")
 }],
 "loop": true,
-"name": &"flint_1",
+"name": &"subsoil_5",
 "speed": 8.0
 }, {
 "frames": [{
@@ -537,7 +625,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_26")
 }],
 "loop": true,
-"name": &"flint_2",
+"name": &"subsoil_6",
 "speed": 8.0
 }, {
 "frames": [{
@@ -545,7 +633,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_27")
 }],
 "loop": true,
-"name": &"flint_3",
+"name": &"subsoil_7",
 "speed": 8.0
 }, {
 "frames": [{
@@ -553,7 +641,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_28")
 }],
 "loop": true,
-"name": &"rock_0",
+"name": &"pebble_0",
 "speed": 8.0
 }, {
 "frames": [{
@@ -561,7 +649,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_29")
 }],
 "loop": true,
-"name": &"rock_1",
+"name": &"pebble_1",
 "speed": 8.0
 }, {
 "frames": [{
@@ -569,7 +657,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_30")
 }],
 "loop": true,
-"name": &"rock_2",
+"name": &"pebble_2",
 "speed": 8.0
 }, {
 "frames": [{
@@ -577,7 +665,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_31")
 }],
 "loop": true,
-"name": &"rock_3",
+"name": &"pebble_3",
 "speed": 8.0
 }, {
 "frames": [{
@@ -585,7 +673,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_32")
 }],
 "loop": true,
-"name": &"rock_4",
+"name": &"pebble_4",
 "speed": 8.0
 }, {
 "frames": [{
@@ -593,7 +681,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_33")
 }],
 "loop": true,
-"name": &"rock_5",
+"name": &"pebble_5",
 "speed": 8.0
 }, {
 "frames": [{
@@ -601,7 +689,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_34")
 }],
 "loop": true,
-"name": &"rock_6",
+"name": &"flint_0",
 "speed": 8.0
 }, {
 "frames": [{
@@ -609,7 +697,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_35")
 }],
 "loop": true,
-"name": &"rock_7",
+"name": &"flint_1",
 "speed": 8.0
 }, {
 "frames": [{
@@ -617,7 +705,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_36")
 }],
 "loop": true,
-"name": &"rock_8",
+"name": &"flint_2",
 "speed": 8.0
 }, {
 "frames": [{
@@ -625,7 +713,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_37")
 }],
 "loop": true,
-"name": &"rock_9",
+"name": &"flint_3",
 "speed": 8.0
 }, {
 "frames": [{
@@ -633,7 +721,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_38")
 }],
 "loop": true,
-"name": &"rock_10",
+"name": &"rock_0",
 "speed": 8.0
 }, {
 "frames": [{
@@ -641,7 +729,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_39")
 }],
 "loop": true,
-"name": &"rock_11",
+"name": &"rock_1",
 "speed": 8.0
 }, {
 "frames": [{
@@ -649,7 +737,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_40")
 }],
 "loop": true,
-"name": &"grass_0",
+"name": &"rock_2",
 "speed": 8.0
 }, {
 "frames": [{
@@ -657,7 +745,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_41")
 }],
 "loop": true,
-"name": &"drip_0",
+"name": &"rock_3",
 "speed": 8.0
 }, {
 "frames": [{
@@ -665,7 +753,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_42")
 }],
 "loop": true,
-"name": &"grass_1",
+"name": &"rock_4",
 "speed": 8.0
 }, {
 "frames": [{
@@ -673,7 +761,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_43")
 }],
 "loop": true,
-"name": &"drip_1",
+"name": &"rock_5",
 "speed": 8.0
 }, {
 "frames": [{
@@ -681,7 +769,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_44")
 }],
 "loop": true,
-"name": &"grass_2",
+"name": &"rock_6",
 "speed": 8.0
 }, {
 "frames": [{
@@ -689,7 +777,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_45")
 }],
 "loop": true,
-"name": &"drip_2",
+"name": &"rock_7",
 "speed": 8.0
 }, {
 "frames": [{
@@ -697,7 +785,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_46")
 }],
 "loop": true,
-"name": &"grass_3",
+"name": &"rock_8",
 "speed": 8.0
 }, {
 "frames": [{
@@ -705,7 +793,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_47")
 }],
 "loop": true,
-"name": &"drip_3",
+"name": &"rock_9",
 "speed": 8.0
 }, {
 "frames": [{
@@ -713,7 +801,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_48")
 }],
 "loop": true,
-"name": &"grass_4",
+"name": &"rock_10",
 "speed": 8.0
 }, {
 "frames": [{
@@ -721,7 +809,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_49")
 }],
 "loop": true,
-"name": &"drip_4",
+"name": &"rock_11",
 "speed": 8.0
 }, {
 "frames": [{
@@ -729,7 +817,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_50")
 }],
 "loop": true,
-"name": &"grass_5",
+"name": &"grass_0",
 "speed": 8.0
 }, {
 "frames": [{
@@ -737,7 +825,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_51")
 }],
 "loop": true,
-"name": &"drip_5",
+"name": &"grass_1",
 "speed": 8.0
 }, {
 "frames": [{
@@ -745,7 +833,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_52")
 }],
 "loop": true,
-"name": &"stonetop_0",
+"name": &"grass_2",
 "speed": 8.0
 }, {
 "frames": [{
@@ -753,7 +841,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_53")
 }],
 "loop": true,
-"name": &"stonetop_1",
+"name": &"grass_3",
 "speed": 8.0
 }, {
 "frames": [{
@@ -761,7 +849,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_54")
 }],
 "loop": true,
-"name": &"stonetop_2",
+"name": &"grass_4",
 "speed": 8.0
 }, {
 "frames": [{
@@ -769,7 +857,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_55")
 }],
 "loop": true,
-"name": &"stonetop_3",
+"name": &"grass_5",
 "speed": 8.0
 }, {
 "frames": [{
@@ -777,7 +865,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_56")
 }],
 "loop": true,
-"name": &"stonetop_4",
+"name": &"grass_6",
 "speed": 8.0
 }, {
 "frames": [{
@@ -785,7 +873,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_57")
 }],
 "loop": true,
-"name": &"stonetop_5",
+"name": &"grass_7",
 "speed": 8.0
 }, {
 "frames": [{
@@ -793,7 +881,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_58")
 }],
 "loop": true,
-"name": &"stone_0",
+"name": &"grass_8",
 "speed": 8.0
 }, {
 "frames": [{
@@ -801,7 +889,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_59")
 }],
 "loop": true,
-"name": &"stone_1",
+"name": &"grass_9",
 "speed": 8.0
 }, {
 "frames": [{
@@ -809,7 +897,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_60")
 }],
 "loop": true,
-"name": &"stone_2",
+"name": &"grass_10",
 "speed": 8.0
 }, {
 "frames": [{
@@ -817,7 +905,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_61")
 }],
 "loop": true,
-"name": &"stone_3",
+"name": &"grass_11",
 "speed": 8.0
 }, {
 "frames": [{
@@ -825,7 +913,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_62")
 }],
 "loop": true,
-"name": &"stone_4",
+"name": &"stonetop_0",
 "speed": 8.0
 }, {
 "frames": [{
@@ -833,7 +921,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_63")
 }],
 "loop": true,
-"name": &"stone_5",
+"name": &"stonetop_1",
 "speed": 8.0
 }, {
 "frames": [{
@@ -841,7 +929,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_64")
 }],
 "loop": true,
-"name": &"stone_6",
+"name": &"stonetop_2",
 "speed": 8.0
 }, {
 "frames": [{
@@ -849,7 +937,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_65")
 }],
 "loop": true,
-"name": &"stone_7",
+"name": &"stonetop_3",
 "speed": 8.0
 }, {
 "frames": [{
@@ -857,7 +945,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_66")
 }],
 "loop": true,
-"name": &"stone_8",
+"name": &"stonetop_4",
 "speed": 8.0
 }, {
 "frames": [{
@@ -865,7 +953,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_67")
 }],
 "loop": true,
-"name": &"stone_9",
+"name": &"stonetop_5",
 "speed": 8.0
 }, {
 "frames": [{
@@ -873,7 +961,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_68")
 }],
 "loop": true,
-"name": &"stone_10",
+"name": &"stone_0",
 "speed": 8.0
 }, {
 "frames": [{
@@ -881,7 +969,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_69")
 }],
 "loop": true,
-"name": &"stone_11",
+"name": &"stone_1",
 "speed": 8.0
 }, {
 "frames": [{
@@ -889,7 +977,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_70")
 }],
 "loop": true,
-"name": &"deep_0",
+"name": &"stone_2",
 "speed": 8.0
 }, {
 "frames": [{
@@ -897,7 +985,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_71")
 }],
 "loop": true,
-"name": &"deep_1",
+"name": &"stone_3",
 "speed": 8.0
 }, {
 "frames": [{
@@ -905,7 +993,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_72")
 }],
 "loop": true,
-"name": &"deep_2",
+"name": &"stone_4",
 "speed": 8.0
 }, {
 "frames": [{
@@ -913,7 +1001,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_73")
 }],
 "loop": true,
-"name": &"deep_3",
+"name": &"stone_5",
 "speed": 8.0
 }, {
 "frames": [{
@@ -921,7 +1009,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_74")
 }],
 "loop": true,
-"name": &"deep_4",
+"name": &"stone_6",
 "speed": 8.0
 }, {
 "frames": [{
@@ -929,7 +1017,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_75")
 }],
 "loop": true,
-"name": &"deep_5",
+"name": &"stone_7",
 "speed": 8.0
 }, {
 "frames": [{
@@ -937,7 +1025,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_76")
 }],
 "loop": true,
-"name": &"deep_6",
+"name": &"stone_8",
 "speed": 8.0
 }, {
 "frames": [{
@@ -945,7 +1033,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_77")
 }],
 "loop": true,
-"name": &"deep_7",
+"name": &"stone_9",
 "speed": 8.0
 }, {
 "frames": [{
@@ -953,7 +1041,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_78")
 }],
 "loop": true,
-"name": &"deep_8",
+"name": &"stone_10",
 "speed": 8.0
 }, {
 "frames": [{
@@ -961,6 +1049,182 @@ animations = [{
 "texture": SubResource("AtlasTexture_79")
 }],
 "loop": true,
-"name": &"deep_9",
+"name": &"stone_11",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_80")
+}],
+"loop": true,
+"name": &"deep_0",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_81")
+}],
+"loop": true,
+"name": &"deep_1",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_82")
+}],
+"loop": true,
+"name": &"deep_2",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_83")
+}],
+"loop": true,
+"name": &"deep_3",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_84")
+}],
+"loop": true,
+"name": &"deep_4",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_85")
+}],
+"loop": true,
+"name": &"deep_5",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_86")
+}],
+"loop": true,
+"name": &"deep_6",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_87")
+}],
+"loop": true,
+"name": &"deep_7",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88")
+}],
+"loop": true,
+"name": &"wall_0",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_89")
+}],
+"loop": true,
+"name": &"wall_1",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_90")
+}],
+"loop": true,
+"name": &"wall_2",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_91")
+}],
+"loop": true,
+"name": &"wall_3",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_92")
+}],
+"loop": true,
+"name": &"wall_4",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_93")
+}],
+"loop": true,
+"name": &"wall_5",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_94")
+}],
+"loop": true,
+"name": &"wall_6",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_95")
+}],
+"loop": true,
+"name": &"wall_7",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_96")
+}],
+"loop": true,
+"name": &"stonewall_0",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_97")
+}],
+"loop": true,
+"name": &"stonewall_1",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_98")
+}],
+"loop": true,
+"name": &"stonewall_2",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_99")
+}],
+"loop": true,
+"name": &"stonewall_3",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_100")
+}],
+"loop": true,
+"name": &"stonewall_4",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_101")
+}],
+"loop": true,
+"name": &"stonewall_5",
 "speed": 8.0
 }]

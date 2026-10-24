@@ -15,9 +15,45 @@ files:
 
 stats:
   blades_per_block:
-    value: 18
+    value: 24
     unit: blades
     description: Blades on each surface block (24 px wide) — a thick tuft. Positions and heights come from the block's map position, so the same level always grows the same grass.
+  rim_height:
+    value: 2
+    unit: px
+    description: A continuous bright-green fringe along the whole top edge of the block, this many pixels above the edge at most (the height varies column by column, so the rim is ragged) - the thin lit rim of the Broforce grass. It is drawn under the blades and never goes below the block's top row.
+  vine_chance:
+    value: 0.55
+    unit: chance
+    description: Chance that a block has a short hanging vine or loop on its face under the grass.
+  vine_max:
+    value: 8
+    unit: px
+    description: Longest hanging vine. Always shorter than the block, so nothing hangs onto the block below.
+  loop_chance:
+    value: 0.5
+    unit: chance
+    description: Chance that a vine is a little U-shaped loop (two strands joined at the bottom) instead of a single strand.
+  bare_chance:
+    value: 0.35
+    unit: chance
+    description: Chance that a block's tuft has a bare patch (no blades), so the grass line is not an even carpet.
+  bare_width:
+    value: 7
+    unit: px
+    description: Width of that bare patch.
+  tall_chance:
+    value: 0.3
+    unit: chance
+    description: Chance that a block has one clump of taller blades (reeds and ferns standing out of the tuft).
+  tall_width:
+    value: 8
+    unit: px
+    description: Width of that clump.
+  tall_height_max:
+    value: 17
+    unit: px
+    description: Tallest blade of a taller clump.
   height_min:
     value: 5
     unit: px

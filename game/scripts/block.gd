@@ -1,8 +1,7 @@
 class_name Block
 extends StaticBody2D
 ## Destructible terrain tile (GameData.BLOCK.size square). Cracks more with every hit and breaks into debris after GameData.BLOCK.hp hits, or at
-## once when an explosion's radius covers its center. A grass block also carries the strands
-## that hang over the tile below it.
+## once when an explosion's radius covers its center.
 
 const SIZE: int = GameData.BLOCK.size
 const FRAMES := preload("res://assets/sprites/terrain_frames.tres")
@@ -19,7 +18,7 @@ var _cracks: AnimatedSprite2D
 var _debris_color := EARTH_DEBRIS
 
 
-func setup(tile_anim: String, drip_anim := "", flip_h := false, flip_v := false, debris_color := EARTH_DEBRIS) -> Block:
+func setup(tile_anim: String, flip_h := false, flip_v := false, debris_color := EARTH_DEBRIS) -> Block:
 	_debris_color = debris_color
 	_sprite = AnimatedSprite2D.new()
 	_sprite.sprite_frames = FRAMES
@@ -27,14 +26,6 @@ func setup(tile_anim: String, drip_anim := "", flip_h := false, flip_v := false,
 	_sprite.flip_h = flip_h
 	_sprite.flip_v = flip_v
 	add_child(_sprite)
-	if drip_anim != "":
-		var drip := AnimatedSprite2D.new()
-		drip.sprite_frames = FRAMES
-		drip.animation = drip_anim
-		drip.flip_h = flip_h
-		drip.position = Vector2(0, SIZE)
-		drip.z_index = 1  # in front of the block below
-		add_child(drip)
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
 	rect.size = Vector2(SIZE, SIZE)
@@ -49,7 +40,7 @@ func setup(tile_anim: String, drip_anim := "", flip_h := false, flip_v := false,
 func stain(at: Vector2, size: Vector2, color: Color) -> void:
 	if _stains == null:
 		_stains = BloodStains.new()
-		_stains.z_index = 1  # in front of the tile and of the grass hanging from the block above
+		_stains.z_index = 1  # in front of the tile
 		add_child(_stains)
 	_stains.add(at, size, color)
 
@@ -107,6 +98,9 @@ static func _in_triangle(p: Vector2, t: Array) -> bool:
 func destroy() -> void:
 	if is_queued_for_deletion():
 		return
+	var walls = get_parent().get("walls")
+	if walls:
+		walls.reveal(position)
 	_chain_above()
 	for c in get_children():
 		if c is Grass:
