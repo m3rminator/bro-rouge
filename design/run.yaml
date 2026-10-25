@@ -23,6 +23,63 @@ stats:
     unit: ratio
     description: The jungle backdrop (game/assets/backgrounds/jungle.jpg, scripts/background.gd) scrolls at this fraction of the camera's speed — 0 would glue it to the screen, 1 would pin it to the world. It is scaled to just cover the screen and mirrored end to end, so it never runs out.
 
+  bg_jungle_parallax:
+    value: 0.5
+    unit: ratio
+    description: Background layer 1 (art bg_jungle, nearest, densest) scrolls sideways at this fraction of the camera's speed (scripts/background.gd). It is the one that reacts most.
+  bg_hills_parallax:
+    value: 0.25
+    unit: ratio
+    description: Background layer 2 (art bg_hills, hazy hills) horizontal scroll fraction.
+  bg_cloud_parallax:
+    value: 0.12
+    unit: ratio
+    description: The drifting clouds, between the sky and the hills, horizontal scroll fraction.
+  bg_sky_parallax:
+    value: 0.05
+    unit: ratio
+    description: Background layer 3 (art bg_sky, the blue gradient strip) horizontal scroll fraction - it barely moves.
+  bg_jungle_sink:
+    value: 0.6
+    unit: ratio
+    description: For every pixel the camera climbs above the lowest point of the level, the jungle layer sinks this many pixels down the screen (so more sky shows). Faster than the hills.
+  bg_hills_sink:
+    value: 0.3
+    unit: ratio
+    description: Same for the hills layer.
+  bg_cloud_sink:
+    value: 0.15
+    unit: ratio
+    description: Same for the clouds.
+  bg_hills_lift:
+    value: 150.0
+    unit: px
+    description: At ground level the bottom of the hills layer sits this many pixels above the bottom of the screen (behind the jungle, so the hills peek out above its trees).
+  bg_jungle_lift:
+    value: 110.0
+    unit: px
+    description: At ground level the bottom of the jungle layer sits this many pixels above the bottom of the screen - about on the ground line (the terrain fills the lower ~45% of the screen), its trees rising well above it.
+  bg_cloud_count:
+    value: 4
+    unit: clouds
+    description: Big clouds (24-110 px wide) alive at once. The user finds many big white shapes distracting, so keep it 3-5.
+  bg_wisp_count:
+    value: 3
+    unit: wisps
+    description: Tiny cloud wisps (6-14 px wide) alive at once.
+  bg_cloud_drift:
+    value: 6.0
+    unit: px/s
+    description: Fastest sideways drift of a cloud; each cloud picks its own speed between 20% and 100% of this, in a random direction.
+  bg_cloud_top:
+    value: 8.0
+    unit: px
+    description: Highest screen row a cloud floats at (at ground level).
+  bg_cloud_bottom:
+    value: 120.0
+    unit: px
+    description: Lowest screen row (cloud bottom edge) a cloud floats at.
+
   boss_every:
     value: 3
     unit: levels

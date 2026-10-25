@@ -1,0 +1,8 @@
+# Palette set for bg_sky: flat background tones, dark to light. No outline.
+symbols:
+  a: bgsky_0
+  b: bgsky_1
+  c: bgsky_2
+  d: bgsky_3
+  e: bgsky_4
+  f: bgsky_5

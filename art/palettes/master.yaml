@@ -161,3 +161,22 @@ colors:
   sharif_barrel_light: "#6e7780"
   sharif_wood:         "#a0663a"  # shotgun stock and forend
   sharif_wood_dark:    "#6a3e1e"
+  # background bg_jungle (91a883df...), dark to light
+  bgj_0:        "#0e1a24"
+  bgj_1:        "#162c34"
+  bgj_2:        "#1f4044"
+  bgj_3:        "#2a5652"
+  bgj_4:        "#3a7062"
+  bgj_5:        "#528c74"
+  # background bg_hills (9ee8e736...), dark to light
+  bgh_0:        "#263e52"
+  bgh_1:        "#3c5c74"
+  bgh_2:        "#567c98"
+  bgh_3:        "#6c96b4"
+  # background bg_sky (5ef6f195...), dark to light
+  bgsky_0:      "#3e9ce4"
+  bgsky_1:      "#4aa8ec"
+  bgsky_2:      "#5ab4ee"
+  bgsky_3:      "#72c2f0"
+  bgsky_4:      "#8ed0f2"
+  bgsky_5:      "#aadcf4"

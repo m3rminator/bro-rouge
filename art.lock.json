@@ -9,6 +9,21 @@
     "game/assets/sprites/barrel.png": "7733f1329c0f965da70bc622e085e52ef2b54c216229459cdaabf2ab555bc022",
     "game/assets/sprites/barrel_frames.tres": "d0345c5c79a709499a79834e8427c38f0061149a16db8ed365a1705a7c4cc91c"
   },
+  "bg_hills": {
+    "docs/previews/bg_hills.png": "8fe4111186d01b7712b6f74337e93e671555f3081fbe0710cc54b73548339d3f",
+    "game/assets/sprites/bg_hills.png": "1493064d41b079896a6a54239cd3b651b78ba4f32091c157c1c822baf6a84db6",
+    "game/assets/sprites/bg_hills_frames.tres": "aa3ac02b6be26aa5e4602cd744b18778973467b50a9fab2b2f91a50f10bdb517"
+  },
+  "bg_jungle": {
+    "docs/previews/bg_jungle.png": "495ef03f98e9e5261c754f7cefc8c33eb766700e9268939fb180bfb0a575d964",
+    "game/assets/sprites/bg_jungle.png": "77a9974e0e49051cbb2b4943b469b9f3d198308b509c1b9f56af398c36610871",
+    "game/assets/sprites/bg_jungle_frames.tres": "f478e72c1f555743b6432290063089369223e429dc991fd44a2a115c0c3762a5"
+  },
+  "bg_sky": {
+    "docs/previews/bg_sky.png": "d8f01e45e9464ac5724a48f2353f9a85c7ce50f590ebaf30ca1c2a0ca4f92100",
+    "game/assets/sprites/bg_sky.png": "8268c107c2216391b32c6a29daff891b477745c6105442114ed46f39e2e63ce1",
+    "game/assets/sprites/bg_sky_frames.tres": "30efd2366bbd1a9aa42e6db6427353322dea0bd93dcee4a35f78273a031f6822"
+  },
   "blala": {
     "docs/previews/blala.png": "dd8478816fa134c335218a81a1002482f26c9b502ae9c412163941a14302efd3",
     "game/assets/sprites/blala.png": "7659fe25659069f38f752460c3f02c761d836cafd37b71c7e8b47765c83d1ed7",
