@@ -1,0 +1,9 @@
+# Palette set for jungle trees: leaves in the grass greens, trunk in the dirt browns, character outline.
+symbols:
+  o: outline
+  L: grass_light
+  F: grass
+  D: grass_dark
+  N: dirt
+  n: dirt_light
+  M: dirt_dark

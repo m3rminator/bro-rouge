@@ -1,0 +1,90 @@
+# Entity: background palm trees.
+id: tree
+name: Palm trees
+kind: effect
+order: 35
+description: Decoration only. Palm trees (and low bushes and ferns at their feet, between them and now and then alone) stand here and there on grass-topped blocks, behind the Bro and the enemies and in front of the far jungle. Nothing touches them - no collision, nobody pushes them. They only react to explosions - the crown sways away from the blast on a spring (the closer the blast, the harder) and shakes a few leaves loose. When the block a tree stands on is destroyed, the tree topples over and fades away. Placement comes from the map position of the block, so the same level always grows the same trees; the kind is picked from every animation in the trees sheet.
+sprite: trees
+files:
+  - game/scripts/tree_decor.gd
+  - game/scripts/main.gd
+  - game/scripts/block.gd
+  - game/scripts/explosion.gd
+
+stats:
+  chance:
+    value: 0.04
+    unit: chance
+    description: Chance that a grass block (with no palm close by already) starts a group of palms.
+  group_size:
+    value: 3
+    unit: palms
+    description: Palms in a group - the first and the ones standing beside it, each a random gap further along.
+  gap_min:
+    value: 2
+    unit: blocks
+    description: Smallest gap between two palms of a group.
+  gap_max:
+    value: 6
+    unit: blocks
+    description: Largest gap between two palms of a group (random each time, so no two groups have the same shape).
+  min_gap:
+    value: 2
+    unit: blocks
+    description: Closest two palms may ever stand to each other along the ground.
+  plant_foot_chance:
+    value: 0.7
+    unit: chance
+    description: Chance that a palm has a bush or fern at its foot.
+  plant_between_chance:
+    value: 0.5
+    unit: chance
+    description: Chance per block, between two palms of a group, of a bush or fern.
+  plant_alone_chance:
+    value: 0.03
+    unit: chance
+    description: Chance per grass block of a bush or fern growing alone.
+  plant_base_x:
+    value: 32
+    unit: px
+    description: Where the middle of a bush or fern is in its 64 px wide frame.
+  plant_bottom:
+    value: 108
+    unit: px
+    description: Row of the frame where a bush or fern touches the ground (the frame is 112 tall).
+  base_x:
+    value: 30
+    unit: px
+    description: Where the trunk base is in the 64 px wide palm frame, counted from its left edge.
+  sink:
+    value: 3
+    unit: px
+    description: How far the trunk base sits down into the grass, so it is planted and not floating.
+  blast_range:
+    value: 4.0
+    unit: x radius
+    description: A blast shakes palms up to this many times its radius away.
+  blast_push:
+    value: 100.0
+    unit: deg/s
+    description: How hard a point-blank blast swings the crown (less the farther away).
+  stiffness:
+    value: 45.0
+    unit: 1/s2
+    description: Spring pulling the sway back to upright.
+  damping:
+    value: 2.6
+    unit: 1/s
+    description: How fast the sway dies down (low - it swings back and forth a few times).
+  max_angle:
+    value: 12.0
+    unit: deg
+    description: Furthest the palm leans.
+  leaves:
+    value: 7
+    unit: leaves
+    description: Leaves shaken loose by a point-blank blast (fewer when farther away).
+  fall_time:
+    value: 0.7
+    unit: s
+    description: How long a palm takes to topple when its block is destroyed (it fades while falling).

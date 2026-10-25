@@ -31,11 +31,10 @@ func _ready() -> void:
 
 func _draw() -> void:
 	var s := float(Block.SIZE)
+	var rect := Rect2(-s / 2.0, -s / 2.0, s, s)
 	for p in _shown:
 		var c: Array = _cells[p]
-		var rect := Rect2(p.x - s / 2.0, p.y - s / 2.0, s, s)
-		if c[1]:
-			rect = Rect2(rect.position.x + s, rect.position.y, -s, s)
-		if c[2]:
-			rect = Rect2(rect.position.x, rect.position.y + s, rect.size.x, -s)
+		# flip with a scaled transform: a rect with negative size is drawn one tile off, under the next block
+		draw_set_transform(p, 0.0, Vector2(-1.0 if c[1] else 1.0, -1.0 if c[2] else 1.0))
 		draw_texture_rect(c[0], rect, false)
+	draw_set_transform(Vector2.ZERO)

@@ -22,6 +22,7 @@ var _ending := false
 var _locked_cooldown := 0.0
 var _fall_limit := 0.0
 var _level_width := 0.0
+var _palms := {}  # tiles that have a palm (tree_decor.gd plan)
 
 
 func _ready() -> void:
@@ -30,6 +31,13 @@ func _ready() -> void:
 	var hub: bool = lv.kind == "hub"
 	Run.begin_level()
 	var tile := Block.SIZE
+	if lv.get("biome", "earth") != "stone":
+		var sky_tiles := []
+		for y in rows.size():
+			for x in rows[y].length():
+				if rows[y][x] == "#" and _has_sky(rows, x, y):
+					sky_tiles.append(Vector2i(x, y))
+		_palms = TreeDecor.plan(sky_tiles)
 	walls = BackWall.new()
 	add_child(walls)
 	for y in rows.size():
@@ -198,6 +206,8 @@ func _add_block(rows: Array, x: int, y: int, pos: Vector2, biome: String) -> voi
 	block.setup(anim, flip_h, flip_v, debris)
 	if sky and biome != "stone":
 		block.add_child(Grass.new())  # living blades on top (grass.gd)
+		for plant in _palms.get(Vector2i(x, y), []):  # background palms and plants (tree_decor.gd)
+			block.add_child(TreeDecor.make(plant[0], plant[1]))
 	block.position = pos
 	add_child(block)
 	if not sky:  # a broken surface block opens onto the sky, not onto a wall

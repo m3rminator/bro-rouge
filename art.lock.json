@@ -149,6 +149,11 @@
     "game/assets/sprites/terrain.png": "3c3372c043fbe47bd3089ed8f91b272670159f1b06d1020f3418260d618442a7",
     "game/assets/sprites/terrain_frames.tres": "6795a20400fd86c3266a39ec9c1caf5d570ec90d8152fcb41698a556b683cd0f"
   },
+  "trees": {
+    "docs/previews/trees.png": "2fbf10f0103f1ded2ec1fbd6d8c81161bfb31ba43a66737066e093e1980250ea",
+    "game/assets/sprites/trees.png": "b80f4e56fe315eb3ff942304333b56616970ceecefe3210f16b7a4b62a1ce3d3",
+    "game/assets/sprites/trees_frames.tres": "a9b2a693f521bf93fa0c35c86e802aa9180b8ed17aad06587ffbaa709db4909a"
+  },
   "truck": {
     "docs/previews/truck.png": "aa4fe0719ef38578aa96f3fa9202fc222ea1236127bbc0adfb44369550459a6a",
     "game/assets/sprites/truck.png": "c36d87c69e81b2f96b65083ca35aa513a786da7d13bd1c39f6f4085c650b9c39",

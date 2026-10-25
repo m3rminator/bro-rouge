@@ -523,6 +523,29 @@ const REVOLVER_FLASH := {
 const REVOLVER_BULLET := {
 }
 
+## Palm trees (design/entities/tree.yaml)
+const TREE := {
+	"chance": 0.04,
+	"group_size": 3,
+	"gap_min": 2,
+	"gap_max": 6,
+	"min_gap": 2,
+	"plant_foot_chance": 0.7,
+	"plant_between_chance": 0.5,
+	"plant_alone_chance": 0.03,
+	"plant_base_x": 32,
+	"plant_bottom": 108,
+	"base_x": 30,
+	"sink": 3,
+	"blast_range": 4.0,
+	"blast_push": 100.0,
+	"stiffness": 45.0,
+	"damping": 2.6,
+	"max_angle": 12.0,
+	"leaves": 7,
+	"fall_time": 0.7,
+}
+
 ## Sprite anchors relative to the frame center, in pixels (art/sprites/*.yaml)
 const ANCHORS := {
 	"airstrike": {"nose": Vector2(-0.5, 8.0)},
@@ -598,6 +621,7 @@ const SPRITE_SIZES := {
 	"shotgun_flash": Vector2(24, 15),
 	"stun": Vector2(21, 9),
 	"terrain": Vector2(24, 24),
+	"trees": Vector2(64, 112),
 	"truck": Vector2(120, 56),
 	"vest": Vector2(47, 34),
 }

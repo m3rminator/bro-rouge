@@ -102,9 +102,11 @@ func destroy() -> void:
 	if walls:
 		walls.reveal(position)
 	_chain_above()
-	for c in get_children():
+	for c in get_children().duplicate():
 		if c is Grass:
 			c.burst()
+		elif c is TreeDecor:
+			c.fall()
 	var debris := CPUParticles2D.new()
 	debris.one_shot = true
 	debris.amount = GameData.BLOCK.debris_amount
