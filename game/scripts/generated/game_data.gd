@@ -569,6 +569,7 @@ const ANCHORS := {
 	"sharif": {"feet": Vector2(0.0, 17.5)},
 	"shotgun_flash": {"center": Vector2(0.5, 0.0)},
 	"stun": {"center": Vector2(0.0, 0.0)},
+	"touch": {"center": Vector2(0.5, 0.5)},
 	"vest": {"eye": Vector2(1.0, -8.5)},
 }
 
@@ -592,8 +593,9 @@ const MUZZLES_2 := {
 ## Frame size (width, height) of every sprite (art/sprites/*.yaml).
 const SPRITE_SIZES := {
 	"airstrike": Vector2(6, 17),
+	"bg_forest": Vector2(512, 187),
 	"bg_hills": Vector2(512, 279),
-	"bg_jungle": Vector2(512, 232),
+	"bg_jungle": Vector2(512, 142),
 	"bg_sky": Vector2(16, 286),
 	"barrel": Vector2(26, 36),
 	"blala": Vector2(39, 36),
@@ -624,6 +626,7 @@ const SPRITE_SIZES := {
 	"shotgun_flash": Vector2(24, 15),
 	"stun": Vector2(21, 9),
 	"terrain": Vector2(24, 24),
+	"touch": Vector2(56, 56),
 	"trees": Vector2(64, 112),
 	"truck": Vector2(120, 56),
 	"vest": Vector2(47, 34),
@@ -700,12 +703,14 @@ const RUN := {
 	"clear_delay": 2.0,
 	"run_over_delay": 3.0,
 	"background_parallax": 0.3,
-	"bg_jungle_parallax": 0.5,
+	"bg_forest_parallax": 0.5,
 	"bg_hills_parallax": 0.25,
+	"bg_jungle_parallax": 0.375,
 	"bg_cloud_parallax": 0.12,
 	"bg_sky_parallax": 0.05,
-	"bg_jungle_sink": 0.6,
+	"bg_forest_sink": 0.6,
 	"bg_hills_sink": 0.3,
+	"bg_jungle_sink": 0.45,
 	"bg_cloud_sink": 0.15,
 	"bg_hills_lift": 150.0,
 	"bg_jungle_lift": 110.0,

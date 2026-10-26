@@ -1,0 +1,7 @@
+# Palette set for the touch buttons. "." is always transparent.
+symbols:
+  r: grey_dark   # ring
+  f: ui_fill     # disc
+  w: white       # icon
+  R: grey        # ring while held
+  F: grey_dark   # disc while held

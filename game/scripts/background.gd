@@ -1,9 +1,10 @@
 class_name Background
 extends CanvasLayer
-## Backdrop behind the level, three parallax layers plus live clouds (numbers: design/run.yaml bg_*).
+## Backdrop behind the level, four parallax layers plus live clouds (numbers: design/run.yaml bg_*).
 ## Far to near: sky (bg_sky, a gradient strip, barely moves), clouds (drawn here, drift and wrap),
-## hills (bg_hills), jungle (bg_jungle, reacts most). The higher the camera climbs above the lowest
-## point of the level, the further the hills and jungle sink down the screen, so more sky shows.
+## hills (bg_hills), jungle (bg_jungle, lifted up behind the forest), forest (bg_forest, the nearest, reacts
+## most). The higher the camera climbs above the lowest point of the level, the further the layers sink
+## down the screen, so more sky shows.
 ## The art doesn't tile on its own, so every second copy is mirrored. Until the layers are built
 ## (art pipeline) the old single picture jungle.jpg is used instead.
 
@@ -17,6 +18,7 @@ var _camera: Camera2D
 var _canvas: Node2D
 var _sky: Texture2D
 var _hills: Texture2D
+var _forest: Texture2D
 var _jungle: Texture2D
 var _hills_fill := Color("263e52")
 var _jungle_fill := Color("0e1a24")
@@ -32,12 +34,13 @@ func _init() -> void:
 	add_child(_canvas)
 	_sky = _layer("bg_sky")
 	_hills = _layer("bg_hills")
+	_forest = _layer("bg_forest")
 	_jungle = _layer("bg_jungle")
 	if _hills:
 		_hills_fill = _bottom_colour(_hills, _hills_fill)
 	if _jungle:
 		_jungle_fill = _bottom_colour(_jungle, _jungle_fill)
-	if _sky and _hills and _jungle:
+	if _sky and _hills and _forest and _jungle:
 		_make_clouds()
 	else:
 		_canvas.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -75,7 +78,7 @@ func _draw_background() -> void:
 		var centre := _camera.get_screen_center_position()
 		cam_x = centre.x - view.x / 2.0
 		climb = maxf(0.0, (_camera.limit_bottom - view.y / 2.0) - centre.y)
-	if not (_sky and _hills and _jungle):
+	if not (_sky and _hills and _forest and _jungle):
 		_draw_old(view, cam_x)
 		return
 	var run := GameData.RUN
@@ -84,8 +87,12 @@ func _draw_background() -> void:
 	# A layer's bottom never rises above the bottom of the screen, so nothing flat shows under it.
 	var hills_bottom: float = view.y + climb * run.bg_hills_sink
 	_draw_strip(_hills, cam_x * run.bg_hills_parallax, hills_bottom - _hills.get_height(), view, false)
-	var jungle_bottom: float = view.y + climb * run.bg_jungle_sink
+	var forest_bottom: float = view.y + climb * run.bg_forest_sink
+	# The jungle is lifted 80 px so its tree tops rise above the forest; the clamp keeps its solid bottom behind
+	# the forest's solid part, so no flat colour or hills show through the forest's holes.
+	var jungle_bottom := maxf(view.y - 80.0 + climb * run.bg_jungle_sink, forest_bottom - 80.0)
 	_draw_strip(_jungle, cam_x * run.bg_jungle_parallax, jungle_bottom - _jungle.get_height(), view, false)
+	_draw_strip(_forest, cam_x * run.bg_forest_parallax, forest_bottom - _forest.get_height(), view, false)
 
 
 ## A layer tiled sideways at its own pixel size, every second copy mirrored. `stretch` scales it to the

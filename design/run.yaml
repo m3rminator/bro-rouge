@@ -23,14 +23,18 @@ stats:
     unit: ratio
     description: The jungle backdrop (game/assets/backgrounds/jungle.jpg, scripts/background.gd) scrolls at this fraction of the camera's speed — 0 would glue it to the screen, 1 would pin it to the world. It is scaled to just cover the screen and mirrored end to end, so it never runs out.
 
-  bg_jungle_parallax:
+  bg_forest_parallax:
     value: 0.5
     unit: ratio
-    description: Background layer 1 (art bg_jungle, nearest, densest) scrolls sideways at this fraction of the camera's speed (scripts/background.gd). It is the one that reacts most.
+    description: Background layer 1 (art bg_forest, the nearest, two rows of trees) scrolls sideways at this fraction of the camera's speed (scripts/background.gd). It is the one that reacts most.
   bg_hills_parallax:
     value: 0.25
     unit: ratio
     description: Background layer 2 (art bg_hills, hazy hills) horizontal scroll fraction.
+  bg_jungle_parallax:
+    value: 0.375
+    unit: ratio
+    description: Background layer behind the forest and in front of the hills (art bg_jungle) horizontal scroll fraction.
   bg_cloud_parallax:
     value: 0.12
     unit: ratio
@@ -39,14 +43,18 @@ stats:
     value: 0.05
     unit: ratio
     description: Background layer 3 (art bg_sky, the blue gradient strip) horizontal scroll fraction - it barely moves.
-  bg_jungle_sink:
+  bg_forest_sink:
     value: 0.6
     unit: ratio
-    description: For every pixel the camera climbs above the lowest point of the level, the jungle layer sinks this many pixels down the screen (so more sky shows). Faster than the hills.
+    description: For every pixel the camera climbs above the lowest point of the level, the forest layer (the nearest) sinks this many pixels down the screen (so more sky shows). Faster than the layers behind it.
   bg_hills_sink:
     value: 0.3
     unit: ratio
     description: Same for the hills layer.
+  bg_jungle_sink:
+    value: 0.45
+    unit: ratio
+    description: Same for the jungle layer (behind the forest, in front of the hills).
   bg_cloud_sink:
     value: 0.15
     unit: ratio

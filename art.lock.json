@@ -9,15 +9,20 @@
     "game/assets/sprites/barrel.png": "7733f1329c0f965da70bc622e085e52ef2b54c216229459cdaabf2ab555bc022",
     "game/assets/sprites/barrel_frames.tres": "d0345c5c79a709499a79834e8427c38f0061149a16db8ed365a1705a7c4cc91c"
   },
+  "bg_forest": {
+    "docs/previews/bg_forest.png": "92da95596ba66f08aa664c883d577883c3a64620f3edae21a53c26eaf8157a65",
+    "game/assets/sprites/bg_forest.png": "ddc820cf496cd92ecf83c13afe8c84b5b1448cbfd51699b75179f59e744558f2",
+    "game/assets/sprites/bg_forest_frames.tres": "beb66fd3e6a7a1847866621977fc43e3bf7a86b333e6d2c20a7142112fc337d9"
+  },
   "bg_hills": {
     "docs/previews/bg_hills.png": "8fe4111186d01b7712b6f74337e93e671555f3081fbe0710cc54b73548339d3f",
     "game/assets/sprites/bg_hills.png": "1493064d41b079896a6a54239cd3b651b78ba4f32091c157c1c822baf6a84db6",
     "game/assets/sprites/bg_hills_frames.tres": "aa3ac02b6be26aa5e4602cd744b18778973467b50a9fab2b2f91a50f10bdb517"
   },
   "bg_jungle": {
-    "docs/previews/bg_jungle.png": "495ef03f98e9e5261c754f7cefc8c33eb766700e9268939fb180bfb0a575d964",
-    "game/assets/sprites/bg_jungle.png": "77a9974e0e49051cbb2b4943b469b9f3d198308b509c1b9f56af398c36610871",
-    "game/assets/sprites/bg_jungle_frames.tres": "f478e72c1f555743b6432290063089369223e429dc991fd44a2a115c0c3762a5"
+    "docs/previews/bg_jungle.png": "2b2d4ee70db3aabbd1be3ac25ea0206bfcf89dd029d812a10cb2e94c3b7e8c6b",
+    "game/assets/sprites/bg_jungle.png": "62642b3c526defc58de549326713b0e95008c28f5ea60526a77f7357c0c2e135",
+    "game/assets/sprites/bg_jungle_frames.tres": "fe77960b42194a22bceaf5fced8882c1187ab74766f9c72aa21d015d8b8794b5"
   },
   "bg_sky": {
     "docs/previews/bg_sky.png": "d8f01e45e9464ac5724a48f2353f9a85c7ce50f590ebaf30ca1c2a0ca4f92100",
@@ -163,6 +168,11 @@
     "docs/previews/terrain.png": "3f4662c45106a3e806fc5f51abcf8967321d90eed9f4895c39255d4b933284ea",
     "game/assets/sprites/terrain.png": "3c3372c043fbe47bd3089ed8f91b272670159f1b06d1020f3418260d618442a7",
     "game/assets/sprites/terrain_frames.tres": "6795a20400fd86c3266a39ec9c1caf5d570ec90d8152fcb41698a556b683cd0f"
+  },
+  "touch": {
+    "docs/previews/touch.png": "20bb2274dc7afc2b5edeb762ae25c8f555c5a16b7dd8d43050830e21040a7f4d",
+    "game/assets/sprites/touch.png": "d5b6a983f8c1bf8e880358792d8402bbffcf3139b2970e5ab1cad809bae88f57",
+    "game/assets/sprites/touch_frames.tres": "880f29946a2ae755cff825255f85e6b0369f78ea98bf8f7825802d8a3a24980d"
   },
   "trees": {
     "docs/previews/trees.png": "2fbf10f0103f1ded2ec1fbd6d8c81161bfb31ba43a66737066e093e1980250ea",

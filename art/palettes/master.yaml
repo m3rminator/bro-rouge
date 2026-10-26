@@ -180,3 +180,5 @@ colors:
   bgsky_3:      "#72c2f0"
   bgsky_4:      "#8ed0f2"
   bgsky_5:      "#aadcf4"
+  # touch buttons (refrences/ui)
+  ui_fill:      "#2a2836"
