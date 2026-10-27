@@ -1,0 +1,32 @@
+# Bruce's corpse: the same lying pose and size as the enemy corpse (mook dead_a) in his colors - bare back,
+# black pants - with the Bro's face-down head and Bruce's dark headband. Same frame and placement as the other
+# Bro corpses. Bottom row = the ground.
+name: bruce_dead
+description: Corpse of Bruce Parche (shirtless, dark headband, black pants), lying on his belly with his face to the ground - the enemy corpse pose in his colors.
+palette: bruce
+frame: [47, 34]
+
+parts:
+  dead: |
+    .....................oooooooo...............
+    ..............oooooooSssssssSoo.............
+    ..............oooooooSssssssSoo....rr.......
+    .............onnndsssssssssssSS...rRr.......
+    ...........oodnnndssssssssssSoo..oooooooo...
+    ...........oonnnndssssssssssSoo.ooooRrooooo.
+    ...........oonnnndssssssssssSoooooooRrooooo.
+    .......oooonnnnnndSSssSSSSSsSoooooooRroooooo
+    .oooooooddnnnnndddSSSSoooSSssoooooooRroooooo
+    .oooooooddnnnnndddSSSSoooSSssooooooRrroooooo
+    .oooooooddnnnndooooooosssssssooSssoRrroooooo
+    ooooooooddddddooosssSssssssssSoSLLsoRrooooo.
+    ooooooooooooooooosssSSsssSSSSoooSLLsoRoooo..
+    ooooooooooooooooosssSSsssSSSSoo.ooooooooo...
+    ooo..............oooooooooooo...............
+
+animations:
+  dead:
+    fps: 1
+    loop: false
+    frames:
+      - [[dead, 2, 19]]

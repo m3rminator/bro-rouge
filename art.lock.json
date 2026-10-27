@@ -54,6 +54,16 @@
     "game/assets/sprites/bro_dead.png": "611ab3aca8ce03e5bff27b21539810c75a304ddcc386e9a9a65622f9e4953c9c",
     "game/assets/sprites/bro_dead_frames.tres": "599bef1dc4e2d335145469db2bfd881294550ec46c3e3b37eea557688494ca9b"
   },
+  "bruce": {
+    "docs/previews/bruce.png": "fbc1528ecc0add3ce0ed945e33d452ce5997b7ea42844c59771c1de484e35747",
+    "game/assets/sprites/bruce.png": "f32f18d03257fd84e73e2f3f1b77e1670217d07e6aa2485651e2fcc04b6da2f1",
+    "game/assets/sprites/bruce_frames.tres": "65ef42a829b9c4afd329163f5bbd6781a0278d680f4ebbd4f70aa9dfe9564835"
+  },
+  "bruce_dead": {
+    "docs/previews/bruce_dead.png": "e0fc37e13ad0bd1cb2dbc25bb6a564d743cf75a965dda4c5583f53cb53edffd4",
+    "game/assets/sprites/bruce_dead.png": "5a368963343bfa004d5f563dde14984942310a05e48fd215b777ed7e3a7306c9",
+    "game/assets/sprites/bruce_dead_frames.tres": "d041aa96d1b3047becbf3cb4ee371c820cb72f9c3fe9913df30b299d2dcc057d"
+  },
   "brute": {
     "docs/previews/brute.png": "9f0cfbc56927c5d3459632666d3e17a13bc6e9d243ac34e37df12a7268a0c650",
     "game/assets/sprites/brute.png": "467d64b908be9fcfaa1b747180d5c89eb97ac1c12fcdae7526c458022466b1c3",
@@ -130,9 +140,9 @@
     "game/assets/sprites/helmet_frames.tres": "29c9988d2d13d4274fb49b0b6336a4c66a2ed8a1161a12a9304c2abb03bc1bc0"
   },
   "items": {
-    "docs/previews/items.png": "2db5fc9e94dd6556504a8a3aaac93f1fd14a3d6b2d9399decfd0cba059615e40",
-    "game/assets/sprites/items.png": "096472401f69949f6b9e7cb6939c8b28ad1eb83dd26fb106bf276bf7df52e9cd",
-    "game/assets/sprites/items_frames.tres": "5dce5f350476a579eafc3eac44195d1fe1da121c45feff55c0101dcca7fcc267"
+    "docs/previews/items.png": "6e893258e3247892ab62def30dcbea20de83c3fa6255768ab00c894a6e3a203f",
+    "game/assets/sprites/items.png": "8a883f74dfa97493bb4bdff4bb1953a9265ea9ed0bb84d23cd96ffda480d8151",
+    "game/assets/sprites/items_frames.tres": "eafa33864ccd4c607255cac203578969c18055e3978d72c041ef48b32d71b512"
   },
   "kamikaze": {
     "docs/previews/kamikaze.png": "de6d5ef0aaf9c57a72eaae72280af11d7e35a1fdeba203be75a313b13c1fc847",

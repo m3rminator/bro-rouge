@@ -5,7 +5,7 @@
 # HUD size (lever, pin ring, yellow band, segmented body). In the level the thrown grenade is just
 # a small round ball with its lever on top (the pin is pulled), blinking red as the fuse burns.
 name: items
-description: Item icons - the magazine shown in the HUD (one per spare magazine), the "+ magazine" pop-up over the Bro's head when a knife kill gives him one, the grenade HUD icon (one per grenade left), the thrown grenade (blinks red while its fuse burns); Sharif's shotgun shell (HUD icon and "+ shells" pop-up), Blala's SMG magazine (HUD icon and pop-up) and Blala's C4 (HUD icon and the planted charge with its blinking red display); Sharif's revolver HUD icon and Hamid's air-strike missile HUD icon.
+description: Item icons - the magazine shown in the HUD (one per spare magazine), the "+ magazine" pop-up over the Bro's head when a knife kill gives him one, the grenade HUD icon (one per grenade left), the thrown grenade (blinks red while its fuse burns); Sharif's shotgun shell (HUD icon and "+ shells" pop-up), Blala's SMG magazine (HUD icon and pop-up) and Blala's C4 (HUD icon and the planted charge with its blinking red display); Sharif's revolver HUD icon and Hamid's air-strike missile HUD icon; Bruce's shield (HUD icon per defend charge, and the shimmering shield over his head while defend is up).
 palette: items
 reference: refrences/items/57d2b35a-865a-42b5-bd4c-b10d9abaf164.jpg
 frame: [16, 16]
@@ -225,6 +225,39 @@ parts:
     ooooo
     oJKKo
     .ooo.
+  shield_icon: |  # Bruce's defend charge: a steel heater shield with a brass rim, lit from the left
+    .oooooooooooo.
+    oqQQQQQQQQQQno
+    oQiiittttttTno
+    oQiitttttttTno
+    oQiittttttTTno
+    oQitttttttTTno
+    oQitttttttTTno
+    .oQittttttTno.
+    .oQitttttTTno.
+    ..oQittttTno..
+    ..oQitttTTno..
+    ...oQittTno...
+    ....oQiTno....
+    .....oQno.....
+    ......oo......
+  shield_small: |  # floats over Bruce's head while defend is up
+    .oooooooo.
+    oQQQQQQQno
+    oQiitttTno
+    oQitttTTno
+    oQitttTTno
+    .oQittTno.
+    .oQitTTno.
+    ..oQiTno..
+    ...oQno...
+    ....oo....
+  shield_glint: |  # white glint sweeping across the small shield (shimmer frame)
+    ....w.
+    ...w..
+    ..w...
+    .w....
+
 animations:
   mag_hud:
     fps: 1
@@ -298,3 +331,14 @@ animations:
     loop: false
     frames:
       - [[plus, 0, 5], [cell_small, 9, 2]]
+  shield_hud:  # Bruce's HUD: one shield per defend charge (in place of grenade_hud)
+    fps: 1
+    loop: false
+    frames:
+      - [[shield_icon, 1, 0]]
+  shield_over:  # over Bruce's head while defend is active: the small shield with a glint flashing across it
+    fps: 4
+    loop: true
+    frames:
+      - [[shield_small, 3, 3]]
+      - [[shield_small, 3, 3], [shield_glint, 4, 5]]

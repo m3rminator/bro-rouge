@@ -1,0 +1,14 @@
+# Palette set for Bruce Parche, the martial-arts Bro: shirtless, dark cloth headband, black pants and boots.
+# Skin, hair and outline are the default Bro's. "." is always transparent.
+symbols:
+  o: rambo_black          # outline, hair, boots
+  p: rambo_brown          # skin outline, belt
+  q: rambo_khaki          # skin edge highlight
+  S: rambo_skin_dark
+  s: rambo_skin
+  L: rambo_skin_light
+  r: bru_band             # headband
+  R: bru_band_dark        # headband shadow
+  n: bru_pants
+  N: bru_pants_dark       # pants folds
+  d: bru_pants_outline

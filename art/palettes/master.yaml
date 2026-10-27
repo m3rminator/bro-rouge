@@ -375,3 +375,9 @@ colors:
   brt_jacket_deep: "#1c1618"
   brt_brass_deep: "#6e5214"  # Brute ammo drum shadow
   brt_sleeve: "#544850"  # Brute leather sleeves, a shade lighter than the vest
+  # bruce — Bruce Parche, the martial-arts Bro (refrences/bros/bruce parche): dark cloth headband, black pants
+  bru_band:          "#4a4a52"
+  bru_band_dark:     "#2c2c32"
+  bru_pants:         "#2e2e34"
+  bru_pants_dark:    "#1c1c20"
+  bru_pants_outline: "#0c0c0e"
