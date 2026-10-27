@@ -69,6 +69,8 @@ var _fist_anim := "jab"  # the animation of the swing playing (crouch_jab when c
 var _fist_low := false  # the swing is the crouched jab: lowered hitbox, no lunge, no chain
 var _fist_t := 0.0  # seconds into it (runs faster in fury)
 var _fist_struck := false
+var _cling_kick_t := -1.0  # Bruce: the wall kick playing while he clings (cling_kick), -1 none
+var _cling_kick_hit := false
 var _fist_next := 0  # the swing the next press throws - the combo chain
 var _fist_queued := 0.0  # > 0: a press is waiting to chain into the next swing
 var _fist_idle := 0.0  # seconds since the last swing ended
@@ -893,6 +895,8 @@ func _release_cling() -> void:
 	_clinging = false
 	_hand_block = null
 	_cling_cooldown = STATS.cling_cooldown
+	_cling_kick_t = -1.0
+	sprite.speed_scale = 1.0
 	sprite.play("jump")
 
 
@@ -900,6 +904,8 @@ func _release_cling() -> void:
 ## away or Crouch lets go; landing or losing the wall ends it too.
 func _cling_process(delta: float, dir: float) -> void:
 	_cling_time += delta
+	if _fists():
+		_fist_cling(delta)
 	if _explosive_is_c4():
 		_c4_input(delta)
 	elif STATS.explosive == "grenade" and Input.is_action_just_pressed("grenade") and Run.grenades > 0:
@@ -1492,3 +1498,32 @@ func _shield_step(delta: float) -> void:
 ## Seconds of fury left (the HUD counts them down).
 func fury_left() -> float:
 	return _fury
+
+
+## Bruce hanging on a wall: Shoot kicks the wall (cling_kick) and breaks the block in front of him, Defend still works,
+## and the shield and fury keep counting down.
+func _fist_cling(delta: float) -> void:
+	_defend_cd -= delta
+	_fury = maxf(_fury - delta, 0.0)
+	_shield_step(delta)
+	if Input.is_action_just_pressed("grenade"):
+		_defend()
+	var speed_k: float = STATS.fury_speed if _fury > 0.0 else 1.0
+	if _cling_kick_t < 0.0:
+		if Input.is_action_pressed("shoot") and sprite.sprite_frames.has_animation("cling_kick"):
+			_cling_kick_t = 0.0
+			_cling_kick_hit = false
+			facing = _cling_side
+			sprite.speed_scale = speed_k
+			sprite.play("cling_kick")
+			Sfx.play(self, "knife_swing", -4.0, 0.08)
+		return
+	_cling_kick_t += delta * speed_k
+	if not _cling_kick_hit and _cling_kick_t >= STATS.fist_hit_time:
+		_cling_kick_hit = true
+		PunchAura.spawn(get_parent(), position + Vector2(_cling_side * 14.0, 4.0), _cling_side, 30.0 * (STATS.fury_aura if _fury > 0.0 else 1.0), Color("ff7a4a") if _fury > 0.0 else Color("fff3b0"))
+		_knife_block(STATS.kick_reach)  # the boot meets the wall: the block breaks
+	if _cling_kick_t >= sprite.sprite_frames.get_frame_count("cling_kick") / sprite.sprite_frames.get_animation_speed("cling_kick"):
+		_cling_kick_t = -1.0
+		sprite.speed_scale = 1.0
+		sprite.play("cling")

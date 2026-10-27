@@ -195,5 +195,6 @@ animations:
   kick: A knee chamber, then the leg out on frames 3 to 5.
   combo: Jab, cross and kick back to back (not used by the game, the chain plays the three on their own).
   crouch_jab: The only attack while crouched - the front arm straightens out like the standing jab, 5 frames at 20 fps, a little lower and further back. No cross, kick or combo.
+  cling_kick: While hanging on a wall, Shoot kicks it - the upper body stays in the hang, the boot meets the wall at hip height and breaks the block. 7 frames at 20 fps.
   defend: Both fists up, a two frame loop - plays while he stands shielded.
   bruce_dead/dead: His corpse.
