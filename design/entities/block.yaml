@@ -35,7 +35,7 @@ stats:
     unit: particles
     description: Dirt chunks thrown when the block breaks - a lot of them, so a broken block is easy to see.
   chain_break:
-    value: 0.3
+    value: 0.75
     unit: chance
     description: Chance that the block directly above a breaking block breaks too, a moment later (that one can chain again).
 

@@ -33,6 +33,46 @@ stats:
     value: 1.0
     unit: ratio
     description: A random upgrade crate makes every bullet hit this much harder (1.0 = double damage) for upgrade_time seconds.
+  perk_heart:
+    value: 1
+    unit: hearts
+    description: The safe house power station perk "heart" - one more heart for the rest of the run (and it is filled at once). It stacks.
+  perk_spare:
+    value: 1
+    unit: magazines
+    description: Perk "belt" - one more spare magazine for the rest of the run. The belt's limit (max_spare_mags) goes up by one too, and one is added now.
+  perk_grenade:
+    value: 1
+    unit: grenades
+    description: Perk "grenade" - carry one more grenade (the limit goes up by one) for the rest of the run, and get that one now.
+  perk_size:
+    value: 0.15
+    unit: ratio
+    description: Perk "magazine" - every magazine holds this much more (shell Bros hold more shells), for the rest of the run. It stacks.
+  perk_rate:
+    value: 0.1
+    unit: ratio
+    description: Perk "trigger" - the gun fires this much faster for the rest of the run. It stacks.
+  perk_speed:
+    value: 0.06
+    unit: ratio
+    description: Perk "legs" - the Bro runs this much faster for the rest of the run. It stacks.
+  perk_damage:
+    value: 0.15
+    unit: ratio
+    description: Perk "rounds" - every bullet hits this much harder for the rest of the run. It stacks.
+  perk_jump:
+    value: 0.05
+    unit: ratio
+    description: Perk "spring" - every jump is this much stronger for the rest of the run. It stacks.
+  perk_reload:
+    value: 0.12
+    unit: ratio
+    description: Perk "quick hands" - a magazine swap takes this much less time for the rest of the run (never below a third). It stacks.
+  enemy_hp_per_loop:
+    value: 0.35
+    unit: ratio
+    description: Every enemy (not the Brute) has this much more health for each boss loop already cleared.
   upgrade_time:
     value: 30.0
     unit: s
@@ -41,10 +81,26 @@ stats:
     value: 2.0
     unit: x
     description: Double-tap a direction and the Bro runs - starting at run_start and building up to this multiple of his normal speed over run_ramp_time - until he lets go.
+  run_bullet_speed:
+    value: 2.0
+    unit: x
+    description: Shooting while running (any Bro but MIB, whose beam has no bullets) - the bullets fly this many times faster. They live this many times shorter, so the range stays the same.
+  run_spread_min:
+    value: 1.5
+    unit: degrees
+    description: Shooting while running - even a gun with no spread of its own wobbles at least this much (before the multiplier).
+  run_spread_mult:
+    value: 2.0
+    unit: x
+    description: Shooting while running - the gun's spread is this many times wider.
   run_start:
     value: 1.5
     unit: x
     description: The speed multiple at the first step of a run, before it builds up.
+  zip_speed:
+    value: 150.0
+    unit: px/s
+    description: How fast the Bro rides a zipline between two towers (levels with a chasm, level_gen.gd _skyline).
   run_ramp_time:
     value: 1.2
     unit: s
@@ -103,6 +159,18 @@ stats:
     value: 110.0
     unit: px
     description: At ground level the bottom of the jungle layer sits this many pixels above the bottom of the screen - about on the ground line (the terrain fills the lower ~45% of the screen), its trees rising well above it.
+  bg_fog_count:
+    value: 7
+    unit: banks
+    description: Banks of mist drifting in the jungle's damp air, for each of the three depth layers (behind the hills, between the jungle and the forest, in front of the forest). Each is a wide, low, soft-edged haze of pale blue-grey lying on the ground (never up in the sky).
+  bg_fog_alpha:
+    value: 0.55
+    unit: ratio
+    description: How solid the mist is at its thickest. The far layer is a third of this and the near one the full value, so the distance fades away.
+  bg_fog_drift:
+    value: 5.0
+    unit: px/s
+    description: Top speed a mist bank drifts sideways (each picks its own, slower, and its own way). It also slides with the layer it belongs to as the camera moves.
   bg_cloud_count:
     value: 4
     unit: clouds
@@ -133,27 +201,27 @@ stats:
     unit: chance
     description: Chance that a generated fight level is a stone level - grey rock all the way through, no grass - instead of the usual jungle earth (rocky near open air, earthy deeper in, a few stones scattered through it). The safe house is always earth.
   min_enemies:
-    value: 15
+    value: 40
     unit: enemies
     description: Enemies in the very first level (a boss level gets this many soldiers plus the Brute).
   enemies_per_depth:
-    value: 2
+    value: 7.5
     unit: enemies
     description: Extra enemies for every fight of the loops already completed (a loop = boss_every fights; difficulty steps up once per loop, not per level) (plus a random 0-3).
   max_enemies:
-    value: 70
+    value: 160
     unit: enemies
     description: Cap on enemies per level.
   width_base:
-    value: 110
+    value: 150
     unit: tiles
     description: Width of the first level (a block is 24 px).
   width_per_depth:
-    value: 6
+    value: 12.5
     unit: tiles
     description: Extra width for every fight of the loops already completed (steps up once per loop).
   width_max:
-    value: 260
+    value: 350
     unit: tiles
     description: Cap on level width.
   boss_width:
@@ -161,15 +229,15 @@ stats:
     unit: tiles
     description: Width of the first boss level - just a short run-up and the arena (it also grows with width_per_depth per boss cleared). There are no other enemies - the Bro steps off the truck into the Brute's arena and the Brute goes for him at once.
   platform_towers_base:
-    value: 4
+    value: 5
     unit: towers
     description: Towers of floating platforms (2-4 tiers, each two blocks higher than the last, one jump apart) in the first level. Enemies and barrels also stand on them.
   platform_towers_per_depth:
-    value: 0.5
+    value: 1.0
     unit: towers
     description: Extra towers for every fight of the loops already completed (steps up once per loop).
   platform_towers_max:
-    value: 14
+    value: 17
     unit: towers
     description: Cap on towers per level.
   kamikaze_base:
@@ -209,15 +277,15 @@ stats:
     unit: share
     description: Cap on the helmet share.
   barrel_clusters_base:
-    value: 4
+    value: 5
     unit: clusters
     description: Explosive barrel clusters (1-3 barrels each) in the first level (a boss arena always has 5 near the Brute).
   barrel_clusters_per_depth:
-    value: 0.5
+    value: 0.6
     unit: clusters
     description: Extra barrel clusters for every fight of the loops already completed (steps up once per loop).
   quota_base:
-    value: 0.6
+    value: 0.7
     unit: share
     description: Share of the enemies that must be killed to open the exit, in the first level.
   quota_per_depth:

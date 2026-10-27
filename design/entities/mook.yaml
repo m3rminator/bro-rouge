@@ -64,6 +64,18 @@ stats:
     value: 0.9
     unit: s
     description: Pause between bursts.
+  hear_range:
+    value: 260.0
+    unit: px
+    description: When a soldier dies, other soldiers who have not seen the Bro and are this close sideways (and within a screen height) to him may hear it. Only those on the Bro's screen can.
+  hear_chance:
+    value: 0.5
+    unit: chance
+    description: Chance that a soldier who hears a comrade die goes to look for the Bro (rolled once per death and soldier). The others carry on patrolling.
+  search_time:
+    value: 5.0
+    unit: s
+    description: How long a soldier who heard a comrade die walks toward the Bro (at twice his patrol speed, never off a ledge) before going back to his patrol. Seeing the Bro ends it at once.
   forget_time:
     value: 1.5
     unit: s

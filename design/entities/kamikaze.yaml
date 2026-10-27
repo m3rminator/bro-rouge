@@ -85,9 +85,9 @@ stats:
     unit: px
     description: Screen shake when his vest goes off (the biggest single shake in the game).
   blast_player_damage:
-    value: 3
+    value: 2
     unit: hearts
-    description: Hearts his blast takes from the Bro — a full-health Bro dies.
+    description: Hearts his blast takes from the Bro, two - a Bro with all three hearts survives it with one.
   hitbox:
     value: [12, 30]
     unit: px

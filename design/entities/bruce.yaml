@@ -1,0 +1,199 @@
+# Entity: Bruce Parche, a playable Bro (the sixth character, id "bruce"). He has no gun: Shoot throws a jab, a cross and a kick,
+# one more with every press. Only the numbers that differ from the default Bro live here; everything else comes from
+# design/entities/bro.yaml. Generated into GameData.BRUCE and laid over GameData.BRO by Run.bro_stats().
+id: bruce
+name: Bruce Parche (playable Bro)
+kind: player
+order: 1.9
+description: A martial artist with no gun. Shoot chains a left jab, a right cross and a kick (one per press, or hold). The three together take exactly one ordinary enemy's health, so the kick finishes a full combo - and a combo that the kick finishes puts him in fury for ten seconds (every kill starts the time again) with swings 30 percent faster and kills in two blows. Every fourth finisher gives him half a heart. A swing steps him forward and its hit-aura destroys enemy bullets that run into it. His grenade button is defend - a three second shield, two charges per level and twelve seconds between uses.
+sprite: bruce
+files:
+  - game/scripts/character_select.gd
+  - game/scripts/run.gd
+  - game/scripts/player.gd
+  - game/scripts/enemy.gd
+  - game/scripts/punch_aura.gd
+controls: [move_left, move_right, jump, crouch, shoot, grenade]
+
+stats:
+  weapon:
+    value: fists
+    unit: kind
+    description: No gun - Shoot throws punches and kicks (jab, cross, kick, one per press, chained).
+  explosive:
+    value: defend
+    unit: kind
+    description: The grenade button is his special - defend, a shield that nothing can hurt him through.
+  speed:
+    value: 132.0
+    unit: px/s
+    description: Run speed - 10 percent faster than the default Bro (120), he has to close the distance to his enemies.
+  max_spare_mags:
+    value: 0
+    unit: magazines
+    description: He carries no magazines.
+  magazines:
+    value: 1
+    unit: magazines
+    description: No spare magazines (the one in hand is counted).
+  magazine_size:
+    value: 0
+    unit: rounds
+    description: No ammunition at all.
+  grenades:
+    value: 2
+    unit: charges
+    description: Defend charges per level - they come back when the level is finished, like grenades.
+  fist_hit_time:
+    value: 0.1
+    unit: s
+    description: When a swing lands, counted from its first frame (the arm or leg is fully out on the third frame at 20 fps).
+  fist_active:
+    value: 0.15
+    unit: s
+    description: How long after the hit time the fist or foot still destroys enemy bullets that reach it.
+  fist_buffer:
+    value: 0.25
+    unit: s
+    description: A press made up to this long before the swing ends waits and chains into the next punch. Holding Shoot keeps chaining.
+  fist_reset:
+    value: 0.6
+    unit: s
+    description: After this long without a swing the combo starts again from the jab.
+  fist_lunge:
+    value: 6.0
+    unit: px
+    description: Every punch steps him this far forward on the ground.
+  jab_share:
+    value: 0.2
+    unit: ratio
+    description: A jab takes this share of an ordinary enemy's health. Jab, cross and kick add up to all of it, so a full combo is exactly a kill and the kick finishes.
+  cross_share:
+    value: 0.3
+    unit: ratio
+    description: A cross takes this share of an ordinary enemy's health.
+  kick_share:
+    value: 0.5
+    unit: ratio
+    description: A kick takes this share of an ordinary enemy's health.
+  jab_boss:
+    value: 1
+    unit: hp
+    description: Health a jab takes off a boss (the Brute has 30).
+  cross_boss:
+    value: 2
+    unit: hp
+    description: Health a cross takes off a boss.
+  kick_boss:
+    value: 3
+    unit: hp
+    description: Health a kick takes off a boss. A full combo is 6, five combos for the Brute.
+  jab_reach:
+    value: 34.0
+    unit: px
+    description: How far in front a jab reaches (the Bro's knife reaches 26, Bruce's art is short so his blows reach well past it).
+  cross_reach:
+    value: 36.0
+    unit: px
+    description: How far in front a cross reaches.
+  kick_reach:
+    value: 42.0
+    unit: px
+    description: How far in front a kick reaches.
+  jab_knock:
+    value: 60.0
+    unit: px/s
+    description: A jab only shoves the enemy back a little, and stops him for a moment.
+  cross_knock:
+    value: 90.0
+    unit: px/s
+    description: A cross shoves a little harder.
+  kick_knock:
+    value: 230.0
+    unit: px/s
+    description: A kick throws the enemy back - dead or not.
+  kick_hop:
+    value: -120.0
+    unit: px/s
+    description: A kick also lifts the enemy a little.
+  jab_stun:
+    value: 1.2
+    unit: s
+    description: Every blow stuns an enemy it does not kill - the jab too, so the first blow of a combo stops him shooting (birds over his head).
+  cross_stun:
+    value: 1.2
+    unit: s
+    description: The cross stuns the enemy this long.
+  kick_stun:
+    value: 1.5
+    unit: s
+    description: The kick stuns an enemy it does not kill this long.
+  kamikaze_throw:
+    value: 9.0
+    unit: x
+    description: A blow that lands on a kamikaze kills him at once and throws him this many times as far (and lifts him) - far away from Bruce, so his blast cannot reach him.
+  fury_reach:
+    value: 1.4
+    unit: x
+    description: In fury every blow reaches this many times as far (and its bullet-destroying zone is wider).
+  fury_aura:
+    value: 2.0
+    unit: x
+    description: In fury the hit-aura ring around the fist or foot is this many times as big.
+  barrel_speed_min:
+    value: 260.0
+    unit: px/s
+    description: Every barrel Bruce hits (and the ones touching it further on) is thrown far forward at a speed picked between this and the maximum, each barrel on its own. A thrown barrel catches fire when it lands.
+  barrel_speed_max:
+    value: 360.0
+    unit: px/s
+    description: Top forward speed of a thrown barrel.
+  barrel_hop_min:
+    value: 100.0
+    unit: px/s
+    description: A thrown barrel is also lifted by a speed picked between this and the maximum - the low ones fly nearly flat, the high ones in a big arc.
+  barrel_hop_max:
+    value: 320.0
+    unit: px/s
+    description: Top upward speed of a thrown barrel.
+  fury_time:
+    value: 10.0
+    unit: s
+    description: A full combo that the kick finishes puts Bruce in fury for this long. The next hit on him in fury (a bullet, a blast, even a kamikaze) costs no health and ends the fury. Every kill in fury starts the time again, and when it runs out the fury ends.
+  fury_share:
+    value: 0.5
+    unit: ratio
+    description: In fury every punch and kick takes this share of an ordinary enemy's health, so two blows of anything kill.
+  fury_speed:
+    value: 1.5
+    unit: x
+    description: In fury the swings play this much faster (the fire rate, in a way).
+  heal_kills:
+    value: 4
+    unit: kills
+    description: Every this many combo finishers give him half a heart (two halves are a heart, up to his maximum).
+  defend_time:
+    value: 3.0
+    unit: s
+    description: How long the shield holds - nothing hurts him, he flashes white and a shield floats over his head.
+  defend_cooldown:
+    value: 12.0
+    unit: s
+    description: Time from one defend to the next, counted from the moment it starts.
+
+animations:
+  idle: Standing in a loose fighting stance, breathing.
+  run: The run.
+  jump: The jump pose.
+  crouch: Crouched, one block tall.
+  crouch_walk: Walking crouched.
+  cling: Hanging on a wall.
+  flip: The somersault off a wall.
+  roll: The landing roll, and the roll off a zipline.
+  jab: Left punch, the front arm straight out on frames 2 to 4.
+  cross: Right punch, the body turns its back, the rear arm is out on frames 3 and 4.
+  kick: A knee chamber, then the leg out on frames 3 to 5.
+  combo: Jab, cross and kick back to back (not used by the game, the chain plays the three on their own).
+  crouch_jab: The only attack while crouched - the front arm straightens out like the standing jab, 5 frames at 20 fps, a little lower and further back. No cross, kick or combo.
+  defend: Both fists up, a two frame loop - plays while he stands shielded.
+  bruce_dead/dead: His corpse.
