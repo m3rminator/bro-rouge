@@ -16,6 +16,7 @@ var exploded := false
 var _fuse := 0.0
 var _sprite: AnimatedSprite2D
 var _puff := 0.0
+var _fall_speed := 0.0  # fastest fall of the current drop; a hard landing sets it burning
 
 
 func _ready() -> void:
@@ -40,7 +41,15 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += STATS.gravity * delta
 	velocity.x = 0.0
+	var falling := velocity.y > 40.0
+	_fall_speed = maxf(_fall_speed, velocity.y)
 	move_and_slide()
+	if falling:
+		_crush_below()
+	if is_on_floor():
+		if _fall_speed > 200.0:  # dropped from a height: it lights up on impact
+			ignite(0.3)
+		_fall_speed = 0.0
 	if burning:
 		_puff -= delta
 		while _puff <= 0.0:
@@ -49,6 +58,22 @@ func _physics_process(delta: float) -> void:
 		_fuse -= delta
 		if _fuse <= 0.0:
 			explode()
+
+
+## A falling barrel crushes whoever is under it (the Bro bursts into gibs, see player.gd _crushed).
+func _crush_below() -> void:
+	var box := RectangleShape2D.new()
+	box.size = DRUM
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = box
+	query.transform = Transform2D(0.0, global_position + Vector2(0, Block.SIZE / 2.0 - DRUM.y / 2.0 + 2.0))
+	query.collision_mask = 2 | 4
+	for result in get_world_2d().direct_space_state.intersect_shape(query, 4):
+		if result.collider.has_method("_crushed"):
+			result.collider._crushed()
+		elif result.collider is Enemy and not result.collider.dead and velocity.y > 120.0:
+			explode()  # dropped on someone's head: it goes off at once
+			return
 
 
 ## Bullets: any hit lights it.

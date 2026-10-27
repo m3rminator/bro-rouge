@@ -20,9 +20,6 @@ autoplay = "idle"
 [node name="FlashTop" type="AnimatedSprite2D" parent="."]
 script = ExtResource("3")
 
-[node name="FlashBottom" type="AnimatedSprite2D" parent="."]
-script = ExtResource("3")
-
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -7)
 shape = SubResource("RectangleShape2D_body")

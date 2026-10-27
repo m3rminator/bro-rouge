@@ -9,15 +9,11 @@ extends Node2D
 
 const STATS := GameData.BODY_PIECES
 const WORLD_MASK := 1
-## [animation, offset from the feet of a standing body, half size of the drawing]
-const PIECES := [
-	["piece_torso", Vector2(0, -18), Vector2(8, 6.5)],
-	["piece_arm", Vector2(-8, -18), Vector2(3, 6.5)],
-	["piece_arm", Vector2(8, -18), Vector2(3, 6.5)],
-	["piece_leg", Vector2(-3, -7), Vector2(3.5, 6.5)],
-	["piece_leg_bent", Vector2(3, -7), Vector2(6.5, 6)],
-]
-const BITS := ["piece_bit_a", "piece_bit_b"]
+const GIBS := preload("res://assets/sprites/gibs_frames.tres")  # shared gore bits for everyone torn apart
+## [animation, half size of the drawing]
+const BONES := [["bone", Vector2(7, 3)], ["bone_small", Vector2(4, 3)]]
+const MEAT := [["meat_a", Vector2(5, 4)], ["meat_b", Vector2(5, 4)], ["meat_c", Vector2(5, 4)]]
+const RIBCAGE := ["ribcage", Vector2(7, 5)]
 
 var velocity := Vector2.ZERO
 var _spin := 0.0  # rad/s
@@ -27,31 +23,53 @@ var _bleed := 0.0  # seconds of blood trail left
 var _drip := 0.0
 var _trail: CPUParticles2D
 var _rest_time := 0.0
+var _clean := false  # not a bloody piece (a helmet): no blood trail, no blood on bounces
 
 
 ## Tear `body` (an Enemy) apart: the pieces fly off away from `center`, and the body is removed.
 static func tear(body: Enemy, dir: int, center: Vector2) -> void:
-	var parent := body.get_parent()
-	var frames := body.sprite.sprite_frames
-	if not frames.has_animation("piece_torso"):  # no pieces drawn for this sprite: just toss him
-		body.toss(dir, GameData.EXPLOSION.fling_speed)
-		return
 	if body.can_behead():
 		body._behead(dir)  # the head goes its own way (does nothing if it is already off)
-	var feet := body.global_position + Vector2(0, Block.SIZE / 2.0)
-	var squash := 0.4 if body._lying else 1.0  # a body lying on the ground is torn up flat
-	var list := PIECES.duplicate()
-	for i in randi_range(STATS.bits[0], STATS.bits[1]):
-		list.append([BITS[randi() % BITS.size()], Vector2(randf_range(-6, 6), -randf_range(8, 20)), Vector2(2.5, 2.5)])
+	scatter(body.get_parent(), body.global_position, dir, center, body._lying)
+	Sfx.play(body, "blood_splat", 0.0)
+	Blood.pool_under(body)
+	body.queue_free()
+
+
+## One loose piece (e.g. a helmet knocked off) from `at`, thrown to side `dir`; tumbles like the gore.
+static func drop(parent: Node, texture: Texture2D, at: Vector2, dir: int, half: Vector2) -> void:
+	var piece := BodyPiece.new()
+	var sprite := Sprite2D.new()
+	sprite.texture = texture
+	sprite.flip_h = dir < 0
+	piece.add_child(sprite)
+	piece._half = half
+	piece._clean = true
+	piece.position = at
+	piece.velocity = Vector2(dir * randf_range(STATS.throw_x[0], STATS.throw_x[1]) * 0.6, -randf_range(STATS.throw_y[0], STATS.throw_y[1]) * 0.8)
+	piece._spin = deg_to_rad(STATS.spin) * dir * randf_range(0.6, 1.0)
+	parent.add_child.call_deferred(piece)
+
+
+## The gore of a body at `at` (its middle) torn apart by a blast at `center`: always a ribcage,
+## one or two bones and two or three chunks of meat, thrown away from the blast. Used for enemies
+## and Bros alike. `lying`: the body was on the ground, so the pieces start flat.
+static func scatter(parent: Node, at: Vector2, dir: int, center: Vector2, lying := false) -> void:
+	var feet := at + Vector2(0, Block.SIZE / 2.0)
+	var squash := 0.4 if lying else 1.0
+	var list: Array = [RIBCAGE]
+	for i in randi_range(3, 4):
+		list.append(BONES[randi() % BONES.size()])
+	for i in randi_range(2, 3):
+		list.append(MEAT[randi() % MEAT.size()])
 	for p in list:
-		var offset: Vector2 = p[1] * Vector2(-1 if body.sprite.flip_h else 1, squash)
 		var piece := BodyPiece.new()
 		var sprite := Sprite2D.new()
-		sprite.texture = frames.get_frame_texture(p[0], 0)
+		sprite.texture = GIBS.get_frame_texture(p[0], 0)
 		sprite.flip_h = randi() % 2 == 0
 		piece.add_child(sprite)
-		piece._half = p[2]
-		piece.position = feet + offset
+		piece._half = p[1]
+		piece.position = feet + Vector2(randf_range(-6, 6), -randf_range(6, 20) * squash)
 		var away := signf(piece.position.x - center.x)
 		if absf(piece.position.x - center.x) < 2.0:
 			away = float(dir) if randi() % 3 > 0 else -float(dir)
@@ -59,16 +77,13 @@ static func tear(body: Enemy, dir: int, center: Vector2) -> void:
 		piece._spin = deg_to_rad(STATS.spin) * away * randf_range(0.5, 1.2)
 		BloodDrops.emit(parent, piece.position, Vector2(away, -1.0), STATS.piece_droplets, 80.0, 200.0)  # every piece sprays blood as it is torn off
 		parent.add_child.call_deferred(piece)  # called from a physics callback (explosion)
-	Blood.gore(parent, body.global_position)
-	Sfx.play(body, "blood_splat", 0.0)
-	Blood.pool_under(body)
-	body.queue_free()
+	Blood.gore(parent, at)
 
 
 func _ready() -> void:
 	z_index = 3
 	rotation = randf_range(-PI, PI)
-	_bleed = STATS.trail_time * randf_range(0.7, 1.3)
+	_bleed = 0.0 if _clean else STATS.trail_time * randf_range(0.7, 1.3)
 	_trail = CPUParticles2D.new()  # blood streaming out of the torn end as it flies
 	_trail.amount = 24
 	_trail.lifetime = 0.5
@@ -135,8 +150,9 @@ func _physics_process(delta: float) -> void:
 			velocity.y = -velocity.y * STATS.bounce
 			velocity.x *= 0.6
 			_spin *= 0.5
-			Blood.spray(get_parent(), global_position, 1 if velocity.x >= 0.0 else -1)
-			BloodDrops.emit(get_parent(), global_position, Vector2.UP, STATS.bounce_droplets, 120.0, 160.0)
+			if not _clean:
+				Blood.spray(get_parent(), global_position, 1 if velocity.x >= 0.0 else -1)
+				BloodDrops.emit(get_parent(), global_position, Vector2.UP, STATS.bounce_droplets, 120.0, 160.0)
 		else:  # lie flat on the block
 			_resting = true
 			velocity = Vector2.ZERO

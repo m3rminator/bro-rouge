@@ -10,6 +10,7 @@ const FRAMES := preload("res://assets/sprites/mook_frames.tres")
 const WORLD_MASK := 1
 
 var _spin := 0.0  # rad/s
+var _idle := 0.0  # seconds lying untouched; past rest_time it sinks and fades away
 var _bleed := 0.0  # seconds of blood trail left
 var _drip := 0.0
 var _nudged := {}  # instance ids of bullets that already nudged it
@@ -19,13 +20,13 @@ var _sprite: AnimatedSprite2D
 
 
 ## Throws head `anim` (head_a / head_b) from `pos` in `parent`'s space, away to side `dir`.
-static func throw(parent: Node, pos: Vector2, anim: String, dir: int, flip: bool) -> Head:
+static func throw(parent: Node, pos: Vector2, anim: String, dir: int, flip: bool, frames: SpriteFrames = FRAMES) -> Head:
 	var head := Head.new()
 	head.position = pos
 	head.velocity = Vector2(dir * randf_range(STATS.throw_x[0], STATS.throw_x[1]), -randf_range(STATS.throw_y[0], STATS.throw_y[1]))
 	head._spin = deg_to_rad(STATS.spin) * dir * randf_range(0.7, 1.2)
 	head._sprite = AnimatedSprite2D.new()
-	head._sprite.sprite_frames = FRAMES
+	head._sprite.sprite_frames = frames
 	head._sprite.animation = anim
 	head._sprite.flip_h = flip
 	head._sprite.position = Vector2(0, 0.5)  # the head sits in the middle of the 47 × 34 frame
@@ -66,6 +67,9 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _idle > GameData.BODY_PIECES.rest_time:
+		_fade(delta)
+		return
 	velocity.y += STATS.gravity * delta
 	var hit := move_and_collide(velocity * delta)
 	if hit:
@@ -74,7 +78,9 @@ func _physics_process(delta: float) -> void:
 			velocity.y = 0.0
 			velocity.x = move_toward(velocity.x, 0.0, STATS.roll_friction * delta)
 			_spin = velocity.x / STATS.radius
-		else:  # bounce, losing speed; a little blood where it hits
+			_idle = _idle + delta if absf(velocity.x) < 8.0 else 0.0
+		else:
+			_idle = 0.0  # bounce, losing speed; a little blood where it hits
 			if velocity.length() > 80.0:
 				BloodDrops.emit(get_parent(), global_position, n, 3, 50.0, 60.0)
 			velocity = velocity.bounce(n) * STATS.bounce
@@ -92,12 +98,27 @@ func _physics_process(delta: float) -> void:
 		BloodDrops.emit(get_parent(), global_position, Vector2.UP, 2, 70.0, 60.0)
 
 
+## Untouched for rest_time: sinks into the ground behind the blocks and fades, like the gore pieces.
+func _fade(delta: float) -> void:
+	var pieces: Dictionary = GameData.BODY_PIECES
+	_idle += delta
+	var left: float = pieces.rest_time + pieces.fade_time - _idle
+	if left <= 0.0:
+		queue_free()
+		return
+	z_index = -1
+	modulate.a = left / pieces.fade_time
+	global_position.y += pieces.sink_speed * delta
+	_trail.emitting = false
+
+
 ## Bullets fly straight through; one passing close gives the head a small knock and spin.
 func _nudge_from_bullets() -> void:
 	for b in get_tree().get_nodes_in_group("bullets"):
 		if _nudged.has(b.get_instance_id()) or b.global_position.distance_to(global_position) > STATS.radius + 4.0:
 			continue
 		_nudged[b.get_instance_id()] = true
+		_idle = 0.0
 		velocity += Vector2(b.direction * STATS.bullet_nudge, -STATS.bullet_nudge * 0.6)
 		_spin += deg_to_rad(360.0) * b.direction
 		BloodDrops.emit(get_parent(), global_position, Vector2(b.direction, -0.5), 3, 30.0, 70.0)
@@ -115,6 +136,7 @@ func _kick_from_bro() -> void:
 	velocity = Vector2(dir * STATS.kick_speed + p.velocity.x * 0.5, -STATS.kick_up * randf_range(0.8, 1.2))
 	_spin = deg_to_rad(STATS.spin) * dir
 	_kicked = 0.4
+	_idle = 0.0
 	_bleed = maxf(_bleed, STATS.kick_bleed)  # the kick squeezes more blood out of it
 	BloodDrops.emit(get_parent(), global_position, Vector2(dir, -1.0), STATS.kick_drops, 80.0, 170.0)
 

@@ -28,9 +28,11 @@ var _air_top := INF  # highest point (smallest y) of the current time in the air
 var _pool_x := INF  # where the last pool was left (a new one only after the body moved)
 var _bubble: AnimatedSprite2D
 var _lying := false
+var _idle := 0.0  # seconds the corpse has lain untouched; past rest_time it sinks and fades away
 var _shots_taken := 0  # bullets this body has absorbed; it bursts at CORPSE.burst_hits
 var _bumped := false  # the Bro is walking through this body right now
 var _dead_anim := "dead"  # lying pose; sprites with two (dead_a / dead_b) get one at random per body
+var counts_kill := true  # false for soldiers dropped in by the boss: they are extra, the quota does not count them
 var tears_apart := true  # a blast rips the body into pieces (BodyPiece); kamikazes keep theirs for the fuse
 var _stab_hits := 0  # knife hits taken that did not kill (a slower knife needs knife_hits of them)
 var _shoved := 0.0  # > 0 while sliding back from a knife hit he survived (no AI meanwhile)
@@ -45,6 +47,14 @@ var _grenade_seen := 0.0  # how long a live grenade has been in sight (he panics
 var _grenade_calm := {}  # grenade instance id -> true if he ignores that grenade (rolled once)
 var _grenade_late := {}  # grenades he only noticed in the last second
 var _fleeing: Node2D = null  # the grenade he is running from
+var _disco: Node2D = null  # a landed disco grenade he is walking toward (design/entities/disco.yaml)
+var _panic := 0.0  # > 0 while panicking after the disco burst: jumps about, runs back and forth, shoots wildly
+var _panic_turn := 0.0
+var _panic_dir := 0
+var _panic_shot := 0.0
+var _doomed := false  # the disco party ends him: when the panic is over he bursts (a lone soldier, or a kamikaze: he blows up)
+var _died_at := -100.0  # when he died (seconds), for the short spell after it that bullets pass through him
+var party_doom := false  # set by kinds that always go off when the panic ends (kamikaze)
 
 
 func _ready() -> void:
@@ -81,11 +91,109 @@ func _physics_process(delta: float) -> void:
 		_check_fall()
 		_animate()
 		return
-	if not _flee(delta):
+	if _panic > 0.0:
+		_panic_step(delta)
+	elif _disco != null and _disco_step(delta):
+		pass
+	elif not _flee(delta):
 		_think(delta)
 	move_and_slide()
 	_check_fall()
 	_animate()
+
+
+## A raygun shockwave from `from_x`: thrown away from it and stunned (bosses are never thrown).
+func wave_hit(from_x: float, speed: float, up: float, stun_time: float) -> void:
+	if dead or is_in_group("bosses"):
+		return
+	var away := signf(global_position.x - from_x)
+	if away == 0.0:
+		away = float(-facing)
+	_disco = null
+	_panic = 0.0
+	_doomed = false
+	velocity = Vector2(away * speed, -up)
+	_shoved = stun_time
+	_stun(stun_time)
+	show_alert(false)
+
+
+## A landed disco grenade calls him: he walks to it until it goes off (bosses ignore it).
+func disco_lure(spot: Node2D) -> void:
+	if dead or _panic > 0.0 or _shoved > 0.0 or is_in_group("bosses"):
+		return
+	_disco = spot
+	show_alert(false)
+
+
+func is_lured_by(spot: Node2D) -> bool:
+	return _disco == spot
+
+
+## The disco burst: panic for `time` seconds. `lone`: nobody else is there to finish him, so the party does.
+func disco_panic(time: float, lone := false) -> void:
+	if dead or is_in_group("bosses"):
+		return
+	_disco = null
+	_doomed = lone or party_doom
+	_panic = time
+	_panic_turn = 0.0
+	_panic_shot = randf_range(0.1, 0.4)
+	show_alert(false)
+
+
+func _disco_step(delta: float) -> bool:
+	if not is_instance_valid(_disco):
+		_disco = null
+		return false
+	var dx := _disco.global_position.x - global_position.x
+	if absf(dx) > 20.0:
+		facing = 1 if dx > 0.0 else -1
+		velocity.x = facing * float(stats.get("walk_speed", 30.0)) * 1.8
+		if is_on_floor() and is_on_wall():
+			velocity.y = -230.0
+	else:
+		velocity.x = 0.0
+		if is_on_floor() and randf() < delta * 2.0:
+			velocity.y = -110.0  # a little dance
+	return true
+
+
+func _panic_step(delta: float) -> void:
+	var disco: Dictionary = GameData.DISCO
+	_panic -= delta
+	if _panic <= 0.0 and _doomed:
+		_doomed = false
+		_party_over()
+		return
+	_panic_turn -= delta
+	if _panic_turn <= 0.0:
+		_panic_turn = randf_range(disco.panic_turn[0], disco.panic_turn[1])
+		_panic_dir = [-1, 0, 1][randi() % 3]
+		facing = [-1, 1][randi() % 2]
+	velocity.x = _panic_dir * disco.panic_speed
+	if is_on_floor():
+		if randf() < disco.panic_jump_rate * delta or (is_on_wall() and _panic_dir != 0):
+			velocity.y = -disco.panic_jump
+		if is_on_wall():
+			_panic_dir = -_panic_dir
+	_panic_shot -= delta
+	if _panic_shot <= 0.0:
+		_panic_shot = randf_range(disco.panic_shot[0], disco.panic_shot[1])
+		_panic_shoot()
+
+
+## The panic ended with him still alive and doomed: he dies and bursts on the spot (a kamikaze goes off).
+func _party_over() -> void:
+	if dead:
+		return
+	die(0)
+	_burst_body(facing)
+
+
+## Wild shot while panicking (soldiers override this).
+func _panic_shoot() -> void:
+	pass
 
 
 ## Landing after a long drop kills (stats.fall_death_height; 0 = immune). Measured from the
@@ -167,6 +275,18 @@ func _animate() -> void:
 
 
 func _dead_process(delta: float) -> void:
+	var pieces: Dictionary = GameData.BODY_PIECES
+	if _idle > pieces.rest_time:  # nobody touched it: sinks into the ground and fades
+		_idle += delta
+		var left: float = pieces.rest_time + pieces.fade_time - _idle
+		if left <= 0.0:
+			queue_free()
+			return
+		$Collision.disabled = true
+		z_index = -1
+		sprite.modulate.a = left / pieces.fade_time
+		sprite.position.y += pieces.sink_speed * delta
+		return
 	_bump(delta)
 	if is_on_floor():
 		velocity.x = move_toward(velocity.x, 0.0, CORPSE.friction * delta)
@@ -174,6 +294,7 @@ func _dead_process(delta: float) -> void:
 	_check_fall()
 	if is_on_floor() and not _lying and velocity.y >= 0.0:
 		_lie()
+	_idle = _idle + delta if _lying and is_on_floor() and absf(velocity.x) < 8.0 and not _bumped else 0.0
 	if is_on_floor() and not _pooled and absf(velocity.x) < 20.0:
 		_pooled = true
 		if absf(global_position.x - _pool_x) > 12.0:
@@ -342,10 +463,16 @@ func toss(dir: int, speed: float) -> void:
 	create_tween().tween_property(sprite, "rotation", TAU * dir, 0.6)
 
 
+## How many knife hits it takes to kill him: `base` (the Bro's knife_hits) only for a soldier still wearing
+## both helmet and vest (helmet.gd); everyone else needs `plain` (knife_hits_plain: 1 for most Bros, 2 for Balal and Hamid - the first stuns).
+func knife_hits_needed(_base: int, plain := 1) -> int:
+	return plain
+
+
 ## The Bro's knife (player.gd). Every enemy but a boss dies from one hit; a boss takes
 ## `boss_damage`. The knifed enemy (or body) is thrown back hard, and a kill sprays `blood`
 ## extra drops. Returns true if this hit killed him.
-func stab(direction: int, boss_damage: int, knockback: float, hop: float, blood: int, hits_needed := 1, stun := 0.0) -> bool:
+func stab(direction: int, boss_damage: int, knockback: float, hop: float, blood: int, hits_needed := 1, stun := 0.0, plain_hits := 1) -> bool:
 	var mass: float = stats.get("mass", 1.0)
 	var throw := Vector2(direction * knockback / mass, hop / mass)
 	var chest := global_position + Vector2(0, Block.SIZE / 2.0 - stats.hitbox[1] * 0.6)
@@ -355,6 +482,7 @@ func stab(direction: int, boss_damage: int, knockback: float, hop: float, blood:
 			die(0)
 		_burst_body(direction)
 		return false
+	hits_needed = knife_hits_needed(hits_needed, plain_hits)
 	if hits_needed > 1 and not is_in_group("bosses"):
 		_stab_hits += 1
 		if _stab_hits < hits_needed:  # not dead yet: thrown back and stunned, standing there helpless
@@ -419,7 +547,7 @@ func _behead(dir: int) -> void:
 	_dead_anim = "headless_" + pose
 	var head_h: float = stats.get("head_height", 8.0)
 	var neck := position + Vector2(0, Block.SIZE / 2.0 - stats.hitbox[1] + head_h / 2.0)
-	Head.throw(get_parent(), neck, "head_" + pose, dir, sprite.flip_h)
+	Head.throw(get_parent(), neck, "head_" + pose, dir, sprite.flip_h, sprite.sprite_frames)
 	Blood.spray(get_parent(), neck, dir)
 	if _lying:
 		_lie()
@@ -428,7 +556,7 @@ func _behead(dir: int) -> void:
 	_fountain_side = -1 if sprite.flip_h else 1
 	_fountain = CPUParticles2D.new()
 	_fountain.position = Vector2(CORPSE.neck[0] * _fountain_side, CORPSE.neck[1])
-	_fountain.amount = 90
+	_fountain.amount = 45
 	_fountain.lifetime = 0.9
 	_fountain.local_coords = false
 	_fountain.direction = Vector2(_fountain_side, -0.8)
@@ -461,14 +589,21 @@ func _pump_fountain(delta: float) -> void:
 		BloodDrops.emit(get_parent(), _fountain.global_position, dir, CORPSE.fountain_drops, 18.0, CORPSE.fountain_speed * strength * beat)
 
 
+## The first moments after death the body cannot be shot (CORPSE.ghost_time): bullets fly through it.
+func is_ghost() -> bool:
+	return dead and Time.get_ticks_msec() / 1000.0 - _died_at < GameData.CORPSE.ghost_time
+
+
 func die(direction: int) -> void:
 	dead = true
+	_died_at = Time.get_ticks_msec() / 1000.0
 	if sprite.sprite_frames.has_animation("dead_b"):
 		_dead_anim = "dead_a" if randi() % 2 == 0 else "dead_b"  # 50 / 50
 	collision_layer = CORPSE_LAYER
 	z_index = 1
 	show_alert(false)
-	Run.add_kill()
+	if counts_kill:
+		Run.add_kill()
 	Blood.burst(get_parent(), global_position + Vector2(0, Block.SIZE / 2.0 - stats.hitbox[1] / 2.0))
 	Sfx.play(self, "blood_splat", -6.0)
 	_on_death(direction)

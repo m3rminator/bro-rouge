@@ -10,6 +10,7 @@ var _timer := 0.0
 var _seen_for := 0.0  # seconds since he first spotted the Bro; at fuse_after_seen he blows
 var _fuse := -1.0  # counting down after death; explodes at 0
 var _exploded := false
+var _hunting := false  # sent after the Bro by the Brute: knows where he is from the start, never loses him
 
 
 func _ready() -> void:
@@ -17,11 +18,12 @@ func _ready() -> void:
 	eye = GameData.ANCHORS["kamikaze"]["eye"]
 	sprite_name = "kamikaze"
 	tears_apart = false
+	party_doom = true  # after the disco party he goes off where he stands
 	super()
 
 
 func _think(delta: float) -> void:
-	if state != State.PATROL:
+	if state != State.PATROL and not _hunting:
 		_seen_for += delta
 		if _seen_for >= stats.fuse_after_seen:
 			_explode()
@@ -42,6 +44,15 @@ func _think(delta: float) -> void:
 			_charge()
 
 
+## Called by the Brute for the suicide soldiers he drops: no patrol, no reaction time - straight at the Bro.
+func hunt() -> void:
+	_hunting = true
+	_spot()
+	state = State.CHARGE
+	_timer = 0.0
+	show_alert(false)
+
+
 func _spot() -> void:
 	state = State.ALERT
 	_seen_for = 0.0
@@ -53,7 +64,7 @@ func _spot() -> void:
 
 func _charge() -> void:
 	var p := player()
-	if p == null or global_position.distance_to(p.global_position) > stats.chase_range:
+	if p == null or (not _hunting and global_position.distance_to(p.global_position) > stats.chase_range):
 		state = State.PATROL
 		return
 	if global_position.distance_to(p.global_position) < stats.trigger_range:

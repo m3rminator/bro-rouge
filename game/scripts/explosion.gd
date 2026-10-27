@@ -34,6 +34,7 @@ func _ready() -> void:
 	var extra := sources.size() - 1
 	_hit_everything()
 	Grass.blast(get_tree(), global_position, power.radius)
+	TreeDecor.blast(get_tree(), global_position, power.radius)
 	if extra == 0:
 		var boom := _blast(SMALL_BLASTS[_variant(position)], Vector2.ZERO, 0.0)
 		boom.scale = Vector2.ONE * clampf(power.radius / STATS.small_radius_ref, 1.0, 2.5)
@@ -57,14 +58,24 @@ func _hit_everything() -> void:
 	query.transform = Transform2D(0.0, global_position)
 	query.collision_mask = HIT_MASK
 	var seen := {}
+	var last_row := _last_row() if power.get("spare_bottom", false) else -1
 	for result in get_world_2d().direct_space_state.intersect_shape(query, 512):
 		var body: Object = result.collider
 		if body == null or seen.has(body) or not body.has_method("on_blast"):
 			continue
 		seen[body] = true
+		if body is Block and floori(body.global_position.y / Block.SIZE) == last_row:
+			continue  # an air strike leaves the bottom row of the map alone: a hole there is a pit to the void
 		if not body is Block and body.global_position.distance_to(global_position) > power.radius:
 			continue
 		body.on_blast(global_position, power)
+
+
+func _last_row() -> int:
+	var last := 0
+	for cell: Vector2i in Block.cells:
+		last = maxi(last, cell.y)
+	return last
 
 
 ## The crater is a random triangle (any rotation, each point 1.0 to 1+tri_reach times the radius

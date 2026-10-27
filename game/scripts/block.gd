@@ -11,11 +11,14 @@ const STONE_DEBRIS := Color("6c6e60")  # master palette: stone
 
 ## Tuning numbers live in design/entities/block.yaml (generated into GameData.BLOCK).
 var hp: int = GameData.BLOCK.hp
+var unbreakable := false  # nothing can break it: bullets, knife, blasts, air strikes (boss arena)
 var _sprite: AnimatedSprite2D
 var _stains: BloodStains
 var _chunks: BlockChunks
 var _cracks: AnimatedSprite2D
 var _debris_color := EARTH_DEBRIS
+
+static var cells := {}  # Vector2i tile -> Block, for every standing block (the debris lands on them)
 
 
 func setup(tile_anim: String, flip_h := false, flip_v := false, debris_color := EARTH_DEBRIS) -> Block:
@@ -36,6 +39,20 @@ func setup(tile_anim: String, flip_h := false, flip_v := false, debris_color := 
 	return self
 
 
+func _enter_tree() -> void:
+	cells[Vector2i(floori(position.x / SIZE), floori(position.y / SIZE))] = self
+
+
+func _exit_tree() -> void:
+	_unregister()
+
+
+func _unregister() -> void:
+	var cell := Vector2i(floori(position.x / SIZE), floori(position.y / SIZE))
+	if cells.get(cell) == self:
+		cells.erase(cell)
+
+
 ## A blood drop landed on this block (BloodDrops). `at` is in block space.
 func stain(at: Vector2, size: Vector2, color: Color) -> void:
 	if _stains == null:
@@ -54,16 +71,18 @@ func add_chunk(x: float, w: int, h: int, bump: int, color: Color) -> void:
 	_chunks.add(x, w, h, bump, color)
 
 
-func hit(damage: int, _direction := 0) -> void:
-	hp -= damage
-	if hp > 0:
-		_crack()
+## One hit takes one point (the damage number is ignored): the block cracks more each time and breaks on the last.
+func hit(_damage: int, _direction := 0) -> void:
+	if unbreakable:
 		Sfx.play(self, "block_hit", -10.0)
-		_sprite.modulate = Color(2, 2, 2)
-		create_tween().tween_property(_sprite, "modulate", Color.WHITE, 0.08)
 		return
-	Sfx.play(self, "block_break", -4.0)
-	destroy()
+	hp -= 1
+	if hp <= 0:
+		Sfx.play(self, "block_break", -4.0)
+		destroy()
+		return
+	Sfx.play(self, "block_hit", -10.0)
+	_crack()
 
 
 ## Cracks grow with the damage taken: the last stage shows one hit before the block breaks.
@@ -81,6 +100,12 @@ func _crack() -> void:
 	_cracks.animation = "crack_%d_%d" % [((int(position.x) * 73) ^ (int(position.y) * 151)) % patterns, stage]
 
 
+## The only way an unbreakable block goes: something that opens it on purpose (the boss arena's gate).
+func open() -> void:
+	unbreakable = false
+	destroy()
+
+
 ## Explosions: destroyed if the blast covers the block's center (the explosion plays the sound).
 func on_blast(center: Vector2, power: Dictionary) -> void:
 	var d := global_position.distance_to(center)
@@ -96,7 +121,7 @@ static func _in_triangle(p: Vector2, t: Array) -> bool:
 
 
 func destroy() -> void:
-	if is_queued_for_deletion():
+	if unbreakable or is_queued_for_deletion():
 		return
 	var walls = get_parent().get("walls")
 	if walls:
@@ -107,24 +132,8 @@ func destroy() -> void:
 			c.burst()
 		elif c is TreeDecor:
 			c.fall()
-	var debris := CPUParticles2D.new()
-	debris.one_shot = true
-	debris.amount = GameData.BLOCK.debris_amount
-	debris.lifetime = 0.6
-	debris.explosiveness = 1.0
-	debris.direction = Vector2.UP
-	debris.spread = 70.0
-	debris.initial_velocity_min = 60.0
-	debris.initial_velocity_max = 140.0
-	debris.gravity = Vector2(0, 500)
-	debris.scale_amount_min = 2.0
-	debris.scale_amount_max = 3.0
-	debris.color = _debris_color
-	debris.position = position
-	debris.z_index = 2
-	debris.finished.connect(debris.queue_free)
-	get_parent().add_child(debris)
-	debris.emitting = true
+	_unregister()  # the crumbs must not collide with the block they come from
+	DirtDebris.burst(get_parent(), position, _debris_color, GameData.BLOCK.debris_amount)
 	queue_free()
 
 
