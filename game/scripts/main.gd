@@ -81,6 +81,11 @@ func _ready() -> void:
 		var wpos := Vector2(cell.x * tile + tile / 2.0, cell.y * tile + tile / 2.0)
 		walls.add(wpos, _wall_anim(cell.x, cell.y, lv.get("biome", "earth")), (tile_hash(cell.x, cell.y) >> 5) & 1 == 1, (tile_hash(cell.x, cell.y) >> 6) & 1 == 1)
 		walls.reveal(wpos)
+	for zip: Dictionary in lv.get("zips", []):
+		var line := Zipline.new()
+		line.a = Vector2(zip.a.x * tile + tile / 2.0, zip.a.y * tile + tile / 2.0)
+		line.b = Vector2(zip.b.x * tile + tile / 2.0, zip.b.y * tile + tile / 2.0)
+		add_child(line)
 	_seal_arena(lv, tile)
 	_seal_trucks(rows)
 	move_child(player, -1)  # drawn and processed after the level
@@ -377,6 +382,35 @@ func _on_station_used(kind: String, station: HubStation) -> void:
 			player.refresh_stats()
 			hud.message({"mag": "BIGGER MAGAZINE", "rate": "FASTER FIRE", "speed": "FASTER RUNNING", "damage": "MORE DAMAGE"}[pick], Hud.GREEN, 2.0,
 					"%d SECONDS" % int(GameData.RUN.upgrade_time))
+		"W":
+			var pool := ["heart", "spare", "grenade", "size", "rate", "speed", "damage", "jump", "reload"]
+			if player.STATS.weapon == "raygun":
+				pool.erase("damage")  # the beam has its own damage
+			if player.STATS.weapon == "fists":
+				for gone in ["damage", "rate", "size", "spare", "reload"]:
+					pool.erase(gone)  # no gun to improve
+			if player.STATS.shells_start > 0:
+				pool.erase("reload")  # shell Bros load one shell at a time
+				pool.erase("spare")  # and carry no magazines
+			pool.shuffle()
+			var picker := PowerPicker.open(self, pool.slice(0, 3), "CHOOSE A PERK")
+			var pick: String = await picker.chosen
+			station.queue_free()
+			Run.add_perk(pick)
+			player.refresh_stats()
+			match pick:  # the new heart, magazine or grenade is already in hand
+				"heart":
+					player.hp = mini(player.hp + 1, player.STATS.max_hp)
+				"spare":
+					player.spare_mags = mini(player.spare_mags + 1, player.STATS.max_spare_mags)
+				"grenade":
+					Run.grenades = mini(Run.grenades + 1, Run.grenade_max())
+			_make_hud()  # new heart, magazine and grenade icons
+			player.hp_changed.emit(player.hp, player.STATS.max_hp)
+			player.ammo_changed.emit(player.ammo, player.spare_mags, false)
+			player.grenades_changed.emit(Run.grenades)
+			Sfx.play(self, "quota_reached", -6.0)
+			hud.message("PERK TAKEN", Hud.GREEN, 2.0, "FOR THE WHOLE RUN")
 		"A":
 			player.restock()
 			hud.message("AMMO RESTOCKED", Hud.GREEN, 1.5)

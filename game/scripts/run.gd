@@ -12,6 +12,7 @@ var level_index := 0  # unused now that levels are generated (kept for the hand-
 var depth := 0  # fights cleared this run; drives how big and tough the next level is
 var in_hub := false  # the safe house between boss levels
 var in_start := true  # the starting zone: walk to the box and be dealt three Bros (the game opens here)
+var perks := {}  # permanent safe-house perks of this run: kind -> how many were taken (see bro_stats)
 var upgrades := {}  # crate boosts running now: kind ("mag", "rate", "speed", "damage") -> seconds left (see bro_stats)
 var loadout := {}  # hearts and ammo carried from one level to the next (see store_loadout)
 var _current := {}  # the level being played: generated once, kept for restarts after a death
@@ -37,6 +38,8 @@ func bro_stats() -> Dictionary:
 		stats.merge(GameData.HEAVY, true)
 	elif character == "mib":
 		stats.merge(GameData.MIB, true)
+	elif character == "bruce":
+		stats.merge(GameData.BRUCE, true)
 	if upgrades.has("mag"):
 		if stats.shells_start > 0:
 			stats.shells_max = int(ceil(stats.shells_max * (1.0 + RULES.upgrade_mag)))
@@ -47,13 +50,36 @@ func bro_stats() -> Dictionary:
 	if upgrades.has("speed"):
 		stats.speed = stats.speed * (1.0 + RULES.upgrade_speed)
 		stats.speed_crouch = stats.speed_crouch * (1.0 + RULES.upgrade_speed)
-	stats.damage_mult = RULES.upgrade_damage if upgrades.has("damage") else 0.0
+	# permanent perks from the safe house (they stack, last the whole run and lift the usual limits)
+	stats.max_hp += perk("heart") * RULES.perk_heart
+	stats.max_spare_mags += perk("spare") * RULES.perk_spare
+	stats.magazines += perk("spare") * RULES.perk_spare
+	stats.grenades = (stats.grenades if stats.grenades > 0 else GameData.GRENADE.grenades_per_level) + perk("grenade") * RULES.perk_grenade
+	var size := 1.0 + perk("size") * RULES.perk_size
+	stats.magazine_size = int(ceil(stats.magazine_size * size))
+	if stats.shells_start > 0:
+		stats.shells_max = int(ceil(stats.shells_max * size))
+	stats.fire_interval = stats.fire_interval / (1.0 + perk("rate") * RULES.perk_rate)
+	stats.speed = stats.speed * (1.0 + perk("speed") * RULES.perk_speed)
+	stats.speed_crouch = stats.speed_crouch * (1.0 + perk("speed") * RULES.perk_speed)
+	stats.jump_velocity = stats.jump_velocity * (1.0 + perk("jump") * RULES.perk_jump)
+	stats.reload_time = stats.reload_time * maxf(0.34, 1.0 - perk("reload") * RULES.perk_reload)
+	stats.damage_mult = (RULES.upgrade_damage if upgrades.has("damage") else 0.0) + perk("damage") * RULES.perk_damage
 	return stats
 
 
 ## A crate boost (30 s): taking the same kind again starts its time over.
 func boost(kind: String) -> void:
 	upgrades[kind] = RULES.upgrade_time
+
+
+## A safe-house perk: permanent for the run, and it stacks.
+func add_perk(kind: String) -> void:
+	perks[kind] = perk(kind) + 1
+
+
+func perk(kind: String) -> int:
+	return perks.get(kind, 0)
 
 
 func _process(delta: float) -> void:
@@ -150,6 +176,7 @@ func go_to_start() -> void:
 func new_run() -> void:
 	in_start = false
 	upgrades = {}
+	perks = {}
 	level_index = 0
 	by_truck = false
 	depth = 0

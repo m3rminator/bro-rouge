@@ -15,6 +15,7 @@ const CHARACTERS := [
 	{"id": "sharif", "title": "SHARIF", "line": "SHOTGUNNER", "stats": GameData.SHARIF},
 	{"id": "heavy", "title": "HAMID", "line": "MINIGUNNER", "stats": GameData.HEAVY},
 	{"id": "mib", "title": "MIB", "line": "RAYGUNNER", "stats": GameData.MIB},
+	{"id": "bruce", "title": "BRUCE", "line": "MARTIAL ARTS", "stats": GameData.BRUCE},
 ]
 
 
@@ -64,6 +65,15 @@ static func build(id: String, at: Vector2) -> Node2D:
 		"RUN SPEED %d" % roundi(stats.speed),
 		"KNIFE %d HIT" % stats.get("knife_hits_plain", 1) + ("S" if stats.get("knife_hits_plain", 1) > 1 else ""),
 	]
+	if stats.weapon == "fists":
+		rows = [
+			"FISTS AND KICKS",
+			"COMBO 3 HITS",
+			"NO GUN NO AMMO",
+			"RUN SPEED %d" % roundi(stats.speed),
+			"DEFEND %d X %dS" % [stats.grenades, roundi(stats.defend_time)],
+			"KICK STUNS",
+		]
 	for r in rows.size():
 		_text(rows[r], Vector2(14, 98 + r * 10), PixelText.Align.LEFT, 1, Color("c9c7d6"), card)
 	return card

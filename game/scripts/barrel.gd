@@ -16,6 +16,9 @@ var exploded := false
 var _fuse := 0.0
 var _sprite: AnimatedSprite2D
 var _puff := 0.0
+var _vx := 0.0  # sideways speed while Bruce's blow has thrown it (otherwise it never moves sideways)
+var _thrown := false  # thrown and not landed yet
+var _thrown_air := false
 var _fall_speed := 0.0  # fastest fall of the current drop; a hard landing sets it burning
 
 
@@ -40,15 +43,25 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += STATS.gravity * delta
-	velocity.x = 0.0
+		if _thrown:
+			_thrown_air = true
+	if is_on_wall():
+		_vx = 0.0
+	velocity.x = _vx
+	if is_on_floor():
+		_vx = move_toward(_vx, 0.0, 500.0 * delta)
 	var falling := velocity.y > 40.0
 	_fall_speed = maxf(_fall_speed, velocity.y)
 	move_and_slide()
 	if falling:
 		_crush_below()
 	if is_on_floor():
-		if _fall_speed > 200.0:  # dropped from a height: it lights up on impact
+		if _fall_speed > 200.0 or _thrown_air:  # dropped from a height, or thrown by Bruce: it lights up on impact
 			ignite(0.3)
+		if _thrown_air:
+			collision_layer = 1
+			_thrown = false
+			_thrown_air = false
 		_fall_speed = 0.0
 	if burning:
 		_puff -= delta
@@ -58,6 +71,15 @@ func _physics_process(delta: float) -> void:
 		_fuse -= delta
 		if _fuse <= 0.0:
 			explode()
+
+
+## Bruce's blow: it flies `dir` at `speed` and is lifted by `hop` (negative is up), and lights up when it lands.
+func toss(dir: int, speed: float, hop: float) -> void:
+	_vx = dir * speed
+	velocity.y = hop
+	_thrown = true
+	_thrown_air = false
+	collision_layer = 0  # in flight it is solid to nothing, so the barrels thrown together do not stop each other
 
 
 ## A falling barrel crushes whoever is under it (the Bro bursts into gibs, see player.gd _crushed).

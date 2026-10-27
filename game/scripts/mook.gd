@@ -22,6 +22,7 @@ var _hunt_delay := 0.0  # idles this long before setting off, so the squad does 
 var _hunt_dir := 0
 var _hunt_wander := 0.0  # time until he picks a new way to go
 var _hunt_speed := 1.0  # each soldier has his own pace
+var _search := 0.0  # > 0 while he walks toward the Bro after hearing a comrade die
 
 
 func _ready() -> void:
@@ -42,6 +43,8 @@ func _think(delta: float) -> void:
 			_spot()
 		elif _hunting:
 			_hunt_step(delta)
+		elif _search > 0.0:
+			_search_step(delta)
 		else:
 			patrol_step(delta, stats.walk_speed)
 	else:
@@ -111,7 +114,38 @@ func _hunt_step(delta: float) -> void:
 		facing = _hunt_dir
 
 
+## A comrade died at `at`: if the Bro is on this soldier's screen and he has not seen him, he may go looking for him.
+func hear_death(at: Vector2) -> void:
+	var m: Dictionary = GameData.MOOK
+	if dead or state != State.PATROL or _hunting or _search > 0.0:
+		return
+	var p := player()
+	if p == null or absf(at.x - global_position.x) > m.hear_range or absf(at.y - global_position.y) > 135.0:
+		return
+	if absf(p.global_position.x - global_position.x) > 240.0 or absf(p.global_position.y - global_position.y) > 135.0:
+		return  # the Bro is not on his screen: he hears nothing
+	if randf() < m.hear_chance:
+		_search = m.search_time
+
+
+func _search_step(delta: float) -> void:
+	_search -= delta
+	var p := player()
+	if p == null:
+		_search = 0.0
+		return
+	if absf(p.global_position.x - global_position.x) < 20.0:
+		velocity.x = 0.0
+		return
+	facing = 1 if p.global_position.x >= global_position.x else -1
+	if is_on_floor() and (is_on_wall() or not ground_ahead()):
+		velocity.x = 0.0  # the way is blocked: he waits and looks
+		return
+	velocity.x = facing * stats.walk_speed * 2.0
+
+
 func _spot() -> void:
+	_search = 0.0
 	_behind = 0.0
 	state = State.ALERT
 	_timer = stats.reaction_time

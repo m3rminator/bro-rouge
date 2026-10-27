@@ -18,6 +18,8 @@ var _hearts: Array[AnimatedSprite2D] = []
 var _mags: Array[AnimatedSprite2D] = []  # one magazine icon per spare magazine (items/mag_hud)
 var _grenades: Array[AnimatedSprite2D] = []  # one grenade icon per grenade left (items/grenade_hud)
 var _lives := PixelText.make(Vector2(6, 6), PixelText.Align.LEFT)  # "X1": extra lives, right of the hearts
+var _player: Node  # Bruce's fury shows in the boost line
+var _fists := false  # Bruce has no gun: no ammo text
 var _ammo := PixelText.make(Vector2(6, 17), PixelText.Align.LEFT)
 var _boosts := PixelText.make(Vector2(6, 62), PixelText.Align.LEFT)  # running crate boosts and their seconds
 var _level := PixelText.make(Vector2(VIEW_W / 2.0, 4), PixelText.Align.CENTER)
@@ -81,11 +83,12 @@ func track(player: Node) -> void:
 		add_child(mag)
 		_mags.append(mag)
 	var icon_frames: SpriteFrames = ITEM_FRAMES
-	var icon: String = stats.explosive + "_hud"  # c4_hud, airstrike_hud, revolver_hud (the plain grenade has grenade_hud)
+	var icon: String = "shield_hud" if stats.explosive == "defend" else stats.explosive + "_hud"  # c4_hud, airstrike_hud, revolver_hud (the plain grenade has grenade_hud)
 	if stats.explosive == "disco":
 		icon_frames = load("res://assets/sprites/disco_grenade_frames.tres")
 	elif not ITEM_FRAMES.has_animation(icon):
 		icon = "grenade_hud"
+	_fists = stats.weapon == "fists"
 	for i in Run.grenade_max():
 		var g := AnimatedSprite2D.new()
 		g.sprite_frames = icon_frames
@@ -96,6 +99,10 @@ func track(player: Node) -> void:
 	player.grenades_changed.connect(_on_grenades_changed)
 	player.hp_changed.connect(_on_hp_changed)
 	player.ammo_changed.connect(_on_ammo_changed)
+	_player = player
+	if _fists:
+		player.fury_started.connect(func(): message("FURY", RED, 1.8, "TWO BLOWS KILL - BLOCKS ONE HIT"))
+		player.fury_ended.connect(func(): message("FURY BROKEN", YELLOW, 1.2))
 
 
 func show_level(number: int, loop: int, title: String) -> void:
@@ -146,8 +153,11 @@ func _process(delta: float) -> void:
 	var boosts := ""
 	for kind in Run.upgrades:
 		boosts += "%s %d  " % [names[kind], ceili(Run.upgrades[kind])]
-	_boosts.text = boosts
 	_boosts.color = GREEN
+	if _fists and _player != null and is_instance_valid(_player) and _player.fury_left() > 0.0:
+		boosts += "FURY %d" % ceili(_player.fury_left())
+		_boosts.color = RED
+	_boosts.text = boosts
 	_message_time -= delta
 	if _message_time <= 0.0 and _message.text != "":
 		_message.text = ""
@@ -179,6 +189,9 @@ func _on_grenades_changed(left: int) -> void:
 
 
 func _on_ammo_changed(in_mag: int, spare_mags: int, reloading: bool) -> void:
+	if _fists:
+		_ammo.text = ""
+		return
 	if _shell_icon != null:  # shells: icon and number, no magazines, no reload
 		_ammo.text = ""
 		_shell_count.text = str(in_mag)

@@ -23,7 +23,9 @@ var _jungle: Texture2D
 var _hills_fill := Color("263e52")
 var _jungle_fill := Color("0e1a24")
 var _clouds: Array[Dictionary] = []  # {tex, x (layer space), y (screen, ground level), v}
+var _fog: Array[Dictionary] = []  # {tex, x, lift (px above the layer's bottom), v, layer 0..2}
 var _time := 0.0
+const FOG_TINT := Color(0.74, 0.84, 0.88)
 
 
 func _init() -> void:
@@ -42,6 +44,7 @@ func _init() -> void:
 		_jungle_fill = _bottom_colour(_jungle, _jungle_fill)
 	if _sky and _hills and _forest and _jungle:
 		_make_clouds()
+		_make_fog()
 	else:
 		_canvas.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 
@@ -87,11 +90,13 @@ func _draw_background() -> void:
 	# A layer's bottom never rises above the bottom of the screen, so nothing flat shows under it.
 	var hills_bottom: float = view.y + climb * run.bg_hills_sink
 	_draw_strip(_hills, cam_x * run.bg_hills_parallax, hills_bottom - _hills.get_height(), view, false)
+	_draw_fog(0, view, cam_x * run.bg_hills_parallax, hills_bottom)
 	var forest_bottom: float = view.y + climb * run.bg_forest_sink
 	# The jungle is lifted 80 px so its tree tops rise above the forest; the clamp keeps its solid bottom behind
 	# the forest's solid part, so no flat colour or hills show through the forest's holes.
 	var jungle_bottom := maxf(view.y - 80.0 + climb * run.bg_jungle_sink, forest_bottom - 80.0)
 	_draw_strip(_jungle, cam_x * run.bg_jungle_parallax, jungle_bottom - _jungle.get_height(), view, false)
+	_draw_fog(1, view, cam_x * run.bg_jungle_parallax, jungle_bottom)
 	_draw_strip(_forest, cam_x * run.bg_forest_parallax, forest_bottom - _forest.get_height(), view, false)
 
 
@@ -188,4 +193,61 @@ func _cloud_texture(w: int) -> ImageTexture:
 			elif lit:
 				col = CLOUD_LIT
 			img.set_pixel(x, y, col)
+	return ImageTexture.create_from_image(img)
+
+
+# --- mist ---------------------------------------------------------------------------------------
+
+## Mist banks for the three depth layers. The far ones sit high up behind the hills and are faint; the near
+## ones hug the ground in front of the forest and are the thickest.
+func _make_fog() -> void:
+	var run := GameData.RUN
+	var lifts := [Vector2(75.0, 125.0), Vector2(60.0, 110.0), Vector2(42.0, 92.0)]  # how far above the layer's bottom, per layer
+	for layer in 2:  # only the two far layers - none in front of the nearest forest
+		for i in int(run.bg_fog_count):
+			var w := randi_range(200, 420)
+			_fog.append({
+				"tex": _fog_texture(w, randi_range(40, 70)),
+				"x": randf() * (480.0 + 300.0),
+				"lift": randf_range(lifts[layer].x, lifts[layer].y),
+				"v": run.bg_fog_drift * randf_range(0.2, 1.0) * (1.0 if randf() < 0.5 else -1.0),
+				"layer": layer,
+			})
+
+
+func _draw_fog(layer: int, view: Vector2, scroll: float, bottom: float) -> void:
+	var run := GameData.RUN
+	var span := view.x + 300.0  # banks wrap inside this width, one leaving as another enters
+	var strength: float = run.bg_fog_alpha * [0.5, 0.75, 1.0][layer]
+	for f in _fog:
+		if f.layer != layer:
+			continue
+		var tex: Texture2D = f.tex
+		var x := fposmod(f.x + _time * f.v - scroll, span + tex.get_width()) - tex.get_width() - 150.0
+		var y: float = bottom - f.lift - tex.get_height()
+		_canvas.draw_texture(tex, Vector2(roundf(x), roundf(y)), Color(FOG_TINT, strength))
+
+
+## One bank: a few big overlapping ellipses that thin out smoothly toward their edges (eight steps, so there is no
+## outline to see) and toward the top, so the mist lies low and has no shape of its own.
+func _fog_texture(w: int, h: int) -> ImageTexture:
+	var level := PackedFloat32Array()
+	level.resize(w * h)
+	for blob in randi_range(4, 6):
+		var rx := w * randf_range(0.25, 0.45)
+		var ry := h * randf_range(0.45, 0.8)
+		var cx := randf_range(rx * 0.6, w - rx * 0.6)
+		var cy := h * randf_range(0.6, 0.85)  # the heavy part sits low
+		var weight := randf_range(0.5, 1.0)
+		for y in h:
+			for x in w:
+				var d := pow((x + 0.5 - cx) / rx, 2.0) + pow((y + 0.5 - cy) / ry, 2.0)
+				if d < 1.0:
+					level[y * w + x] = maxf(level[y * w + x], pow(1.0 - d, 1.6) * weight)
+	var img := Image.create(w, h, false, Image.FORMAT_RGBA8)
+	for y in h:
+		for x in w:
+			var step := roundf(level[y * w + x] * 8.0)
+			if step > 0.0:
+				img.set_pixel(x, y, Color(1, 1, 1, step / 8.0))
 	return ImageTexture.create_from_image(img)

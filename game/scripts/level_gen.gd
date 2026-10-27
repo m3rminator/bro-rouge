@@ -15,6 +15,7 @@ extends RefCounted
 ## platforms - spread over the different heights, not along one line.
 
 const ROWS := 17  # same height as the hand-made maps
+const GROUP_REACH := 3  # soldiers on one row this many columns apart or closer count as standing together
 const GROUND_MIN := 5  # highest ground top row (hill tops)
 const GROUND_MAX := 13  # lowest ground top row (valley floors)
 const PIT_FLOOR := 14  # lowest a gap floor may go (gaps are 2 deep, so ground rows 13+ dig less)
@@ -22,12 +23,25 @@ const ARENA := 40  # a boss level ends with this many flat columns: the walled a
 const ARENA_GROUND := 12  # its ground top row (leaves room for the gallery above the Brute)
 const START_COLS := 12  # flat safe run-up at the left edge
 const END_COLS := 10  # flat run before the exit
+const SKYLINE_MIN_WIDTH := 90  # levels at least this wide get a skyline (two towers over a chasm) and underground rooms
+const CHASM_WIDTH := 14  # too wide to jump: the zipline between the tower tops is the way over
 const STEP_WIDTH := 3  # width of one stair tread
 const TITLES := ["Jungle Outpost", "Ruined Camp", "River Crossing", "Overgrown Road", "Bandit Ridge",
 		"Supply Depot", "Burnt Village", "Hidden Trail", "Rotting Bridge", "Smuggler's Run"]
 const R := GameData.RUN
 
 static var _gaps := {}  # columns that are gap floors in the level being built
+static var _reserved := {}  # columns taken by a skyline, so nothing else is built over it
+
+## Every level draws one of these "personalities": how many skylines (towers over a chasm or a street) and underground
+## rooms it gets per 100 columns, how many plain towers (multiplier), how much cover. It is what makes two levels feel
+## different even when the terrain dice fall alike.
+const PERSONAS := [
+	{"name": "Skyline District", "sky": 1.7, "caves": 0.4, "towers": 0.4, "barrels": 1.0, "titles": ["Rooftop Run", "High Wire", "Skyline Sprint", "Tower Row"]},
+	{"name": "Underground Network", "sky": 0.5, "caves": 1.8, "towers": 0.6, "barrels": 1.3, "titles": ["Mole Tunnels", "Under the Camp", "Burrow Road", "Deep Cellar"]},
+	{"name": "Jungle Sprawl", "sky": 0.9, "caves": 0.7, "towers": 1.4, "barrels": 0.8, "titles": ["Overgrown Road", "Hidden Trail", "Vine Ridge", "Canopy Walk"]},
+	{"name": "Fortified Ridge", "sky": 1.1, "caves": 1.0, "towers": 1.0, "barrels": 1.6, "titles": ["Bandit Ridge", "Supply Depot", "Burnt Village", "Smuggler's Run"]},
+]
 
 
 static func is_boss(depth: int) -> bool:
@@ -45,6 +59,8 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 	if boss:
 		width = mini(R.boss_width + R.width_per_depth * (depth / R.boss_every), R.width_max)
 	_gaps = {}
+	_reserved = {}
+	var persona: Dictionary = PERSONAS[rng.randi() % PERSONAS.size()]
 	var heights := _terrain(width, boss, rng)
 	var grid: Array = []
 	for y in ROWS:
@@ -52,8 +68,17 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 		for x in width:
 			row.append("#" if y >= heights[x] else ".")
 		grid.append(row)
-	var towers := 0 if boss else mini(R.platform_towers_base + int(R.platform_towers_per_depth * tier), R.platform_towers_max)
+	var towers := 0 if boss else mini(int((R.platform_towers_base + R.platform_towers_per_depth * tier) * persona.towers), R.platform_towers_max)
 	var walls := []  # shaft cells of the towers: back wall shows there
+	var zips := []  # ziplines across the chasms: {a: Vector2i, b: Vector2i} (the cells the Bro stands on at each end)
+	var extra := []  # enemy cells inside skyline streets and underground rooms
+	if not boss and width >= SKYLINE_MIN_WIDTH:
+		var skylines := maxi(1, roundi(width / 100.0 * persona.sky * rng.randf_range(0.7, 1.3)))
+		for i in skylines:
+			extra.append_array(_skyline(grid, heights, rng, START_COLS + 6, width - END_COLS - 8, walls, zips, rng.randf() < 0.4))
+		var rooms := maxi(1, roundi(width / 100.0 * persona.caves * rng.randf_range(0.7, 1.3)))
+		for i in rooms:
+			extra.append_array(_cave(grid, heights, rng, START_COLS + 6, width - END_COLS - 20, walls))
 	_towers(grid, heights, rng, towers, START_COLS + 2, width - (ARENA + 4 if boss else 16), walls)
 
 	var start_row: int = heights[3] - 1
@@ -92,17 +117,28 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 			sx -= 1
 		placed += 1
 	else:
-		_barrels(grid, taken, rng, R.barrel_clusters_base + int(R.barrel_clusters_per_depth * tier), 16, width - 10)
+		_barrels(grid, taken, rng, int((R.barrel_clusters_base + R.barrel_clusters_per_depth * tier) * persona.barrels), 16, width - 10)
 	var crate := _pick(_spots_by_row(grid, taken, START_COLS + 4, width - ARENA - 6 if boss else width - 12, 1), rng)  # the random crate (upgrade or another Bro)
 	if crate.x >= 0:
 		grid[crate.y][crate.x] = "U"
 		_take(taken, crate, 1)
 	var spots := _spots_by_row(grid, taken, 14, width - 10, 1)
+	var standing := {}  # Vector2i(x, row) of the soldiers placed so far, to keep the groups small
 	for i in enemies:
-		var spot := _pick(spots, rng)
+		var spot := Vector2i(-1, -1)
+		var limit := _group_limit(rng)  # this soldier may join a group of at most this many (1 = stands alone)
+		for attempt in 12:
+			spot = _pick(spots, rng)
+			if spot.x < 0 or _group_size(standing, spot) <= limit:
+				break
+			spot = Vector2i(-1, -1)
 		if spot.x < 0:
-			placed -= enemies - i
-			break
+			if _pick(spots, rng).x < 0:  # nothing left at all
+				placed -= enemies - i
+				break
+			placed -= 1  # no loose spot found for this one: he is left out
+			continue
+		standing[spot] = true
 		var roll := rng.randf()
 		var kind := "E"
 		if roll < kamikaze_share:
@@ -115,18 +151,31 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 		_take(taken, spot, 1)
 		_drop(spots, spot)
 
+	for spot: Vector2i in extra:
+		if _group_size(standing, spot) > _group_limit(rng):
+			continue  # streets and rooms obey the same group limit
+		standing[spot] = true
+		var roll := rng.randf()
+		grid[spot.y][spot.x] = "V" if roll < vest_share + 0.15 else ("K" if roll < vest_share + 0.15 + kamikaze_share else "E")
+		placed += 1
+	for zip: Dictionary in zips:  # the blocks a zipline is fixed to can never be broken
+		for end: Vector2i in [zip.a, zip.b]:
+			unbreakable.append(end + Vector2i(0, 1))
+			unbreakable.append(end + Vector2i(0, 2))
 	var rows: Array = []
 	for row in grid:
 		rows.append("".join(row))
 	var quota := placed if boss else mini(placed, ceili(placed * minf(R.quota_base + R.quota_per_depth * tier, R.quota_max)))
 	return {
 		"rows": rows,
-		"title": "Brute Arena" if boss else TITLES[rng.randi() % TITLES.size()],
+		"title": "Brute Arena" if boss else (persona.titles + TITLES)[rng.randi() % (persona.titles.size() + TITLES.size())],
+		"persona": persona.name,
 		"kill_quota": quota,
 		"kind": "boss" if boss else "level",
 		"depth": depth,
 		"biome": "stone" if rng.randf() < R.stone_biome_chance else "earth",
 		"walls": walls,
+		"zips": zips,
 		"unbreakable": unbreakable,
 		"stone": stone,
 		"arena": arena_info,
@@ -154,7 +203,7 @@ static func start_zone() -> Dictionary:
 
 ## The safe house between boss levels: a flat room with walls, the three stations and the door.
 static func hub() -> Dictionary:
-	var width := 38
+	var width := 42
 	var floor_row := 11
 	var rows: Array = []
 	for y in ROWS:
@@ -169,7 +218,8 @@ static func hub() -> Dictionary:
 	put.call(9, "A")  # three tiles apart: close together, but never in reach of two at once
 	put.call(12, "H")
 	put.call(15, "G")
-	put.call(20, "X")
+	put.call(18, "W")
+	put.call(23, "X")
 	return {"rows": rows, "title": "Safe House", "kill_quota": 0, "kind": "hub", "depth": -1}
 
 
@@ -181,7 +231,7 @@ static func hub() -> Dictionary:
 static func _terrain(width: int, boss: bool, rng: RandomNumberGenerator) -> PackedInt32Array:
 	var heights := PackedInt32Array()
 	heights.resize(width)
-	var h := 11
+	var h := 11 if boss else rng.randi_range(10, 12)
 	var x := 0
 	var last_was_gap := true  # no gap right at the start
 	var arena_set := false
@@ -273,6 +323,126 @@ static func _stairs(heights: PackedInt32Array, x: int, h: int, target: int, rng:
 	return [x, h]
 
 
+## Two towers with a chasm between them (it kills: there is no floor). The Bro cannot jump it, so he climbs the
+## first tower's shelves, takes the zipline across from the top of its wall to the top of the second tower's wall
+## and climbs down that one. Both towers have their wall on the chasm side and the open end facing away.
+## The ground is levelled where it stands. Adds the zipline to `zips`.
+static func _skyline(grid: Array, heights: PackedInt32Array, rng: RandomNumberGenerator, from: int, to: int, walls: Array, zips: Array, street: bool) -> Array:
+	var inner := rng.randi_range(8, 9)
+	var w := inner + 2
+	var total := 2 * w + CHASM_WIDTH + 6  # the towers, the chasm and a little ground each side
+	if to - from < total + 4:
+		return []
+	var x_start := -1
+	var g := 0
+	for attempt in 30:  # a spot where the ground on both sides is about as high as the towers will stand
+		var x := rng.randi_range(from, to - total)
+		if _span_reserved(x - 2, x + total + 2):
+			continue
+		var h: int = heights[x + total / 2]
+		if h >= 8 and h <= 12 and absi(heights[x - 1] - h) <= 1 and absi(heights[x + total] - h) <= 1 and not _gaps.has(x - 1) and not _gaps.has(x + total):
+			x_start = x
+			g = h
+			break
+	if x_start < 0:
+		return []
+	var tiers := 2 if g >= 11 else 1
+	var top := g - 3 * tiers - 3
+	if top < 2:
+		return []
+	for x in range(x_start, x_start + total):  # level the ground
+		for y in ROWS:
+			grid[y][x] = "#" if y >= g else "."
+		heights[x] = g
+		_gaps.erase(x)
+	var xa := x_start + 3  # tower A: open end on its left, wall on the right
+	_build_tower(grid, xa, g, inner, tiers, true, walls)
+	var xb := xa + w + CHASM_WIDTH  # tower B: wall on its left
+	_build_tower(grid, xb, g, inner, tiers, false, walls)
+	for x in range(x_start - 2, x_start + total + 2):
+		_reserved[x] = true
+	var spots := []
+	if street:  # no chasm: ground between the towers, with soldiers on it
+		for x in range(xa + w + 2, xb - 1, 3):
+			spots.append(Vector2i(x, g - 1))
+	else:
+		for x in range(xa + w, xb):  # the chasm: no floor at all
+			for y in ROWS:
+				grid[y][x] = "."
+			heights[x] = ROWS
+	zips.append({"a": Vector2i(xa + w - 1, top - 1), "b": Vector2i(xb, top - 1)})
+	return spots
+
+
+## Any column of x0..x1 already used by a skyline.
+static func _span_reserved(x0: int, x1: int) -> bool:
+	for x in range(x0, x1 + 1):
+		if _reserved.has(x):
+			return true
+	return false
+
+
+## Underground rooms: a trench ramp walks down from the ground (treads two wide, one block per step) into a
+## two-block-high room under a roof of earth, with enemies inside (their cells are returned). The dark back
+## wall shows in the room. Placed on flat ground that is clear above.
+static func _cave(grid: Array, heights: PackedInt32Array, rng: RandomNumberGenerator, from: int, to: int, walls: Array) -> Array:
+	var room_w := rng.randi_range(8, 18)
+	var tunnel := rng.randf() < 0.5  # a tunnel has a ramp up on the far side too: a way along under the ground
+	var length := 8 + room_w + (6 if tunnel else 0)  # ramp (three treads of two), the room, and the ramp out
+	if to - from < length + 6:
+		return []
+	for attempt in 40:
+		var x0 := rng.randi_range(from, to - length - 2)
+		var g: int = heights[x0 + length / 2]
+		if g > 12 or g < 6 or absi(heights[x0 - 3] - g) > 1 or absi(heights[x0 + length + 2] - g) > 1:
+			continue
+		var ok := true
+		if _span_reserved(x0 - 2, x0 + length + 2):
+			continue
+		for x in range(x0 - 2, x0 + length + 2):  # bare terrain only: no tower, chasm or earlier room in the way
+			if _gaps.has(x) or heights[x] >= ROWS:
+				ok = false
+				break
+			for y in ROWS:
+				if (grid[y][x] == "#") != (y >= heights[x]):
+					ok = false
+					break
+			if not ok:
+				break
+		if not ok:
+			continue
+		for x in range(x0 - 2, x0 + length + 2):  # level the ground
+			for y in ROWS:
+				grid[y][x] = "#" if y >= g else "."
+			heights[x] = g
+		for k in range(1, 4):  # the ramp: tread k is two columns, floor row g + k
+			for dx in 2:
+				for y in range(g, g + k):
+					grid[y][x0 + 2 * (k - 1) + dx] = "."
+				for y in range(g, g + k):
+					walls.append(Vector2i(x0 + 2 * (k - 1) + dx, y))
+		var rx := x0 + 6  # the room: air g+1..g+2 under the roof (row g), floor row g + 3
+		var spots := []
+		for x in range(rx, rx + room_w + 2):
+			for y in [g + 1, g + 2]:
+				grid[y][x] = "."
+				walls.append(Vector2i(x, y))
+			if x >= rx + 3 and (x - rx) % 3 == 0:
+				spots.append(Vector2i(x, g + 2))
+		if tunnel:  # the way out on the far side: the same ramp mirrored
+			var xr := rx + room_w + 2
+			for k in range(3, 0, -1):
+				for dx in 2:
+					var cx := xr + 2 * (3 - k) + dx
+					for y in range(g, g + k):
+						grid[y][cx] = "."
+						walls.append(Vector2i(cx, y))
+		for x in range(x0 - 2, x0 + length + 2):
+			_reserved[x] = true
+		return spots
+	return []
+
+
 ## Earth towers standing on the ground - nothing floats. A tower is a tall wall of earth (two blocks thick) with
 ## shelves of earth growing out of it like stairs: the lowest is long, each one above is shorter, three rows
 ## higher. The side facing away from the wall is open, so he just walks in at the bottom and climbs shelf by
@@ -285,7 +455,7 @@ static func _towers(grid: Array, heights: PackedInt32Array, rng: RandomNumberGen
 			var inner := rng.randi_range(8, 10)  # shelf depth, from the open end to the wall
 			var w := inner + 2
 			var x0 := rng.randi_range(from, maxi(from, to - w))
-			if x0 < 4 or x0 + w + 4 >= heights.size():
+			if x0 < 4 or x0 + w + 4 >= heights.size() or _span_reserved(x0 - 3, x0 + w + 3):
 				continue
 			var g: int = heights[x0]
 			var flat := true
@@ -297,24 +467,32 @@ static func _towers(grid: Array, heights: PackedInt32Array, rng: RandomNumberGen
 			var top := g - 3 * tiers - 3
 			if not flat or top < 2 or not _free_box(grid, x0, top - 1, w, g - top + 1):
 				continue
-			var far_right := rng.randf() < 0.5
-			var col := func(c: int) -> int:  # c = blocks in from the open end (the wall is at c = inner, inner + 1)
-				return x0 + c if far_right else x0 + w - 1 - c
-			for y in range(top, g):
-				for c in range(inner, w):
-					grid[y][col.call(c)] = "#"
-				for c in inner:
-					walls.append(Vector2i(col.call(c), y))
-			var shelf := inner - 2  # length of the lowest shelf
-			for k in tiers:
-				var row := g - 3 - 3 * k
-				for c in range(inner - shelf, inner):
-					grid[row][col.call(c)] = "#"
-				grid[row + 2][col.call(inner - shelf - 1)] = "#"  # step stone at its open end, on the level below
-				if k == tiers - 1:
-					grid[row - 1][col.call(inner - 1)] = "#"  # stone against the wall: the way out over its top
-				shelf -= 2
+			_build_tower(grid, x0, g, inner, tiers, rng.randf() < 0.5, walls)
 			break
+
+
+## Builds one tower (see _towers) with its open end at column x0 (far_right: the wall is on the right) on ground row g.
+## Returns the row of the top of its wall, where the Bro stands when he climbs out.
+static func _build_tower(grid: Array, x0: int, g: int, inner: int, tiers: int, far_right: bool, walls: Array) -> int:
+	var w := inner + 2
+	var top := g - 3 * tiers - 3
+	var col := func(c: int) -> int:  # c = blocks in from the open end (the wall is at c = inner, inner + 1)
+		return x0 + c if far_right else x0 + w - 1 - c
+	for y in range(top, g):
+		for c in range(inner, w):
+			grid[y][col.call(c)] = "#"
+		for c in inner:
+			walls.append(Vector2i(col.call(c), y))
+	var shelf := inner - 2  # length of the lowest shelf
+	for k in tiers:
+		var row := g - 3 - 3 * k
+		for c in range(inner - shelf, inner):
+			grid[row][col.call(c)] = "#"
+		grid[row + 2][col.call(inner - shelf - 1)] = "#"  # step stone at its open end, on the level below
+		if k == tiers - 1:
+			grid[row - 1][col.call(inner - 1)] = "#"  # stone against the wall: the way out over its top
+		shelf -= 2
+	return top
 
 
 ## The boss arena's gallery, built from column `a` on ground row `g`. From the left: a hill (stairs up, a
@@ -434,6 +612,30 @@ static func _pick(by_row: Dictionary, rng: RandomNumberGenerator) -> Vector2i:
 			break
 	var list: Array = by_row[chosen]
 	return list[rng.randi() % list.size()]
+
+
+## How many soldiers one may stand with: mostly alone or in pairs, sometimes three - never more.
+static func _group_limit(rng: RandomNumberGenerator) -> int:
+	var roll := rng.randf()
+	return 1 if roll < 0.4 else (2 if roll < 0.75 else 3)
+
+
+## The size of the group a soldier at `spot` would join: soldiers on the same row, each within GROUP_REACH columns of the next.
+static func _group_size(standing: Dictionary, spot: Vector2i) -> int:
+	var count := 1
+	for way in [-1, 1]:
+		var cur: int = spot.x
+		while true:
+			var found := false
+			for d in range(1, GROUP_REACH + 1):
+				if standing.has(Vector2i(cur + way * d, spot.y)):
+					cur += way * d
+					count += 1
+					found = true
+					break
+			if not found:
+				break
+	return count
 
 
 ## Keep things a column apart: remove the neighbours of a used spot from the candidates.

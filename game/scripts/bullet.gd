@@ -111,6 +111,15 @@ func _pierce(body: Node) -> void:
 		body.hit(stats.damage, direction)
 
 
+## Bruce's fist or foot meets it: the bullet is destroyed on the spot.
+func deflect() -> void:
+	if is_queued_for_deletion():
+		return
+	_spark()
+	Sfx.play(self, "block_hit", -8.0)
+	queue_free()
+
+
 func _spark() -> void:
 	var spark := AnimatedSprite2D.new()
 	spark.sprite_frames = FRAMES

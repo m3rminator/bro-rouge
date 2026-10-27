@@ -34,6 +34,8 @@ var _bumped := false  # the Bro is walking through this body right now
 var _dead_anim := "dead"  # lying pose; sprites with two (dead_a / dead_b) get one at random per body
 var counts_kill := true  # false for soldiers dropped in by the boss: they are extra, the quota does not count them
 var tears_apart := true  # a blast rips the body into pieces (BodyPiece); kamikazes keep theirs for the fuse
+var _punched := 0.0  # share of his health Bruce's blows have taken (a full 1.0 kills); forgotten after 3 s
+var _punch_at := -100.0
 var _stab_hits := 0  # knife hits taken that did not kill (a slower knife needs knife_hits of them)
 var _shoved := 0.0  # > 0 while sliding back from a knife hit he survived (no AI meanwhile)
 var _stunned := 0.0  # > 0 while stunned by a melee hit (design/entities/stun.yaml): blinks white, birds over the head
@@ -61,6 +63,8 @@ func _ready() -> void:
 	add_to_group("enemies")
 	z_index = 2
 	hp = stats.hp
+	if not get_script().resource_path.ends_with("brute.gd"):
+		hp = ceili(hp * (1.0 + GameData.RUN.enemy_hp_per_loop * (Run.loop - 1)))  # tougher every boss loop
 	if sprite_name != "":
 		sprite.position.y = Block.SIZE / 2.0 - GameData.SPRITE_SIZES[sprite_name].y / 2.0
 		eye += Vector2(0, sprite.position.y)
@@ -502,6 +506,39 @@ func stab(direction: int, boss_damage: int, knockback: float, hop: float, blood:
 	return false
 
 
+## One of Bruce's blows (player.gd). An ordinary enemy takes `share` of his health and dies when the shares add up to
+## all of it; a boss takes `boss_damage`. The blow shoves him back (`knock`, `hop`) and a kick that does not kill stuns
+## him. Returns true if this blow killed him.
+func punched(share: float, boss_damage: int, direction: int, knock: float, hop: float, stun_time: float) -> bool:
+	if dead:
+		return false
+	var now := Time.get_ticks_msec() / 1000.0
+	if now - _punch_at > 3.0:
+		_punched = 0.0
+	_punch_at = now
+	var mass: float = stats.get("mass", 1.0)
+	var chest := global_position + Vector2(0, Block.SIZE / 2.0 - stats.hitbox[1] * 0.6)
+	if is_in_group("bosses"):
+		hit(boss_damage, direction)
+		if not dead:
+			velocity.x = direction * knock * 0.2 / mass
+			_shoved = 0.12
+		return dead
+	_punched += share
+	if _punched >= 0.999:
+		hit(hp, direction)
+		if dead:
+			Blood.knife_kill(get_parent(), chest, direction, 20)
+			velocity = Vector2(direction * knock / mass, hop / mass)
+		return dead
+	hit(0, direction)  # blood and the white flash, no damage of its own
+	velocity = Vector2(direction * knock / mass, hop / mass)
+	_shoved = maxf(0.12, stun_time)
+	if stun_time > 0.0:
+		_stun(stun_time)
+	return false
+
+
 func _shot_body(direction: int) -> void:
 	var dir := direction if direction != 0 else 1
 	var mass: float = stats.get("mass", 1.0)
@@ -604,9 +641,15 @@ func die(direction: int) -> void:
 	show_alert(false)
 	if counts_kill:
 		Run.add_kill()
+	get_tree().call_group("enemies", "hear_death", global_position)
 	Blood.burst(get_parent(), global_position + Vector2(0, Block.SIZE / 2.0 - stats.hitbox[1] / 2.0))
 	Sfx.play(self, "blood_splat", -6.0)
 	_on_death(direction)
+
+
+## Another soldier died at `at` (soldiers override this to go and look).
+func hear_death(_at: Vector2) -> void:
+	pass
 
 
 func _on_hurt(_direction: int) -> void:

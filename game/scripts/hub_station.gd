@@ -11,6 +11,7 @@ const KINDS := {
 	"H": {"title": "LIVES", "prompt": "E REFILL LIVES", "color": Color("e85a50")},
 	"G": {"title": "GRENADES", "prompt": "E REFILL GRENADES", "color": Color("7cc04e")},
 	"R": {"title": "BRO BOX", "prompt": "E OPEN THE BOX", "color": Color("b07be0")},
+	"W": {"title": "POWER-UP", "prompt": "E CHOOSE A POWER-UP", "color": Color("ff9a3c")},
 	"U": {"title": "CRATE", "prompt": "E OPEN THE CRATE", "color": Color("4ec8d8")},
 }
 ## The three supply stations are drawn as the crate sprites (art/sprites/crate_*.yaml), 30x27, flat bottom on the ground.

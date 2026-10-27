@@ -12,6 +12,10 @@ signal grenades_changed(left: int)
 const BULLET_MASK := 1 | 4 | 8  # world (blocks, barrels) + enemies + bodies
 const KNIFE_MASK := 4 | 8  # enemies + bodies
 const KNIFE_HIT_FRAME := 3  # first arm-up frame of the "knife" animation
+const ZIP_START := 90.0  # px/s when he first grabs the cable
+const ZIP_ACCEL := 70.0  # px/s per second while it speeds him up
+const ZIP_BRAKE := 320.0  # px/s per second when he steers against the way he goes
+const ZIP_KEEP_TIME := 1.6  # seconds the speed is remembered after a jump off the cable
 const MANTLE_TIME := 0.22  # climbing onto a one-block step under a low ceiling
 
 @onready var sprite: AnimatedSprite2D = $Sprite
@@ -49,6 +53,35 @@ var _clinging := false  # knife stuck in the side of a block: hangs, then slides
 var _cling_time := 0.0
 var _cling_side := 0  # which side the wall is on (+1 right, -1 left)
 var _cling_cooldown := 0.0  # no re-grab right after letting go
+var riding := false  # on a zipline
+var zip_load := 0.0  # 0..1, how much of his weight the cable carries (eases in and out)
+var _zip_spark := 0.0
+var zip_cooldown := 0.0  # no grabbing the cable again right after getting off
+var _zip_a := Vector2.ZERO  # the cable: left end, right end, how far along it he is and how fast he goes (signed)
+var _zip_b := Vector2.ZERO
+var _zip_x := 0.0
+var _zip_v := 0.0
+var _zip_saved_v := 0.0  # the speed he jumped off with, kept for a moment in case he lands on the cable again
+var _zip_saved_t := 0.0
+var _zip_roll := 0.0  # > 0 while the roll off the cable plays in the air
+var _fist := -1  # Bruce: the swing playing now (0 jab, 1 cross, 2 kick), -1 none
+var _fist_anim := "jab"  # the animation of the swing playing (crouch_jab when crouched)
+var _fist_low := false  # the swing is the crouched jab: lowered hitbox, no lunge, no chain
+var _fist_t := 0.0  # seconds into it (runs faster in fury)
+var _fist_struck := false
+var _fist_next := 0  # the swing the next press throws - the combo chain
+var _fist_queued := 0.0  # > 0: a press is waiting to chain into the next swing
+var _fist_idle := 0.0  # seconds since the last swing ended
+var _combo_target: Enemy = null  # the enemy the running combo has been hitting, and how many of its blows landed on him
+var _combo_hits := 0
+signal fury_started
+signal fury_ended
+var _fury := 0.0  # > 0 after a finished full combo: swings faster, two blows kill
+var _heal_kills := 0  # finishers toward the next half heart
+var _half_hearts := 0
+var _shield := 0.0  # > 0 while Bruce's defend is up: nothing can hurt him
+var _defend_cd := 0.0
+var _shield_icon: AnimatedSprite2D
 var _mantle := 0.0  # seconds left of climbing onto a step (he crouches and rises, then crawls on)
 var _mantle_from := Vector2.ZERO
 var _mantle_to := Vector2.ZERO
@@ -129,6 +162,10 @@ func switch_character() -> void:
 	_revolver = -1.0
 	_heat = 0
 	_overheat = 0.0
+	_fist = -1
+	_knifing = false
+	_shield = 0.0
+	Run.grenades = mini(Run.grenades, Run.grenade_max())
 	_apply_look()
 	sprite.play("idle")
 	hp_changed.emit(hp, STATS.max_hp)
@@ -150,6 +187,13 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	zip_cooldown -= delta
+	_zip_saved_t -= delta
+	_zip_roll -= delta
+	zip_load = move_toward(zip_load, 1.0 if riding else 0.0, delta * 5.0)
+	if riding:
+		_zip_step(delta)
+		return
 	if not is_on_floor():
 		velocity.y += STATS.gravity * delta
 	if dead or frozen:
@@ -178,13 +222,13 @@ func _physics_process(delta: float) -> void:
 	if _clinging:
 		_cling_process(delta, dir)
 		return
-	if Input.is_action_just_pressed("knife") and _revolver < 0.0:
+	if Input.is_action_just_pressed("knife") and _revolver < 0.0 and not _fists():
 		_start_knife()
 	_revolver_step(delta, dir)
 	_crouch_knife_step(delta)
 	if _explosive_is_c4():
 		_c4_input(delta)
-	elif Input.is_action_just_pressed("grenade") and not _knifing:
+	elif Input.is_action_just_pressed("grenade") and (not _knifing or _fist >= 0):
 		_throw_grenade()
 	if not _knifing:
 		_update_stance()
@@ -193,6 +237,10 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0.0, 400.0 * delta)
 	elif _revolver >= 0.0:
 		velocity.x = 0.0  # the revolver is out: he does not move
+	elif _fist >= 0:
+		if is_on_floor():  # a short step into every punch, planted otherwise
+			var lunging: bool = not _fist_low and _fist_t >= STATS.fist_hit_time - 0.05 and _fist_t <= STATS.fist_hit_time + 0.05
+			velocity.x = facing * STATS.fist_lunge / 0.1 if lunging else 0.0
 	elif _knifing:
 		velocity.x = dir * STATS.knife_speed if signf(dir) == facing else 0.0  # shuffles forward, never turns mid-slash
 	else:
@@ -266,8 +314,10 @@ func _physics_process(delta: float) -> void:
 	if _burst_gap > STATS.burst_reset:
 		_burst_shots = 0
 	_update_reload(delta)
+	if _fists():
+		_fist_step(delta)
 	var spun_up := _windup_step(delta, Input.is_action_pressed("shoot") and _reload <= 0.0 and not _knifing and ammo > 0 and _overheat <= 0.0)
-	if Input.is_action_pressed("shoot") and fire_cooldown <= 0.0 and _reload <= 0.0 and not _knifing and _revolver < 0.0 and _overheat <= 0.0:
+	if not _fists() and Input.is_action_pressed("shoot") and fire_cooldown <= 0.0 and _reload <= 0.0 and not _knifing and _revolver < 0.0 and _overheat <= 0.0:
 		if ammo > 0:
 			if spun_up:
 				_shoot()
@@ -301,7 +351,14 @@ func _feet() -> Vector2:
 
 
 func hit(damage: int, direction := 0) -> void:
-	if dead or frozen or _invulnerable > 0.0:
+	if dead or frozen or _invulnerable > 0.0 or _shield > 0.0:
+		return
+	if _fury > 0.0:  # fury takes one hit for him, and ends
+		_fury = 0.0
+		_invulnerable = STATS.invulnerable_time
+		Sfx.play(self, "player_hurt", -4.0)
+		shake(3.0)
+		fury_ended.emit()
 		return
 	hp = maxi(hp - damage, 0)
 	hp_changed.emit(hp, STATS.max_hp)
@@ -378,6 +435,11 @@ func freeze() -> void:
 
 func _die(direction: int) -> void:
 	dead = true
+	_shield = 0.0
+	_fist = -1
+	sprite.modulate = Color.WHITE
+	if _shield_icon != null:
+		_shield_icon.queue_free()
 	_knifing = false
 	sprite.visible = true
 	collision_layer = 0
@@ -432,7 +494,11 @@ func _shoot(aim := 0) -> void:
 		_burst_shots += 1
 	elif _dir == 0.0:
 		_burst_shots = 0
-	var angle := randf_range(-STATS.base_spread, STATS.base_spread)  # the gun's own sloppiness
+	var running_shot: bool = _dir != 0.0 and is_on_floor() and STATS.weapon != "raygun"  # shooting on the run: bullets fly fast and wobble more
+	var spread: float = STATS.base_spread
+	if running_shot:  # a small spread even for a perfect gun, and a multiple of the gun's own for the rest
+		spread = maxf(spread, GameData.RUN.run_spread_min) * GameData.RUN.run_spread_mult
+	var angle := randf_range(-spread, spread)  # the gun's own sloppiness
 	if _burst_shots > STATS.spread_after:
 		angle += randf_range(-STATS.spread_degrees, STATS.spread_degrees)
 		if _shout_timer <= 0.0:
@@ -449,7 +515,7 @@ func _shoot(aim := 0) -> void:
 		shake(GameData.RAYGUN.shake)
 		_kick_due = sprite.sprite_frames.has_animation("run_recoil")
 	for i in pellets:  # a shotgun throws several pellets in a fan, each a little different
-		var pellet := _bullet_stats
+		var pellet := _bullet_stats.duplicate() if running_shot else _bullet_stats
 		var fan := 0.0
 		if STATS.pellets > 1 or STATS.damage_mult > 0.0:
 			pellet = _bullet_stats.duplicate()
@@ -459,6 +525,9 @@ func _shoot(aim := 0) -> void:
 		if STATS.pellets > 1:
 			fan = randf_range(-STATS.pellet_spread, STATS.pellet_spread)
 			pellet.speed *= randf_range(1.0 - STATS.pellet_speed_var, 1.0)
+		if running_shot:  # twice as fast, half the time in the air: the same range
+			pellet.speed *= GameData.RUN.run_bullet_speed
+			pellet.lifetime /= GameData.RUN.run_bullet_speed
 		Bullet.spawn(get_parent(), position + muzzle, aim_dir, pellet, "bro_shot", BULLET_MASK, angle + fan)
 	(_flash_2 if two_guns and _gun == 1 else flash).fire(muzzle, aim_dir)
 	Sfx.play(self, STATS.shot_sound, -8.0)
@@ -494,6 +563,8 @@ func _windup_step(delta: float, held: bool) -> bool:
 
 
 func _start_reload() -> void:
+	if _fists():
+		return
 	if _uses_shells():
 		return
 	if _reload > 0.0 or spare_mags <= 0 or ammo >= STATS.magazine_size:
@@ -541,6 +612,9 @@ func _c4_input(delta: float) -> void:
 
 
 func _throw_grenade() -> void:
+	if _fists():
+		_defend()
+		return
 	if Run.grenades <= 0 or _stagger > 0.0:
 		return
 	if STATS.explosive == "airstrike":
@@ -734,11 +808,12 @@ func _knife_strike() -> void:
 
 ## No enemy in reach: the blade bites into the nearest block in front and breaks it in one
 ## stab (every character; the numbers come from the knife range only).
-func _knife_block() -> bool:
+func _knife_block(reach := -1.0) -> bool:
+	var length: float = reach if reach > 0.0 else STATS.knife_range
 	var best: Block = null
 	for dy in [-8.0, 6.0]:  # chest and belt height
 		var from := global_position + Vector2(0, dy)
-		var query := PhysicsRayQueryParameters2D.create(from, from + Vector2(facing * (STATS.knife_range + 6.0), 0), 1)
+		var query := PhysicsRayQueryParameters2D.create(from, from + Vector2(facing * (length + 6.0), 0), 1)
 		var result := get_world_2d().direct_space_state.intersect_ray(query)
 		if not result.is_empty() and result.collider is Block:
 			if best == null or absf(result.collider.global_position.x - global_position.x) < absf(best.global_position.x - global_position.x):
@@ -890,7 +965,7 @@ func _kick_off_wall() -> void:
 
 
 func _update_animation(dir: float) -> void:
-	sprite.speed_scale = 1.0
+	sprite.speed_scale = (STATS.fury_speed if _fury > 0.0 else 1.0) if _fist >= 0 else 1.0
 	if _knifing or _clinging:
 		return
 	if _revolver >= 0.0:
@@ -900,6 +975,8 @@ func _update_animation(dir: float) -> void:
 		return
 	if _flipping > 0.0 and not is_on_floor():
 		return  # the somersault plays out
+	if _zip_roll > 0.0 and not is_on_floor():
+		return  # the roll off the zipline plays out
 	if _rolling and sprite.animation == "roll" and is_on_floor() and dir != 0.0 and shooting <= 0.0 and not Input.is_action_pressed("shoot"):
 		return  # the landing roll plays out (stopping, shooting or jumping cuts it short)
 	_rolling = false
@@ -926,6 +1003,8 @@ func _update_animation(dir: float) -> void:
 			anim = "run_recoil"
 	elif shooting > 0.0:
 		anim = "shoot"
+	if _shield > 0.0 and is_on_floor() and not crouching and dir == 0.0 and sprite.sprite_frames.has_animation("defend"):
+		anim = "defend"  # both fists up while shielded and standing
 	if _reload > 0.0 and is_on_floor() and not crouching and sprite.sprite_frames.has_animation("reload"):
 		anim = "reload"  # the gun bobs while the belt is swapped (optional art)
 		var frames := sprite.sprite_frames
@@ -1006,6 +1085,73 @@ func _step_up(side: int) -> bool:
 	velocity = Vector2.ZERO
 	_set_stance(true)  # crouched while he climbs; the stance clears itself afterwards if there is room
 	return true
+
+
+## Grabs the zipline handle (zipline.gd calls this): the cable runs from `a` to `b` (a is the left end) and he
+## starts at his own x on it, heading `hint` (1 = toward b). If he just jumped off, he keeps the speed he had.
+func start_zip(a: Vector2, b: Vector2, hint: int) -> void:
+	riding = true
+	_zip_a = a
+	_zip_b = b
+	_zip_x = clampf(global_position.x - a.x, 0.0, b.x - a.x)
+	_zip_v = _zip_saved_v if _zip_saved_t > 0.0 else hint * ZIP_START
+	var held := Input.get_axis("move_left", "move_right")
+	if _zip_saved_t > 0.0 and held != 0.0 and signf(_zip_v) != held:
+		_zip_v = held * absf(_zip_v)  # he turned around in the air: he rides the way he is holding, with the speed he had
+	_zip_saved_t = 0.0
+	_zip_roll = 0.0
+	_clinging = false
+	_recoil = 0.0
+	velocity = Vector2.ZERO
+	facing = 1 if _zip_v > 0.0 else -1
+	sprite.flip_h = facing < 0
+	sprite.play("jump")
+	Sfx.play(self, "jump", -6.0)
+
+
+## On the cable: it carries him at _zip_v. Left/Right turn him around - the speed drops to nothing first, then builds
+## up the other way; letting go of the keys, it builds back up. Jump lets go (he keeps the speed in the air, and
+## keeps it if he lands on the cable again soon). The ends of the cable put him down.
+func _zip_step(delta: float) -> void:
+	if dead:
+		riding = false
+		return
+	var span := _zip_b.x - _zip_a.x
+	var steer := Input.get_axis("move_left", "move_right")
+	var top: float = GameData.RUN.zip_speed
+	if steer != 0.0 and signf(_zip_v) != steer and _zip_v != 0.0:
+		_zip_v = move_toward(_zip_v, 0.0, ZIP_BRAKE * delta)  # braking against the way he goes
+	else:
+		var way := steer if steer != 0.0 else signf(_zip_v)
+		_zip_v = move_toward(_zip_v, way * top, ZIP_ACCEL * delta)
+	if _zip_v != 0.0:
+		facing = 1 if _zip_v > 0.0 else -1
+		sprite.flip_h = facing < 0
+	if Input.is_action_just_pressed("jump"):  # lets go and jumps, carrying the speed
+		riding = false
+		_zip_saved_v = _zip_v
+		_zip_saved_t = ZIP_KEEP_TIME
+		zip_cooldown = 0.25
+		velocity = Vector2(0.0, STATS.jump_velocity)
+		_recoil = _zip_v  # the speed carries on through the air
+		Sfx.play(self, "jump", -4.0)
+		if sprite.sprite_frames.has_animation("roll"):  # the jump off the cable is a roll through the air
+			_zip_roll = sprite.sprite_frames.get_frame_count("roll") / sprite.sprite_frames.get_animation_speed("roll")
+			sprite.play("roll")
+		return
+	_zip_x += _zip_v * delta
+	var t := clampf(_zip_x / span, 0.0, 1.0)
+	position = _zip_a.lerp(_zip_b, t) + Vector2(0, sin(t * PI) * 6.0 + Zipline.DIP * zip_load)  # hangs lower as the cable takes his weight
+	velocity = Vector2.ZERO
+	_zip_spark -= delta
+	if _zip_spark <= 0.0 and absf(_zip_v) > 5.0:
+		_zip_spark = randf_range(0.03, 0.08)
+		ZipSparks.emit(get_parent(), position + Vector2(-facing * 2.0, -19.0), -facing)  # the handle scraping the cable above his head
+	if _zip_x <= 0.0 or _zip_x >= span:  # the end of the cable
+		riding = false
+		zip_cooldown = 0.6
+		_zip_saved_t = 0.0
+		position = _zip_a if _zip_x <= 0.0 else _zip_b
 
 
 ## Rises first, then edges over onto the step, in the crouch pose.
@@ -1128,3 +1274,221 @@ func _on_animation_finished() -> void:
 	if sprite.animation == "knife":
 		_knifing = false
 		_update_animation(_dir)
+
+
+# --- Bruce: fists and the defend shield ------------------------------------------------------------
+
+func _fists() -> bool:
+	return STATS.weapon == "fists"
+
+
+const FIST_ANIMS := ["jab", "cross", "kick"]
+
+
+## Every physics frame for Bruce: cooldowns, the shield, queued presses, the swing in progress.
+func _fist_step(delta: float) -> void:
+	_defend_cd -= delta
+	_fury = maxf(_fury - delta, 0.0)
+	_shield_step(delta)
+	if _shield <= 0.0:
+		sprite.modulate = Color(1.35, 0.75, 0.7) if _fury > 0.0 else Color.WHITE  # a red glow while in fury
+	if _fist >= 0 and not _knifing:  # cancelled from outside (death, level clear, new Bro)
+		_fist = -1
+	_fist_queued -= delta
+	if Input.is_action_just_pressed("shoot"):
+		_fist_queued = STATS.fist_buffer
+	elif Input.is_action_pressed("shoot"):
+		_fist_queued = maxf(_fist_queued, 0.05)  # held: chains on and on
+	if _fist < 0:
+		_fist_idle += delta
+		if _fist_idle > STATS.fist_reset:
+			_fist_next = 0
+			_combo_target = null
+			_combo_hits = 0
+		if _fist_queued > 0.0 and _stagger <= 0.0 and not _clinging and not riding and not frozen and _revolver < 0.0:
+			_fist_queued = 0.0
+			_start_fist(0 if crouching else _fist_next)  # crouched he has the jab and nothing else
+		return
+	_fist_t += delta * (STATS.fury_speed if _fury > 0.0 else 1.0)
+	if not _fist_struck and _fist_t >= STATS.fist_hit_time:
+		_fist_struck = true
+		_fist_strike()
+	if _fist_t >= STATS.fist_hit_time and _fist_t <= STATS.fist_hit_time + STATS.fist_active:
+		_fist_deflect()
+	if _fist_t >= sprite.sprite_frames.get_frame_count(_fist_anim) / sprite.sprite_frames.get_animation_speed(_fist_anim):
+		_end_fist()
+
+
+func _start_fist(stage: int) -> void:
+	if stage == 0:
+		_combo_target = null
+		_combo_hits = 0
+	_fist = stage
+	_fist_t = 0.0
+	_fist_struck = false
+	_fist_low = crouching and sprite.sprite_frames.has_animation("crouch_jab")
+	_fist_anim = "crouch_jab" if _fist_low else FIST_ANIMS[stage]
+	_fist_next = 0 if crouching else (stage + 1) % 3
+	_knifing = true  # the swing plays out like the knife: no shooting-style animation, no clinging, no landing roll
+	_flipping = 0.0
+	sprite.play(_fist_anim)
+	Sfx.play(self, "knife_swing", -4.0, 0.08)
+
+
+func _end_fist() -> void:
+	_fist = -1
+	_knifing = false
+	_fist_idle = 0.0
+	_update_animation(_dir)
+
+
+## The blow lands: the nearest living enemy in reach takes it, and a full combo that the kick finishes is a finisher.
+func _fist_strike() -> void:
+	var stage := _fist
+	var fury := _fury > 0.0
+	var reach: float = [STATS.jab_reach, STATS.cross_reach, STATS.kick_reach][stage] * (STATS.fury_reach if fury else 1.0)
+	var aura_at := Vector2(facing * (reach - 12.0), 6.0 if stage == 2 else (4.0 if _fist_low else -5.0))
+	PunchAura.spawn(get_parent(), position + aura_at, facing, (30.0 if stage == 2 else 20.0) * (STATS.fury_aura if fury else 1.0), Color("ff7a4a") if fury else Color("fff3b0"))
+	var behind: float = STATS.hitbox[0] / 2.0 + 6.0
+	var body_h: float = Block.SIZE if _fist_low else STATS.hitbox[1]  # crouched he is one block tall
+	var probe := RectangleShape2D.new()
+	probe.size = Vector2(reach + behind, body_h)
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = probe
+	query.transform = Transform2D(0.0, global_position + Vector2(facing * (reach - behind) / 2.0, Block.SIZE / 2.0 - body_h / 2.0))
+	query.collision_mask = 1  # barrels first: every barrel in reach is thrown forward, and so are the ones touching it further on
+	var hit_barrels := {}
+	for info in get_world_2d().direct_space_state.intersect_shape(query, 16):
+		if info.collider is Barrel and not info.collider.exploded:
+			hit_barrels[info.collider] = true
+	var grew := not hit_barrels.is_empty()
+	while grew:
+		grew = false
+		for b in get_tree().get_nodes_in_group("barrels"):
+			if hit_barrels.has(b) or b.exploded:
+				continue
+			for h in hit_barrels.keys():
+				var d: Vector2 = b.global_position - h.global_position
+				if d.x * facing > 0.0 and absf(d.x) <= Barrel.TOUCH.x and absf(d.y) <= Barrel.TOUCH.y:
+					hit_barrels[b] = true
+					grew = true
+					break
+	for b in hit_barrels:  # each flies its own way: some flat, some in a high arc
+		b.toss(facing, randf_range(STATS.barrel_speed_min, STATS.barrel_speed_max), -randf_range(STATS.barrel_hop_min, STATS.barrel_hop_max))
+	if not hit_barrels.is_empty():
+		Sfx.play(self, STATS.melee_hit_sound, -2.0, 0.08)
+		shake(2.0)
+	query.collision_mask = 4 | 8  # enemies and bodies
+	var target: Enemy = null
+	var corpses: Array[Enemy] = []
+	for hit_info in get_world_2d().direct_space_state.intersect_shape(query, 16):
+		var e = hit_info.collider
+		if not e is Enemy:
+			continue
+		if e.dead:
+			corpses.append(e)
+			continue
+		if target == null or absf(e.global_position.x - global_position.x) < absf(target.global_position.x - global_position.x):
+			target = e
+	for body in corpses:  # a blow into a body bursts it, like a knife stab does
+		body.stab(facing, 0, 0.0, 0.0, 0)
+	if not corpses.is_empty():
+		Sfx.play(self, STATS.melee_hit_sound, -2.0, 0.08)
+		shake(2.0)
+	if target == null:
+		if hit_barrels.is_empty() and corpses.is_empty():
+			_knife_block(reach)  # nothing to hit: the blow breaks the block in front, one per swing
+		return
+	var share: float = STATS.fury_share if fury else [STATS.jab_share, STATS.cross_share, STATS.kick_share][stage]
+	var boss: int = [STATS.jab_boss, STATS.cross_boss, STATS.kick_boss][stage]
+	var knock: float = [STATS.jab_knock, STATS.cross_knock, STATS.kick_knock][stage]
+	var hop: float = STATS.kick_hop if stage == 2 else 0.0
+	var stun: float = [STATS.jab_stun, STATS.cross_stun, STATS.kick_stun][stage]
+	if target.party_doom:  # a kamikaze dies from any blow and is thrown away, so his blast does not reach Bruce
+		share = 1.0
+		knock *= STATS.kamikaze_throw
+		hop = minf(hop, -150.0)
+	Sfx.play(self, STATS.melee_hit_sound, -2.0, 0.08)
+	shake(1.5 + stage)
+	if target == _combo_target:
+		_combo_hits += 1
+	else:
+		_combo_target = target
+		_combo_hits = 1
+	if target.punched(share, boss, facing, knock, hop, stun):
+		if stage == 2 and _combo_hits >= 3:
+			_finisher()
+		elif fury:
+			_fury = STATS.fury_time  # every kill in fury starts the time again
+		_combo_target = null
+		_combo_hits = 0
+
+
+## A full combo, finished by the kick: fury for fury_time, and every heal_kills of them a half heart.
+func _finisher() -> void:
+	_fury = STATS.fury_time
+	fury_started.emit()
+	Sfx.play(self, "bro_shout", -2.0, 0.05)
+	shake(3.0)
+	_heal_kills += 1
+	if _heal_kills >= STATS.heal_kills:
+		_heal_kills = 0
+		_half_hearts += 1
+		Sfx.play(self, "quota_reached", -8.0)
+		if _half_hearts >= 2:
+			_half_hearts = 0
+			if hp < STATS.max_hp:
+				hp += 1
+				hp_changed.emit(hp, STATS.max_hp)
+
+
+## While the fist or foot is out, enemy bullets that reach it are destroyed.
+func _fist_deflect() -> void:
+	var fury := _fury > 0.0
+	var reach: float = [STATS.jab_reach, STATS.cross_reach, STATS.kick_reach][_fist] * (STATS.fury_reach if fury else 1.0) + 8.0
+	var half_height := (28.0 if _fist == 2 else 22.0) * (1.6 if fury else 1.0)
+	for b in get_tree().get_nodes_in_group("bullets"):
+		if not b is Bullet or (b.collision_mask & 2) == 0:  # only bullets that fly at the player
+			continue
+		var d: Vector2 = b.global_position - global_position
+		if d.x * facing >= -6.0 and d.x * facing <= reach and absf(d.y) <= half_height:
+			b.deflect()
+
+
+## Defend (the grenade button): a charge for fully safe seconds, then twelve seconds before the next.
+func _defend() -> void:
+	if Run.grenades <= 0 or _defend_cd > 0.0 or _shield > 0.0 or _stagger > 0.0 or dead or frozen:
+		Sfx.play(self, "dry_fire", -8.0)
+		return
+	Run.grenades -= 1
+	grenades_changed.emit(Run.grenades)
+	_shield = STATS.defend_time
+	_defend_cd = STATS.defend_cooldown
+	_shield_icon = AnimatedSprite2D.new()
+	_shield_icon.sprite_frames = load("res://assets/sprites/items_frames.tres")
+	_shield_icon.position = Vector2(0, -34)
+	_shield_icon.z_index = 5
+	add_child(_shield_icon)
+	_shield_icon.play("shield_over")
+	Sfx.play(self, "quota_reached", -6.0)
+
+
+func _shield_step(delta: float) -> void:
+	if _shield <= 0.0:
+		return
+	_shield -= delta
+	if _shield <= 0.0:
+		sprite.modulate = Color.WHITE
+		if _shield_icon != null:
+			_shield_icon.queue_free()
+			_shield_icon = null
+		return
+	sprite.modulate = Color(2.4, 2.4, 2.4) if fmod(_shield, 0.16) < 0.08 else Color.WHITE  # flashes white
+	if _shield_icon != null:
+		_shield_icon.visible = _shield >= 0.7 or fmod(_shield, 0.2) < 0.1  # flickers when about to end
+		_shield_icon.position.y = -34.0 + sin(_shield * 8.0) * 1.5
+
+
+## Seconds of fury left (the HUD counts them down).
+func fury_left() -> float:
+	return _fury
