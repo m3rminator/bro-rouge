@@ -1,0 +1,44 @@
+# First-aid box, after refrences/items/photo_2026-10-27_00-23-22.jpg, redrawn side-on like the rest of the game
+# so its flat bottom sits on the ground: front face, a strip of the open top with the contents, lid tipped back.
+name: crate_med
+description: "First-aid box: cream, dirty, red cross in a ring, red cross inside the lid, a kit, bandages, a bottle and a syringe inside. Picking it up heals."
+palette: crate_med
+reference: refrences/items/photo_2026-10-27_00-23-22.jpg
+frame: [30, 27]
+anchors:
+  center: [15, 13]
+parts:
+  crate: |
+    .....oooooooooooooooooooo.....
+    ....obbbbbbbRbbbbbbbbbbbbo....
+    ...oddddddddRdddddddddddddo...
+    ...oddddddRRRRRdddddddddddo...
+    ..odddddddddRdddddddddddddo...
+    ..odddddddddRddddddddddddddo..
+    ..oDDDDDDDDDDDDDDDDDDDDDDDDGo.
+    .ooooosssssooooooooooooooogoo.
+    .okkkkssssskkkkkkkRRRkkkkgkko.
+    .okkkkRRRRRkssssskRRRkkkgkkko.
+    .okkkksssssksRRRskssskkGkkkko.
+    .oooooooooooooooooooooooooooo.
+    .oVVVVVVVVVVVVVVVVVVVVVVVVVVo.
+    .oVvvvvvvvvvvvvvvvvvvvvvvvvwo.
+    .oVvvvvvvvvvvrvvvvvvvvrvvvvwo.
+    .oVovvvvvvvvvvRRvvvvvvvvvvowo.
+    .oVovvvvvvvvRRvvRRvvvvvvvvowo.
+    .oVovvvvvvvRvvRRvvRvvvvvvvowo.
+    .oVvvvvvvrvRvvRRvvRvvvvvvvvwo.
+    .oVvvvvvvvRvRRRRRRvRvvvvvvvwo.
+    .oVvvvvvvvRvRRRRRRvRvvvvvvvwo.
+    .oVvvvvvvvvRvvRRvvRvvvvvvvvwo.
+    .oVvvvvvvvvRvvRRvvRvvvvvvvvwo.
+    .oVvvvvvvvvvRRvvRRvvvvvvvvvwo.
+    .oVvvvvvvvvvvvRRvvvvvvvvvvvro.
+    .oVvvvvvvvrvvvvvvvvvvvvvvvvwo.
+    .oVvvvvvvrrvvvvvvvvvvvvvvvrro.
+animations:
+  idle:
+    fps: 1
+    loop: false
+    frames:
+      - [[crate, 0, 0]]

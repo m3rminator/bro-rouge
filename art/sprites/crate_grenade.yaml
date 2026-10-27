@@ -1,0 +1,44 @@
+# Grenade crate, after refrences/items/photo_2026-10-27_00-23-22.jpg, redrawn side-on like the rest of the game
+# so its flat bottom sits on the ground: front face, a strip of the open top with the contents, lid tipped back.
+name: crate_grenade
+description: "Grenade crate: dark green, rusty, rivets, an orange grenade stencil, live grenades packed inside. Picking it up gives grenades."
+palette: crate_grenade
+reference: refrences/items/photo_2026-10-27_00-23-22.jpg
+frame: [30, 27]
+anchors:
+  center: [15, 13]
+parts:
+  crate: |
+    .....oooooooooooooooooooo.....
+    ....obbbbbbbbbbbbbbbbbbbbo....
+    ...oddddddddddddddddddddddo...
+    ...oddddddddddddddddddddddo...
+    ..odddddddddddddddddddddddo...
+    ..oddddoooddoooddoooddoooddo..
+    ..oDDDoggGooggGooggGooggGoDo..
+    .oooooVVvvooovvooovvooovvoooo.
+    .okkkoVvvoggGooggGooggGovoooo.
+    .okkkovvoVVvvoVVvvoVVvvooggGo.
+    .okkkovvoVvvvoVvvvoVvvvoVVvvo.
+    .oooooooooooooooooooooooooooo.
+    .oVVVVVVVVVVVVVVVVVVVVVVVVVVo.
+    .oVvvvvvvvvvvvvvvvvvvvvvvvvwo.
+    .oVvgvvvvvvvvvvrvvvvvvvvvgvwo.
+    .oVovvvvvvvvvvvvvvvvvvvvvvowo.
+    .oVovvvvvrvvvvvLLLvvvvvvvvowo.
+    .oVovvvvvvvvvvLLvvvvvvvvvvoro.
+    .oVvvvvvvvvvvLLLLLvvvvvvvvvRo.
+    .oVvvvvvvvvvvLvLvLvvvvvvvvvro.
+    .oVvvvvvvvvvvLLLLLvvvvvvvvvwo.
+    .oVvvvvvvvvvvLvLvLvvvvvvvvvwo.
+    .oVvvvvvvvvvvvLLLvvvvvvvvvvwo.
+    .oVvvvvvvvvvvvvvvvvvvvvvvvvwo.
+    .oVvvvvvvvvvvvvvvvvvvvvvvvvwo.
+    .oVvgvvvvvvvrvvvvvvvvvrvvgvwo.
+    .oVvvvvvvvvrRvvvvrvvvrRvvvvwo.
+animations:
+  idle:
+    fps: 1
+    loop: false
+    frames:
+      - [[crate, 0, 0]]

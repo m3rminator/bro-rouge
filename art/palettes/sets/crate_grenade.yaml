@@ -1,0 +1,15 @@
+# Palette set for crate_grenade, sampled from refrences/items/photo_2026-10-27_00-23-22.jpg. "." is always transparent.
+symbols:
+  D: cg_lid_dark
+  G: cg_steel
+  L: cg_logo
+  R: cg_red
+  V: cg_light
+  b: cg_lid_edge
+  d: cg_lid
+  g: cg_steel_light
+  k: cg_inside
+  o: cg_black
+  r: cg_rust
+  v: cg_body
+  w: cg_shade

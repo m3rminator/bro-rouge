@@ -1,0 +1,108 @@
+# The Men in Black Bro's disco grenade (his grenade button): the normal grenade's shape (lever, pin, round
+# segmented body) in rainbow bands that keep scrolling, so its color never stops changing. The disco light
+# zone, the pull on enemies and the panic after the blast are code (dev).
+name: disco_grenade
+description: Disco grenade - the grenade shape in rainbow bands (red, orange, yellow, green, cyan, purple) that scroll down every frame so it keeps changing color, with a white glint; plus a multicolored HUD icon.
+palette: disco
+frame: [16, 16]
+
+parts:
+  disco_0: |
+    ..kkkk..
+    .kIIIIk.
+    ..kAAk..
+    ..kkkk..
+    .kRRrrk.
+    kOWuuu2k
+    kYyyyy3k
+    kgggg44k
+    .kc555k.
+    ..kkkk..
+  disco_1: |
+    ..kkkk..
+    .kIIIIk.
+    ..kAAk..
+    ..kkkk..
+    .kPPppk.
+    kRWrrr1k
+    kOuuuu2k
+    kyyyy33k
+    .kg444k.
+    ..kkkk..
+  disco_2: |
+    ..kkkk..
+    .kIIIIk.
+    ..kAAk..
+    ..kkkk..
+    .kCCcck.
+    kPWppp6k
+    kRrrrr1k
+    kuuuu22k
+    .ky333k.
+    ..kkkk..
+  disco_3: |
+    ..kkkk..
+    .kIIIIk.
+    ..kAAk..
+    ..kkkk..
+    .kGGggk.
+    kCWccc5k
+    kPpppp6k
+    krrrr11k
+    .ku222k.
+    ..kkkk..
+  disco_4: |
+    ..kkkk..
+    .kIIIIk.
+    ..kAAk..
+    ..kkkk..
+    .kYYyyk.
+    kGWggg4k
+    kCcccc5k
+    kpppp66k
+    .kr111k.
+    ..kkkk..
+  disco_5: |
+    ..kkkk..
+    .kIIIIk.
+    ..kAAk..
+    ..kkkk..
+    .kOOuuk.
+    kYWyyy3k
+    kGgggg4k
+    kcccc55k
+    .kp666k.
+    ..kkkk..
+  disco_icon: |
+    ....kkkkkk....
+    ...kIIIIIIAk..
+    ....kAAAkkIAk.
+    ....kyyyIkkIAk
+    ...kkkkkI.IkAk
+    ..kRrkOukIkk.k
+    .kRrrkOukkYyk.
+    .krr1kuukyy3k.
+    .kkkkkkkkkkkk.
+    .kYykkGgkCc5k.
+    .kyy3kggkcc5k.
+    .kkkkkkkkkkkk.
+    .kCckkPpkRr1k.
+    ..kc5kppkr1k..
+    ...kkkkkkkk...
+
+animations:
+  disco:  # the thrown grenade: bands scroll through the six hues
+    fps: 10
+    loop: true
+    frames:
+      - [[disco_0, 4, 3]]
+      - [[disco_1, 4, 3]]
+      - [[disco_2, 4, 3]]
+      - [[disco_3, 4, 3]]
+      - [[disco_4, 4, 3]]
+      - [[disco_5, 4, 3]]
+  disco_hud:  # the HUD icon (one per disco grenade left, in place of grenades)
+    fps: 1
+    loop: false
+    frames:
+      - [[disco_icon, 1, 0]]

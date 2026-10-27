@@ -1,0 +1,34 @@
+# Sharif's revolver round: a long, fat tracer - longer and brighter than every other bullet, because it flies far and
+# pierces. White-hot head, yellow body, orange tail, soft glow around it (glow colors have alpha). Points right.
+name: revolver_bullet
+description: Sharif's revolver round - a long fat tracer with a white-hot head and an orange tail; the glow pulses while it flies.
+palette: projectiles
+frame: [22, 9]
+anchors:
+  center: [11, 4]
+
+parts:
+  core: |
+    ....cccccaaaaaaaa...
+    .ccROOOYYYYYYYYYYaa.
+    cROOOYYYYWWWWWWWWWWa
+    cROOOYYYYWWWWWWWWWWa
+    .ccROOOYYYYYYYYYYaa.
+    ....cccccaaaaaaaa...
+  halo: |
+    .....eeeeeffffffffff..
+    ..ee................ff
+    ee....................
+    ......................
+    ......................
+    ee....................
+    ..ee................ff
+    .....eeeeeffffffffff..
+
+animations:
+  fly:
+    fps: 12
+    loop: true
+    frames:
+      - [[core, 1, 1]]
+      - [[halo, 0, 0], [core, 1, 1]]

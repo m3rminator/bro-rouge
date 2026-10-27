@@ -1,0 +1,42 @@
+# Heavy's air-strike missile: small and long, falls nose down with its exhaust flame flickering on top.
+# Frame layers: [part, x, y] drawn in order.
+name: airstrike
+description: A small, long air-strike missile - olive-drab body with fins, red nose pointing down, flickering exhaust flame on top. A row of them falls on the laser marker when Heavy calls an air strike.
+palette: airstrike
+frame: [6, 17]
+anchors:
+  nose: [2, 16]   # the bottom tip (it explodes where this lands)
+
+parts:
+  body: |
+    o.oo.o
+    ofhgfo
+    ofhgfo
+    oohgoo
+    .ohgo.
+    .ohgo.
+    .ohgo.
+    .ohgo.
+    .ohgo.
+    .orRo.
+    .orRo.
+    .orRo.
+    ..oo..
+  flame_a: |
+    ...O..
+    ..YO..
+    ..WY..
+    .OWWO.
+  flame_b: |
+    ......
+    ..O...
+    ..YO..
+    .OYYO.
+
+animations:
+  missile:
+    fps: 12
+    loop: true
+    frames:
+      - [[flame_a, 0, 0], [body, 0, 4]]
+      - [[flame_b, 0, 0], [body, 0, 4]]

@@ -1,0 +1,11 @@
+# Palette set for Heavy's air-strike missiles: olive-drab body and fins, red nose, exhaust flame.
+symbols:
+  o: rambo_black          # outline
+  h: missile_olive_light
+  g: missile_olive
+  f: missile_olive_dark   # fins
+  r: shell_red            # nose
+  R: shell_red_dark
+  W: fire_white           # exhaust
+  Y: fire_yellow
+  O: fire_orange

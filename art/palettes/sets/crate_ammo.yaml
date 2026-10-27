@@ -1,0 +1,16 @@
+# Palette set for crate_ammo, sampled from refrences/items/photo_2026-10-27_00-23-22.jpg. "." is always transparent.
+symbols:
+  D: ca_lid_dark
+  G: ca_steel
+  V: ca_light
+  Y: ca_brass_light
+  b: ca_lid_edge
+  d: ca_lid
+  g: ca_steel_light
+  k: ca_inside
+  o: ca_black
+  r: ca_rust
+  u: ca_brass_dark
+  v: ca_body
+  w: ca_shade
+  y: ca_brass

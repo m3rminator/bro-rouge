@@ -1,0 +1,15 @@
+# Palette set for crate_med, sampled from refrences/items/photo_2026-10-27_00-23-22.jpg. "." is always transparent.
+symbols:
+  D: cm_lid_dark
+  G: cm_steel
+  R: cm_red
+  V: cm_light
+  b: cm_lid_edge
+  d: cm_lid
+  g: cm_steel_light
+  k: cm_inside
+  o: cm_black
+  r: cm_rust
+  s: cm_white
+  v: cm_body
+  w: cm_shade

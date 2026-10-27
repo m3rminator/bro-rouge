@@ -1,0 +1,25 @@
+# Palette set for the Men in Black Bro's disco grenade: six hues (light / mid / dark each), the grenade
+# outline and the lever of the normal grenade. "." is always transparent.
+symbols:
+  k: grenade_black     # outline and grooves
+  I: lever_light       # lever / pin ring
+  A: lever_dark
+  W: white             # sparkle
+  R: disco_red_light
+  r: disco_red
+  "1": disco_red_dark
+  O: disco_orange_light
+  u: disco_orange
+  "2": disco_orange_dark
+  Y: disco_yellow_light
+  y: disco_yellow
+  "3": disco_yellow_dark
+  G: disco_green_light
+  g: disco_green
+  "4": disco_green_dark
+  C: disco_cyan_light
+  c: disco_cyan
+  "5": disco_cyan_dark
+  P: disco_purple_light
+  p: disco_purple
+  "6": disco_purple_dark
