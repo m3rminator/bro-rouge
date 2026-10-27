@@ -30,6 +30,11 @@ func _ready() -> void:
 	title.text = "BRO ROGUE"
 	title.color = YELLOW
 	add_child(title)
+	if Run.best_level > 0:  # the furthest fight level of any run
+		var best := PixelText.make(Vector2(VIEW.x / 2.0, 80), PixelText.Align.CENTER, 2)
+		best.text = "BEST LEVEL %d" % Run.best_level
+		best.color = Color("f4f2e8")
+		add_child(best)
 	for i in COUNT:
 		var r := _rect(i)
 		var frame := ColorRect.new()

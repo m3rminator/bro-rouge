@@ -7,6 +7,7 @@ signal quota_reached
 signal upgrade_ended(kind: String)
 
 const RULES := GameData.RUN
+const BEST_FILE := "user://best.cfg"
 
 var level_index := 0  # unused now that levels are generated (kept for the hand-made maps)
 var depth := 0  # fights cleared this run; drives how big and tough the next level is
@@ -17,6 +18,7 @@ var upgrades := {}  # crate boosts running now: kind ("mag", "rate", "speed", "d
 var loadout := {}  # hearts and ammo carried from one level to the next (see store_loadout)
 var _current := {}  # the level being played: generated once, kept for restarts after a death
 var loop := 1
+var best_level := 0  # the highest fight level ever reached (kept between sessions, user://best.cfg)
 var lives: int = RULES.lives
 var kills := 0
 var grenades: int = GameData.GRENADE.grenades_per_level  # refilled only when a level is finished
@@ -82,6 +84,22 @@ func perk(kind: String) -> int:
 	return perks.get(kind, 0)
 
 
+func _ready() -> void:
+	var file := ConfigFile.new()
+	if file.load(BEST_FILE) == OK:
+		best_level = file.get_value("best", "level", 0)
+
+
+## A fight level has been reached: remember it if it is the furthest yet.
+func _record_best(level_number: int) -> void:
+	if level_number <= best_level:
+		return
+	best_level = level_number
+	var file := ConfigFile.new()
+	file.set_value("best", "level", best_level)
+	file.save(BEST_FILE)
+
+
 func _process(delta: float) -> void:
 	for kind in upgrades.keys():
 		upgrades[kind] -= delta
@@ -112,6 +130,8 @@ func look() -> String:
 func level() -> Dictionary:
 	if _current.is_empty():
 		_current = LevelGen.start_zone() if in_start else (LevelGen.hub() if in_hub else LevelGen.combat(depth))
+		if not in_start and not in_hub:
+			_record_best(depth + 1)
 	return _current
 
 
