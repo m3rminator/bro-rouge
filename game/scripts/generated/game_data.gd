@@ -270,7 +270,7 @@ const REVOLVER := {
 
 ## Raygun beam (design/entities/raygun.yaml)
 const RAYGUN := {
-	"range": 420.0,
+	"range": 150.0,
 	"beam_time": 0.16,
 	"direct_damage": 12,
 	"boss_damage": 4,

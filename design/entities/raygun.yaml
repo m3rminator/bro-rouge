@@ -13,9 +13,9 @@ controls: [shoot]
 
 stats:
   range:
-    value: 420.0
+    value: 150.0
     unit: px
-    description: Longest distance the beam reaches (~17 blocks).
+    description: Longest distance the beam reaches (~10 blocks), the same as the Heavy's bullets. At the end of its range the beam bursts into the same shockwave as when it hits something.
   beam_time:
     value: 0.16
     unit: s

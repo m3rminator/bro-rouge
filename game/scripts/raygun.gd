@@ -37,6 +37,8 @@ static func fire(parent: Node2D, from: Vector2, dir: int) -> Vector2:
 			if target.dead and not target.is_in_group("bosses"):
 				target._burst_body(dir)  # a direct hit tears him into pieces
 		_wave(parent, end, dir, target)
+	else:
+		_wave(parent, end, dir, null)  # out of range: it bursts in the air where the beam ends
 	return end
 
 
