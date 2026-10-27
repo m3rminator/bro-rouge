@@ -1,0 +1,33 @@
+# Palette set for the Men in Black Bro (refrences/bros/mard dar siah): Blala's dark skin and hair,
+# black sunglasses, black suit, white shirt, black tie, black shoes, a raygun with a red power cell
+# and a glowing cyan tip. "." is always transparent.
+symbols:
+  o: rambo_black          # outline
+  O: rambo_black          # sunglasses
+  h: blala_hair
+  H: blala_hair_light
+  e: blala_skin_outline
+  S: blala_skin_dark
+  s: blala_skin
+  L: blala_skin_light
+  j: mib_suit_light       # lapel edges, lit shoulders
+  k: mib_suit             # jacket
+  K: mib_suit_dark        # jacket shadows and folds
+  w: mib_shirt            # shirt, cuffs
+  W: mib_shirt_shadow
+  t: mib_tie
+  T: mib_tie_light
+  p: mib_pants
+  P: mib_pants_dark
+  N: mib_pants_dark
+  n: mib_pants
+  B: mib_shoe
+  g: ray_steel_light      # raygun
+  G: ray_steel
+  f: ray_grip_light
+  F: ray_grip
+  r: ray_cell
+  R: ray_cell_dark
+  y: ray_cell_glint
+  c: ray_glow             # gun tip rings
+  C: ray_glow_light       # gun tip (muzzle)

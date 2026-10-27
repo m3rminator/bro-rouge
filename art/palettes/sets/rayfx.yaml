@@ -1,0 +1,6 @@
+# Palette set for the Men in Black Bro's raygun effects: cyan energy instead of fire.
+symbols:
+  W: ray_white
+  C: ray_cyan
+  B: ray_blue
+  D: ray_deep

@@ -17,3 +17,32 @@ symbols:
   F: grenade_flash_dark   # blink: body flashes red
   f: grenade_flash
   P: grenade_flash_light
+  S: shell_red_light   # shotgun shell (Sharif's ammo)
+  s: shell_red
+  r: shell_red_dark
+  Q: brass_light       # shell base
+  q: brass
+  n: brass_dark
+  C: smg_mag_cap_light # SMG magazine (Blala's)
+  c: smg_mag_cap
+  G: smg_mag_dark
+  g: smg_mag
+  x: smg_mag_ridge
+  U: c4_light          # C4 block (Blala's explosive)
+  u: c4
+  V: c4_dark
+  W: red               # C4 wires
+  h: missile_olive_light  # air-strike missile (Hamid's HUD)
+  j: missile_olive
+  z: missile_olive_dark   # missile fins
+  T: rambo_steel_dark     # revolver (Sharif's HUD)
+  t: rambo_steel
+  i: sharif_barrel_light
+  v: sharif_wood          # revolver grip
+  D: sharif_wood_dark
+  J: ray_steel_light      # raygun power cell (MIB's magazine)
+  K: ray_steel
+  L: ray_glow           # cell core: the same light blue as the contact
+  M: ray_blue
+  N: ray_glow_light
+  R: ray_glow

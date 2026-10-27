@@ -1,0 +1,33 @@
+# Corpse of the Men in Black Bro: the same lying pose and size as the other Bros' corpses (the enemy corpse
+# dead_a), built on Blala's corpse (same skin and buzz cut, face down) with the black suit: jacket with a lit
+# edge, white shirt cuff at the wrist, black trousers. Same frame and placement as the mook corpse.
+# Bottom row = the ground.
+name: mib_dead
+description: Corpse of the Men in Black Bro (black buzz cut, black suit, white cuff, black trousers and shoes), lying on his belly with his face to the ground - the enemy corpse pose in his colors.
+palette: mib
+frame: [47, 34]
+
+parts:
+  dead: |
+    .....................oooooooo...............
+    ..............ooooooojjjjjjjjoo.............
+    ..............oooooooKkkkkkkKoo.............
+    .............opppPjjjkkkkkkkkKK.............
+    ...........ooPpppPkkkkkkkkkkjoo..oooooooo...
+    ...........ooppppPkkkkkkkkkkjoo.ohhhhhhhho..
+    ...........ooppppPkkkkkkkkkkjooohhhhhHhhhho.
+    .......ooooppppppPKKkkKKKKKkjoohhhhhhhhHhhho
+    .oooooooPPpppppPPPKKKKoooKKkjoohhhhhhhhhhhho
+    .oooooooPPpppppPPPKKKKoooKKkjooShhhhhhhhhhho
+    .oooooooPPppppPooooooojjjkkkwoeSssShhhhhhho.
+    ooooooooPPPPPPooowssjjkkkkkkwKeSLLsShhhhhho.
+    ooooooooooooooooowssKKkkkKKKwooeSLLsShhhho..
+    ooooooooooooooooowssKKkkkKKKKoo.eeeeoooooo..
+    ooo..............oooooooooooo...............
+
+animations:
+  dead:
+    fps: 1
+    loop: false
+    frames:
+      - [[dead, 2, 19]]

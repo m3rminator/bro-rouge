@@ -1,0 +1,38 @@
+# Storyboard: Men in Black (mard dar siah), the fifth Bro - who he is at a glance.
+title: Men in Black
+description: The raygun Bro. Slow shots, but each one ends in a shockwave that tears up blocks and throws enemies around - and his grenade starts a disco.
+panels:
+  - title: The agent
+    shot: mib/idle/0
+    caption: Black suit, white shirt, black tie, wide black sunglasses - and a raygun (red power cell, glowing cyan tip) held out at arm's length.
+  - title: Raygun
+    shot: mib/shoot/1
+    caption: A blue beam runs from the raygun to where it hits, and the kick pushes his whole upper body back and up. He fires slowly.
+    sfx: raygun_shot
+  - title: Raygun glow
+    shot: raygun_flash/muzzle/0
+    caption: His muzzle flash is the raygun's blue-white glow, not fire.
+  - title: Shockwave
+    shot: raygun_flash/muzzle/2
+    caption: Where the beam lands a shockwave bursts - it breaks many blocks, throws enemies back and stuns them. Only a direct hit kills.
+    sfx: raygun_wave
+  - title: On the move
+    shot: mib/run_shoot/0
+    caption: He shoots while running; each shot jolts him once (run_recoil) instead of shaking all the time.
+  - title: Punch
+    shot: mib/knife/3
+    caption: No knife - the raygun comes up in front of his chest, he turns away, then punches with the free hand.
+  - title: Disco grenade
+    shot: disco_grenade/disco/0
+    caption: His grenade flashes through every color of the rainbow. Where it lands a party zone of disco lights pulls enemies in...
+    sfx: disco_party
+  - title: Panic
+    shot: disco_grenade/disco/3
+    caption: ...then it goes off, and the enemies panic, jump and shoot each other.
+    sfx: disco_burst
+  - title: Landing roll
+    shot: mib/roll/4
+    caption: After a fall of 2-3 blocks or more, moving and not shooting, he tucks the raygun to his chest and rolls out of the landing (every Bro does this).
+  - title: Down
+    shot: mib_dead/dead/0
+    caption: His corpse - the suit, with a lit jacket edge and a white collar and cuff.

@@ -5,7 +5,7 @@
 # HUD size (lever, pin ring, yellow band, segmented body). In the level the thrown grenade is just
 # a small round ball with its lever on top (the pin is pulled), blinking red as the fuse burns.
 name: items
-description: Item icons — the magazine shown in the HUD (one per spare magazine), the "+ magazine" pop-up over the Bro's head when a knife kill gives him one, the grenade HUD icon (one per grenade left) and the thrown grenade (blinks red while its fuse burns).
+description: Item icons - the magazine shown in the HUD (one per spare magazine), the "+ magazine" pop-up over the Bro's head when a knife kill gives him one, the grenade HUD icon (one per grenade left), the thrown grenade (blinks red while its fuse burns); Sharif's shotgun shell (HUD icon and "+ shells" pop-up), Blala's SMG magazine (HUD icon and pop-up) and Blala's C4 (HUD icon and the planted charge with its blinking red display); Sharif's revolver HUD icon and Hamid's air-strike missile HUD icon.
 palette: items
 reference: refrences/items/57d2b35a-865a-42b5-bd4c-b10d9abaf164.jpg
 frame: [16, 16]
@@ -87,7 +87,144 @@ parts:
     kffffFFk
     .kfFFFk.
     ..kkkk..
+  shell_icon: |
+    .ooooo.
+    osrrrso
+    oSsssro
+    oSsssro
+    oSsssro
+    oSsssro
+    oSsssro
+    oSsssro
+    oSsssro
+    oQqqqno
+    oQqqqno
+    ooooooo
+    oqnnnno
+    .ooooo.
+  shell_small: |
+    .ooo.
+    osrso
+    oSsro
+    oSsro
+    oSsro
+    oSsro
+    oQqno
+    ooooo
+    oqnno
+    .ooo.
+  smg_mag_icon: |
+    .ooooo.
+    oCCCCco
+    oCcccco
+    ooooooo
+    .oggGo.
+    .oxgGo.
+    .oggGo.
+    .oxgGo.
+    .oggGo.
+    .oggGo.
+    .oxgGo.
+    .oggGo.
+    .oggGo.
+    oooooo.
+    occcco.
+    oooooo.
+  smg_mag_small: |
+    .ooo.
+    oCCco
+    ooooo
+    oggGo
+    oxgGo
+    oggGo
+    oxgGo
+    oggGo
+    ooooo
+    occco
+    ooooo
+  c4_icon: |
+    .....oooooo.....
+    ..WWoIIIIIIo....
+    .W..oIfFfFIoWW..
+    .W.ooooooooooo.W
+    .WoUUuUokUUuUUoW
+    ..oUuUUokUuUUuo.
+    ..oUUUuokUUUuUo.
+    ..ouuUuokuuUuuo.
+    ..oVVVVokVVVVVo.
+    ...ooooooooooo..
+  c4: |
+    ...ooooo...
+    .WoIfIIoW..
+    W.oooooooW.
+    .oUuUokUuUo
+    .oUUuokUUuo
+    .oVVVokVVVo
+    ..ooooooooo
+  c4_off: |
+    ...ooooo...
+    .WoIFIIoW..
+    W.oooooooW.
+    .oUuUokUuUo
+    .oUUuokUUuo
+    .oVVVokVVVo
+    ..ooooooooo
+  revolver_icon: |
+    .....ooo........
+    ....oTTToooooooo
+    ...oTtttTiiiiiio
+    ...oTtitTTTTTTTo
+    ..ooTtttToooooo.
+    .oDvoTTToo......
+    .oDvooooo.o.....
+    oDvvo..o.o......
+    oDvvo...oo......
+    oDvo............
+    .oo.............
+  airstrike_icon: |
+    o.oo.o
+    ozjhzo
+    ozjhzo
+    oojhoo
+    .ojho.
+    .ojho.
+    .ojho.
+    .ojho.
+    .ojho.
+    .osSo.
+    .osSo.
+    .orso.
+    ..oo..
 
+  cell_icon: |  # MIB raygun power cell (his magazine): cyan contact on top, steel caps, a light-blue glowing core the same color as the contact
+    ..ooo..
+    ..oRo..
+    .ooooo.
+    oJJJJKo
+    oKKKKKo
+    ooooooo
+    oNLLLMo
+    oNLLLMo
+    oLLLLMo
+    oNLLLMo
+    oNLLLMo
+    oLLLLMo
+    oLLLLMo
+    ooooooo
+    oJJJKKo
+    .ooooo.
+  cell_small: |  # the same cell, small, for the "+ cell" pop-up
+    .ooo.
+    .oRo.
+    ooooo
+    oJJKo
+    ooooo
+    oNLMo
+    oNLMo
+    oLLMo
+    ooooo
+    oJKKo
+    .ooo.
 animations:
   mag_hud:
     fps: 1
@@ -110,3 +247,54 @@ animations:
     frames:
       - [[grenade_ball, 4, 3]]
       - [[grenade_ball_flash, 4, 3]]
+  shell_hud:  # Sharif's HUD: one shell icon next to his shell count
+    fps: 1
+    loop: false
+    frames:
+      - [[shell_icon, 4, 1]]
+  shell_pickup:  # over Sharif's head after a melee kill (the game writes the number of shells next to it)
+    fps: 1
+    loop: false
+    frames:
+      - [[plus, 0, 5], [shell_small, 9, 3]]
+  smg_mag_hud:  # Blala's HUD: one SMG magazine per spare magazine
+    fps: 1
+    loop: false
+    frames:
+      - [[smg_mag_icon, 4, 0]]
+  smg_mag_pickup:  # over Blala's head when a melee kill gives him a magazine
+    fps: 1
+    loop: false
+    frames:
+      - [[plus, 0, 5], [smg_mag_small, 9, 2]]
+  c4_hud:  # Blala's HUD: one C4 per charge left (in place of grenades)
+    fps: 1
+    loop: false
+    frames:
+      - [[c4_icon, 0, 3]]
+  c4:  # a planted C4 stuck on a block or an enemy: the red display blinks until it is set off
+    fps: 2
+    loop: true
+    frames:
+      - [[c4, 2, 5]]
+      - [[c4_off, 2, 5]]
+  revolver_hud:  # Sharif's HUD: one revolver per round left (in place of grenades)
+    fps: 1
+    loop: false
+    frames:
+      - [[revolver_icon, 0, 2]]
+  airstrike_hud:  # Hamid's HUD: the air-strike missile, nose down (in place of grenades)
+    fps: 1
+    loop: false
+    frames:
+      - [[airstrike_icon, 5, 1]]
+  cell_hud:  # MIB's HUD: one raygun power cell per spare magazine (in place of mag_hud)
+    fps: 1
+    loop: false
+    frames:
+      - [[cell_icon, 4, 0]]
+  cell_pickup:  # over MIB's head when a melee kill gives him a power cell
+    fps: 1
+    loop: false
+    frames:
+      - [[plus, 0, 5], [cell_small, 9, 2]]
