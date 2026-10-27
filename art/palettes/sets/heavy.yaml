@@ -1,0 +1,29 @@
+# Palette set for Heavy, the minigun Bro: bald with a dark beard, black leather jacket over a white tank top,
+# blue jeans, black boots, minigun with a brass ammo belt.
+# Skin, outline and steel are shared with the default Bro. "." is always transparent.
+symbols:
+  o: rambo_black          # outline
+  e: rambo_brown          # skin outline, ear
+  S: rambo_skin_dark
+  s: rambo_skin
+  L: rambo_skin_light     # bald-head shine
+  Z: heavy_beard
+  z: heavy_beard_light
+  k: heavy_jacket
+  q: heavy_jacket_light
+  w: heavy_shirt          # tank top
+  W: heavy_shirt_shadow
+  b: heavy_belt
+  d: sharif_jeans_dark    # jeans outline
+  J: heavy_jeans_shadow
+  j: heavy_jeans
+  n: heavy_boot
+  G: rambo_steel_dark     # minigun housing
+  g: heavy_steel_black    # gaps between the barrels
+  i: sharif_barrel_light
+  I: heavy_steel_light    # barrel highlight, clamp ring, belt buckle
+  A: sharif_badge         # ammo belt brass
+  a: heavy_brass_dark
+  X: rambo_swoosh_light   # melee impact swoosh
+  x: rambo_swoosh
+  Y: rambo_swoosh_dark

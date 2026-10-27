@@ -1,0 +1,19 @@
+# Storyboard: Heavy, the fourth Bro - who he is at a glance.
+title: Heavy
+description: The minigun Bro. Slow on his feet, but once the barrels spin up he sprays a wall of bullets.
+panels:
+  - title: The heavy
+    shot: heavy/idle/0
+    caption: Bald, dark beard, black leather jacket over a white tank top, blue jeans, black boots - and a big minigun held low at the hip with its ammo belt hanging.
+  - title: Spin up
+    shot: heavy/windup/1
+    caption: The barrels spin for a moment before the first bullet leaves.
+  - title: Spray
+    shot: heavy/shoot/0
+    caption: Then 25 bullets a second, and the kick shakes his whole body back and up and down.
+  - title: On the move
+    shot: heavy/run_shoot/0
+    caption: He keeps firing while running, Bro's stride under the weight of the gun.
+  - title: Minigun flash
+    shot: minigun_flash/muzzle/0
+    caption: His muzzle flash - bigger than the rifle's, smaller than the shotgun's.
