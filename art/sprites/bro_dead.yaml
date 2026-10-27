@@ -1,0 +1,32 @@
+# Bro's corpse: the same lying pose and size as the enemy corpse (mook dead_a) in his own colors, with his
+# own head (face down). Its own sheet because the body is wider than his 39-px frame. Same frame and placement as
+# the mook corpse, so the game can treat both alike. Bottom row = the ground.
+name: bro_dead
+description: Corpse of the Bro (red headband), lying on his belly with his face to the ground - the enemy corpse pose in his colors.
+palette: bro
+frame: [47, 34]
+
+parts:
+  dead: |
+    .....................oooooooo...............
+    ..............oooooooTttttttToo.............
+    ..............oooooooTttttttToo....rr.......
+    .............opppdtttttttttttTT...rRr.......
+    ...........oodpppdttttttttttToo..oooooooo...
+    ...........ooppppdttttttttttToo.ooooRrooooo.
+    ...........ooppppdttttttttttToooooooRrooooo.
+    .......ooooppppppdTTttTTTTTtToooooooRroooooo
+    .oooooooddpppppdddTTTToooTTttoooooooRroooooo
+    .oooooooddpppppdddTTTToooTTttooooooRrroooooo
+    .oooooooddppppdoooooootttttttooSssoRrroooooo
+    ooooooooddddddooosssTttttttttToSLLsoRrooooo.
+    ooooooooooooooooosssTTtttTTTToooSLLsoRoooo..
+    ooooooooooooooooosssTTtttTTTToo.ooooooooo...
+    ooo..............oooooooooooo...............
+
+animations:
+  dead:
+    fps: 1
+    loop: false
+    frames:
+      - [[dead, 2, 19]]

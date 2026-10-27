@@ -1,0 +1,32 @@
+# Blala's corpse: the same lying pose and size as the enemy corpse (mook dead_a) in his own colors, with his
+# own head (face down). Its own sheet because the body is wider than his 39-px frame. Same frame and placement as
+# the mook corpse, so the game can treat both alike. Bottom row = the ground.
+name: blala_dead
+description: Corpse of Blala (black buzz cut, white tank top, green pants), lying on his belly with his face to the ground - the enemy corpse pose in his colors.
+palette: blala
+frame: [47, 34]
+
+parts:
+  dead: |
+    .....................oooooooo...............
+    ..............oooooooKkkkkkkKoo.............
+    ..............oooooooKkkkkkkKoo.............
+    .............onnndkkkkkkkkkkkKK.............
+    ...........oodnnndkkkkkkkkkkKoo..oooooooo...
+    ...........oonnnndkkkkkkkkkkKoo.ohhhhhhhho..
+    ...........oonnnndkkkkkkkkkkKooohhhhhHhhhho.
+    .......oooonnnnnndKKkkKKKKKkKoohhhhhhhhHhhho
+    .oooooooddnnnnndddKKKKoooKKkkoohhhhhhhhhhhho
+    .oooooooddnnnnndddKKKKoooKKkkooShhhhhhhhhhho
+    .oooooooddnnnndoooooookkkkkkkoeSssShhhhhhho.
+    ooooooooddddddooosssKkkkkkkkkKeSLLsShhhhhho.
+    ooooooooooooooooosssKKkkkKKKKooeSLLsShhhho..
+    ooooooooooooooooosssKKkkkKKKKoo.eeeeoooooo..
+    ooo..............oooooooooooo...............
+
+animations:
+  dead:
+    fps: 1
+    loop: false
+    frames:
+      - [[dead, 2, 19]]

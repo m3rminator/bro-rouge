@@ -1,0 +1,32 @@
+# Sharif's corpse: the same lying pose and size as the enemy corpse (mook dead_a) in his own colors, with his
+# own head (face down). Its own sheet because the body is wider than his 39-px frame. Same frame and placement as
+# the mook corpse, so the game can treat both alike. Bottom row = the ground.
+name: sharif_dead
+description: Corpse of Sharif (cowboy hat, silver mustache, vest, jeans), lying on his belly with his face to the ground - the enemy corpse pose in his colors.
+palette: sharif
+frame: [47, 34]
+
+parts:
+  dead: |
+    .....................oooooooo...............
+    ..............oooooooVvvvvvvVoo.............
+    ..............oooooooVvvvvvvVoo.....oo......
+    .............ojjjdvvvvvvvvvvvVV....oyo......
+    ...........oodjjjdvvvvvvvvvvVoo...HoyYoooo..
+    ...........oojjjjdvvvvvvvvvvVoo..HHoyYyyyyo.
+    ...........oojjjjdvvvvvvvvvvVoo.oHhoyYyuyyyo
+    .......oooojjjjjjdVVvvVVVVVvVoooHhhoyYyuyyyo
+    .oooooooddjjjjjdddVVVVoooVVvvooSHhhoyYyuyyyo
+    .oooooooddjjjjjdddVVVVoooVVvvooSSsMoyYyuyyyo
+    .oooooooddjjjjdooooooovvvvvvvoeSsMMoyYyyyyyo
+    ooooooooddddddooosssVvvvvvvvvVeSLMmoyYyyyyo.
+    ooooooooooooooooosssVVvvvVVVVooeSMmoyYoooo..
+    ooooooooooooooooosssVVvvvVVVVoo.eeeoyo......
+    ooo..............oooooooooooo...............
+
+animations:
+  dead:
+    fps: 1
+    loop: false
+    frames:
+      - [[dead, 2, 19]]

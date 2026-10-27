@@ -33,7 +33,7 @@ panels:
     caption: He fires slow red bursts. Jump over them, or break the block under him. Two hits and he drops.
     sfx: enemy_shoot
   - title: Hit
-    shot: bro/hurt/0
+    shot: bro_dead/dead/0
     caption: Each enemy hit costs a heart and makes the Bro blink (briefly invulnerable). Lose all three and you lose a life; the level restarts. Blasts take two or three hearts at once and throw you.
     sfx: player_hurt
   - title: Knife
