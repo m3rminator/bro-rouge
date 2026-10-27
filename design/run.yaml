@@ -2,13 +2,13 @@
 # Generated into GameData.RUN. The build checks that every map exists, has an exit
 # ("X") and enough enemies to meet its kill quota.
 name: Run loop
-description: A run is endless and every level is generated fresh (scripts/level_gen.gd) - fight, fight, BOSS (a Brute), then a safe-house HUB where the Bro can walk around and restock ammo, refill hearts and lives, and refill grenades - then it starts again, every level with real height - hills with stairs, valleys, narrow gaps and towers of floating platforms, enemies on every level of it - and every loop (not every level) a little bigger, fuller and tougher (more enemies, more kamikazes, higher kill quota, more barrels). Each level has at least min_enemies enemies; the exit flag opens after the kill quota (a boss level needs every enemy dead, the Brute included). Hearts and ammo carry over from level to level, so the hub matters. Dying costs one life and restarts the current level (same layout, kills reset, hearts refilled); losing the last life ends the run and you start again from the first fight with full lives. The three hand-made maps listed under 'levels' are no longer part of the run - they stay as reference and test maps.
+description: A run is endless and every level is generated fresh (scripts/level_gen.gd) - fight, fight, BOSS (a Brute), then a safe-house HUB (after EVERY level) where the Bro can walk around and restock ammo, refill hearts, and refill grenades - then it starts again, every level with real height - hills with stairs, valleys, narrow gaps and towers of floating platforms, enemies on every level of it - and every loop (not every level) a little bigger, fuller and tougher (more enemies, more kamikazes, higher kill quota, more barrels). Each level has at least min_enemies enemies; the exit flag opens after the kill quota (a boss level needs every enemy dead, the Brute included). Hearts and ammo carry over from level to level, so the hub matters. Dying costs one life and restarts the current level (same layout, kills reset, hearts refilled); losing the last life ends the run and you start again from the first fight with full lives. The three hand-made maps listed under 'levels' are no longer part of the run - they stay as reference and test maps.
 
 stats:
   lives:
-    value: 3
+    value: 2
     unit: lives
-    description: Lives at the start of a run. Each death costs one and restarts the current level.
+    description: Lives at the start of a run - the Bro himself and ONE extra (the HUD shows X1 next to the hearts). Each death costs one and restarts the current level; the run is over when none is left.
   clear_delay:
     value: 2.0
     unit: s
@@ -17,6 +17,42 @@ stats:
     value: 3.0
     unit: s
     description: How long "RUN OVER" shows after the last life is lost, before a new run starts.
+  upgrade_mag:
+    value: 0.5
+    unit: ratio
+    description: A random upgrade crate makes the magazine this much bigger for upgrade_time seconds (shell Bros get more shells).
+  upgrade_rate:
+    value: 0.3
+    unit: ratio
+    description: A random upgrade crate makes the gun fire this much faster for upgrade_time seconds (the time between shots shrinks).
+  upgrade_speed:
+    value: 0.24
+    unit: ratio
+    description: A random upgrade crate makes the Bro run this much faster for upgrade_time seconds.
+  upgrade_damage:
+    value: 1.0
+    unit: ratio
+    description: A random upgrade crate makes every bullet hit this much harder (1.0 = double damage) for upgrade_time seconds.
+  upgrade_time:
+    value: 30.0
+    unit: s
+    description: How long a crate upgrade lasts. Taking the same one again starts the 30 seconds over.
+  run_multiplier:
+    value: 2.0
+    unit: x
+    description: Double-tap a direction and the Bro runs - starting at run_start and building up to this multiple of his normal speed over run_ramp_time - until he lets go.
+  run_start:
+    value: 1.5
+    unit: x
+    description: The speed multiple at the first step of a run, before it builds up.
+  run_ramp_time:
+    value: 1.2
+    unit: s
+    description: How long a run takes to build from run_start to run_multiplier.
+  double_tap_time:
+    value: 0.3
+    unit: s
+    description: Two taps on the same direction closer together than this count as a double tap.
 
   background_parallax:
     value: 0.3
@@ -89,9 +125,9 @@ stats:
     description: Lowest screen row (cloud bottom edge) a cloud floats at.
 
   boss_every:
-    value: 3
+    value: 4
     unit: levels
-    description: Every this many fights the last one is a boss level (a Brute), and a hub follows it.
+    description: Every this many fights (three fights, then the boss) the last one is a boss level (a Brute), and a hub follows it.
   stone_biome_chance:
     value: 0.35
     unit: chance
@@ -121,9 +157,9 @@ stats:
     unit: tiles
     description: Cap on level width.
   boss_width:
-    value: 90
+    value: 72
     unit: tiles
-    description: Width of the first boss arena (it also grows with width_per_depth per boss cleared).
+    description: Width of the first boss level - just a short run-up and the arena (it also grows with width_per_depth per boss cleared). There are no other enemies - the Bro steps off the truck into the Brute's arena and the Brute goes for him at once.
   platform_towers_base:
     value: 4
     unit: towers
@@ -148,6 +184,30 @@ stats:
     value: 0.4
     unit: share
     description: Cap on the kamikaze share.
+  vest_base:
+    value: 0.08
+    unit: share
+    description: Share of the soldiers that are vest soldiers (3 hits, headshot kills) in the first level.
+  vest_per_depth:
+    value: 0.03
+    unit: share
+    description: Extra vest share per loop completed.
+  vest_max:
+    value: 0.3
+    unit: share
+    description: Cap on the vest share.
+  helmet_base:
+    value: 0.12
+    unit: share
+    description: Share of the soldiers that are helmet soldiers in the first loop.
+  helmet_per_depth:
+    value: 0.03
+    unit: share
+    description: Extra helmet share per loop completed.
+  helmet_max:
+    value: 0.2
+    unit: share
+    description: Cap on the helmet share.
   barrel_clusters_base:
     value: 4
     unit: clusters

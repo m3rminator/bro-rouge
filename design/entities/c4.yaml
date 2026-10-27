@@ -1,0 +1,43 @@
+# Entity: Balal's C4.
+id: c4
+name: C4 charge
+kind: weapon
+order: 2.6
+description: Balal's explosive (the grenade button throws C4 for him; the Bro and Sharif keep grenades). He starts every level with as many charges as the Bro has grenades (grenades_per_level, refilled only by finishing a level). TAP the button to throw one in the same arc as a grenade; it flies until it touches something and sticks there for good - floor, wall or ceiling (it lies flat on the surface) - or to the enemy it hits and rides along with him. If the block it is stuck to is destroyed it falls again; if its enemy dies it drops from the body and sticks wherever it lands. It never goes off by itself. HOLD the button for hold_time and every planted charge explodes at once with the power of a grenade (same radius and damage, breaks blocks, hurts Balal if he is close). Enemies cannot see C4 - no alert, no fleeing. The HUD shows one c4_hud icon per charge left (planted charges are spent).
+sprite: items
+files:
+  - game/scripts/c4_charge.gd
+  - game/scripts/player.gd
+  - game/scripts/hud.gd
+controls: [grenade]
+spawns: [explosion]
+
+stats:
+  radius:
+    value: 3.0
+    unit: px
+    description: Size of its collision circle.
+  hold_time:
+    value: 0.45
+    unit: s
+    description: How long the grenade button must be held to set the planted charges off (a shorter press throws one).
+  blast_radius:
+    value: 58.0
+    unit: px
+    description: Blast radius of each charge - the same as a grenade or one explosive barrel.
+  blast_damage:
+    value: 4
+    unit: hp
+    description: Damage to enemies in each blast - the same as a grenade.
+  blast_player_damage:
+    value: 2
+    unit: hearts
+    description: Hearts each blast takes from Balal if he is standing in it.
+  detonate_shake:
+    value: 4.0
+    unit: px
+    description: Extra screen shake at the moment he sets the charges off.
+
+animations:
+  items/c4: The planted charge - a red display blinks (2 frames, 2 per second, looping).
+  items/c4_hud: HUD icon - one per charge left.

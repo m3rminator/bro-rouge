@@ -66,7 +66,7 @@ stats:
     unit: px/s
     description: Upward speed of a kick.
   kick_drops:
-    value: 24
+    value: 12
     unit: drops
     description: Blood drops a kick sprays all around (they fall and stain the ground).
   kick_bleed:
@@ -74,7 +74,7 @@ stats:
     unit: s
     description: A kicked head pours blood again for at least this long.
   burst_drops:
-    value: 40
+    value: 20
     unit: drops
     description: Blood drops thrown when the Bro's knife bursts it.
 

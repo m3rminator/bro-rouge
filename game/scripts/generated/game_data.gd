@@ -31,6 +31,7 @@ const BRO := {
 	"max_spare_mags": 3,
 	"magazine_size": 30,
 	"reload_time": 1.4,
+	"drop_mag": true,
 	"recoil": 22.0,
 	"recoil_max": 45.0,
 	"recoil_air": 1.0,
@@ -44,7 +45,7 @@ const BRO := {
 	"knife_boss_damage": 5,
 	"knife_knockback": 190.0,
 	"knife_hop": -180.0,
-	"knife_blood": 70,
+	"knife_blood": 35,
 	"mag_popup_time": 1.5,
 	"shout_interval": 1.1,
 	"cling_hold": 2.0,
@@ -65,6 +66,8 @@ const BRO := {
 	"hud_mag_icon": "mag_hud",
 	"pickup_icon": "mag_pickup",
 	"explosive": "grenade",
+	"recoil_hop": 0.0,
+	"weapon": "rifle",
 	"windup_time": 0.0,
 	"windup_decay": 0.6,
 	"grenades": 0,
@@ -73,8 +76,8 @@ const BRO := {
 	"pellet_spread": 0.0,
 	"pellet_speed_var": 0.0,
 	"bullet_lifetime": 0.8,
-	"knife_hits": 1,
-	"knife_stun": 0.0,
+	"knife_hits": 2,
+	"knife_stun": 2.0,
 	"shot_sound": "shoot",
 	"melee_hit_sound": "knife_stab",
 	"tint": [1.0, 1.0, 1.0],
@@ -82,6 +85,8 @@ const BRO := {
 
 ## Balal (playable Bro) (design/entities/blala.yaml)
 const BLALA := {
+	"drop_mag": false,
+	"drop_guns": true,
 	"fire_interval": 0.055,
 	"magazine_size": 60,
 	"bullet_lifetime": 0.28,
@@ -91,6 +96,7 @@ const BLALA := {
 	"knife_hits": 2,
 	"shot_sound": "blala_shoot",
 	"melee_hit_sound": "gun_bash",
+	"knife_hits_plain": 2,
 	"knife_stun": 2.0,
 	"shoot_shake": 0.5,
 	"hud_mag_icon": "smg_mag_hud",
@@ -102,6 +108,7 @@ const BLALA := {
 const SHARIF := {
 	"speed": 95.0,
 	"muzzle_flash": "shotgun_flash",
+	"pellet_pierce": 2,
 	"pellets": 7,
 	"pellet_spread": 13.0,
 	"pellet_speed_var": 0.25,
@@ -125,8 +132,8 @@ const SHARIF := {
 
 ## Hamid (playable Bro) (design/entities/heavy.yaml)
 const HEAVY := {
-	"speed": 75.0,
-	"windup_time": 0.7,
+	"speed": 88.0,
+	"windup_time": 0.4,
 	"fire_interval": 0.04,
 	"magazine_size": 120,
 	"magazines": 2,
@@ -136,16 +143,44 @@ const HEAVY := {
 	"recoil": 50.0,
 	"recoil_max": 150.0,
 	"recoil_decay": 260.0,
+	"recoil_ground": 0.3,
 	"recoil_air": 1.8,
 	"shoot_shake": 0.9,
 	"knife_hits": 2,
+	"knife_hits_plain": 2,
 	"knife_stun": 2.0,
 	"muzzle_flash": "minigun_flash",
 	"shot_sound": "blala_shoot",
 	"melee_hit_sound": "gun_bash",
 	"explosive": "airstrike",
-	"grenades": 1,
+	"grenades": 2,
 	"reload_move_mult": 0.35,
+	"overheat_shots": 80,
+	"overheat_time": 1.5,
+	"overheat_reset": 0.5,
+}
+
+## Men in Black (playable Bro) (design/entities/mib.yaml)
+const MIB := {
+	"drop_mag": false,
+	"steam_reload": true,
+	"hud_mag_icon": "cell_hud",
+	"pickup_icon": "cell_pickup",
+	"speed": 105.0,
+	"muzzle_flash": "raygun_flash",
+	"weapon": "raygun",
+	"fire_interval": 0.9,
+	"magazine_size": 8,
+	"magazines": 3,
+	"reload_time": 1.6,
+	"base_spread": 0.0,
+	"spread_after": 1000,
+	"recoil": 115.0,
+	"recoil_max": 115.0,
+	"shoot_shake": 3.0,
+	"recoil_hop": 160.0,
+	"explosive": "disco",
+	"shot_sound": "raygun_shot",
 }
 
 ## Bro rifle bullet (design/entities/bullet.yaml)
@@ -194,6 +229,7 @@ const C4 := {
 const AIRSTRIKE := {
 	"distance": 170.0,
 	"delay": 1.3,
+	"warn_radius": 66.0,
 	"bombs": 6,
 	"bomb_interval": 0.12,
 	"spread": 46.0,
@@ -221,6 +257,47 @@ const REVOLVER := {
 	"bullet_sheet": "revolver_bullet",
 	"bullet_anim": "fly",
 	"flash": "revolver_flash",
+	"charge_time": 1.2,
+	"max_damage": 18,
+	"max_pierce_enemies": 10,
+	"max_pierce_blocks": 10,
+	"max_lifetime": 2.2,
+	"max_shake": 9.0,
+	"ring_radius": 6.0,
+	"ring_offset": [8, -26],
+	"flash_time": 0.25,
+}
+
+## Raygun beam (design/entities/raygun.yaml)
+const RAYGUN := {
+	"range": 420.0,
+	"beam_time": 0.16,
+	"direct_damage": 12,
+	"boss_damage": 4,
+	"wave_radius": 30.0,
+	"wave_time": 0.45,
+	"knock_speed": 240.0,
+	"knock_up": 150.0,
+	"stun_time": 2.5,
+	"shake": 5.0,
+}
+
+## Disco grenade (design/entities/disco.yaml)
+const DISCO := {
+	"party_time": 4.0,
+	"lure_range": 280.0,
+	"zone_radius": 96.0,
+	"panic_time": 6.0,
+	"panic_speed": 85.0,
+	"panic_jump": 230.0,
+	"panic_jump_rate": 1.2,
+	"panic_turn": [0.3, 0.8],
+	"panic_shot": [0.35, 0.8],
+	"gravity": 700.0,
+	"radius": 3.0,
+	"bounce": 0.35,
+	"roll_friction": 300.0,
+	"light_spots": 7,
 }
 
 ## Mook (enemy soldier) (design/entities/mook.yaml)
@@ -330,6 +407,22 @@ const BRUTE := {
 	"burst_pause": 1.3,
 	"spread_angle": 36.0,
 	"forget_time": 3.0,
+	"phases": 3,
+	"barrage_min": 3,
+	"barrage_max": 4,
+	"barrage_gap": 1.8,
+	"barrage_delay": 1.4,
+	"barrage_end": 2.0,
+	"transition_timeout": 30.0,
+	"strike_interval": 10.0,
+	"strike_first": 2.0,
+	"strike_delay": 2.2,
+	"strike_radius": 56.0,
+	"rage_fire_mult": 1.5,
+	"drop_interval": 14.0,
+	"drop_count": 3,
+	"drop_max": 4,
+	"drop_soldiers": 5,
 	"hitbox": [24, 42],
 }
 
@@ -347,7 +440,7 @@ const BLOCK := {
 	"hp": 3,
 	"crack_stages": 4,
 	"grass_clearance": 3,
-	"debris_amount": 34,
+	"debris_amount": 24,
 	"chain_break": 0.3,
 }
 
@@ -375,21 +468,21 @@ const EXPLOSION := {
 	"core_share": 0.55,
 	"big_scale_per_extra": 0.18,
 	"secondary_delay": 0.06,
-	"smoke_puffs": 2,
-	"fire_particles": 24,
+	"smoke_puffs": 1,
+	"fire_particles": 12,
 	"fling_speed": 220.0,
 	"shake": 6.0,
 	"shake_per_extra": 3.0,
-	"embers": 34,
-	"embers_per_extra": 10,
+	"embers": 16,
+	"embers_per_extra": 5,
 	"ember_life": 3.0,
 }
 
 ## Blood (design/entities/blood.yaml)
 const BLOOD := {
-	"droplets_hit": 28,
-	"droplets_death": 90,
-	"droplets_gore": 450,
+	"droplets_hit": 14,
+	"droplets_death": 45,
+	"droplets_gore": 225,
 	"gibs_death": 3,
 	"gore_shake": 5.0,
 	"gibs_gore": 14,
@@ -404,6 +497,7 @@ const BLOOD := {
 
 ## Corpse (enemy body) (design/entities/corpse.yaml)
 const CORPSE := {
+	"ghost_time": 0.5,
 	"bump_speed": 0.3,
 	"bump_hop": -25.0,
 	"drag": 0.23,
@@ -416,7 +510,7 @@ const CORPSE := {
 	"fountain_time": 4.0,
 	"fountain_speed": 170.0,
 	"fountain_beat": 2.5,
-	"fountain_drops": 3,
+	"fountain_drops": 2,
 }
 
 ## Extraction truck (design/entities/exit.yaml)
@@ -469,9 +563,9 @@ const HEAD := {
 	"kick_reach": 9.0,
 	"kick_speed": 150.0,
 	"kick_up": 190.0,
-	"kick_drops": 24,
+	"kick_drops": 12,
 	"kick_bleed": 0.8,
-	"burst_drops": 40,
+	"burst_drops": 20,
 }
 
 ## Torn-apart body (design/entities/body_pieces.yaml)
@@ -485,9 +579,9 @@ const BODY_PIECES := {
 	"rest_speed": 70.0,
 	"trail_time": 2.2,
 	"drip_interval": 0.05,
-	"drip_droplets": 5,
-	"piece_droplets": 120,
-	"bounce_droplets": 40,
+	"drip_droplets": 3,
+	"piece_droplets": 60,
+	"bounce_droplets": 20,
 	"rest_time": 2.0,
 	"fade_time": 1.5,
 	"sink_speed": 14.0,
@@ -553,7 +647,10 @@ const ANCHORS := {
 	"blala": {"feet": Vector2(0.0, 17.5)},
 	"blood": {"spray_origin": Vector2(-8.5, 0.5), "center": Vector2(0.5, 0.5)},
 	"bro": {"feet": Vector2(0.0, 17.5)},
-	"brute": {"muzzle_top": Vector2(25.0, -4.0), "muzzle_bottom": Vector2(24.0, 7.0), "eye": Vector2(2.0, -14.0)},
+	"brute": {"muzzle_top": Vector2(17.5, 4.5), "muzzle_bottom": Vector2(17.5, 4.5), "eye": Vector2(-2.5, -18.5)},
+	"crate_ammo": {"center": Vector2(0.5, 0.0)},
+	"crate_grenade": {"center": Vector2(0.5, 0.0)},
+	"crate_med": {"center": Vector2(0.5, 0.0)},
 	"explosion": {"center": Vector2(0.5, 1.5)},
 	"explosion_big": {"ground": Vector2(0.5, 16.5)},
 	"fx": {"center": Vector2(0.5, 0.5)},
@@ -561,9 +658,11 @@ const ANCHORS := {
 	"heavy": {"feet": Vector2(0.0, 17.5)},
 	"helmet": {"eye": Vector2(1.0, -8.5)},
 	"kamikaze": {"eye": Vector2(4.0, -7.5), "fuse": Vector2(10.0, -5.5)},
+	"mib": {"feet": Vector2(-4.0, 17.5)},
 	"minigun_flash": {"center": Vector2(0.5, 0.0)},
 	"mook": {"eye": Vector2(1.0, -8.5)},
 	"projectiles": {"center": Vector2(0.5, 0.5)},
+	"raygun_flash": {"center": Vector2(0.5, 0.0)},
 	"revolver_bullet": {"center": Vector2(0.5, 0.0)},
 	"revolver_flash": {"center": Vector2(0.5, 0.0)},
 	"sharif": {"feet": Vector2(0.0, 17.5)},
@@ -576,35 +675,40 @@ const ANCHORS := {
 ## Gun tip of every frame, relative to the frame center (null = no gun in that frame).
 ## Found by tools/build.py from each sprite's muzzle_symbols, so bullets always leave the barrel.
 const MUZZLES := {
-	"blala": {"idle": [Vector2(16.0, 2.5), Vector2(16.0, 3.5)], "run": [Vector2(15.0, 2.5), Vector2(16.0, 3.5)], "jump": [Vector2(16.0, 1.5)], "shoot": [Vector2(17.0, -2.5), Vector2(18.0, -2.5)], "crouch": [Vector2(16.0, 4.5), Vector2(16.0, 5.5)], "crouch_walk": [Vector2(16.0, 5.5), Vector2(16.0, 4.5), Vector2(16.0, 5.5), Vector2(16.0, 4.5)], "crouch_shoot": [Vector2(16.0, 4.5), Vector2(17.0, 4.5)], "knife": [Vector2(16.0, 5.5), Vector2(16.0, -14.5), Vector2(18.0, 2.5), Vector2(16.0, 9.5), Vector2(16.0, 9.5), Vector2(16.0, 9.5)], "run_shoot": [Vector2(15.0, 2.5), Vector2(16.0, 2.5), Vector2(16.0, 3.5), Vector2(17.0, 3.5)], "cling": [Vector2(-2.0, 2.5), Vector2(-2.0, 2.5), Vector2(-1.0, 2.5), Vector2(-1.0, 2.5)], "flip": [Vector2(16.0, -0.5), Vector2(2.0, 8.5), Vector2(10.0, -1.5), Vector2(7.0, 5.5)], "climb": [Vector2(16.0, 6.5), Vector2(16.0, 5.5), Vector2(16.0, 4.5)], "crouch_knife": [Vector2(16.0, 8.5), Vector2(16.0, -11.5), Vector2(18.0, 5.5), Vector2(16.0, 12.5), Vector2(16.0, 12.5), Vector2(16.0, 12.5)]},
-	"bro": {"idle": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "run": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "jump": [Vector2(14.0, -0.5)], "shoot": [Vector2(14.0, -2.5), Vector2(15.0, -2.5)], "crouch": [Vector2(14.0, 1.5), Vector2(14.0, 2.5)], "crouch_walk": [Vector2(14.0, 2.5), Vector2(14.0, 1.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)], "crouch_shoot": [Vector2(14.0, 1.5), Vector2(15.0, 1.5)], "knife": [null, null, null, Vector2(17.0, -9.5), Vector2(17.0, -9.5), Vector2(17.0, -9.5)], "run_shoot": [Vector2(13.0, 2.5), Vector2(14.0, 2.5), Vector2(13.0, 3.5), Vector2(14.0, 3.5)], "cling": [Vector2(4.0, 0.5), Vector2(4.0, 0.5), Vector2(5.0, 0.5), Vector2(5.0, 0.5)], "flip": [Vector2(14.0, -0.5), Vector2(2.0, 13.5), Vector2(8.0, -2.5), Vector2(7.0, -2.5)], "climb": [Vector2(14.0, 3.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)], "crouch_knife": [null, null, null, Vector2(17.0, -4.5), Vector2(17.0, -4.5), Vector2(17.0, -4.5)]},
-	"heavy": {"idle": [Vector2(17.0, 7.5), Vector2(17.0, 8.5)], "run": [Vector2(16.0, 7.5), Vector2(17.0, 8.5)], "shoot": [Vector2(15.0, 7.5), Vector2(17.0, 8.5), Vector2(16.0, 7.5), Vector2(15.0, 8.5)], "windup": [Vector2(17.0, 7.5), Vector2(17.0, 7.5), Vector2(17.0, 8.5)], "run_shoot": [Vector2(14.0, 7.5), Vector2(16.0, 7.5), Vector2(15.0, 8.5), Vector2(17.0, 8.5)], "run_windup": [Vector2(16.0, 7.5), Vector2(16.0, 7.5), Vector2(17.0, 8.5), Vector2(17.0, 8.5)], "jump": [Vector2(17.0, 5.5)], "crouch": [Vector2(17.0, 10.5), Vector2(17.0, 11.5)], "crouch_walk": [Vector2(17.0, 11.5), Vector2(17.0, 10.5), Vector2(17.0, 11.5), Vector2(17.0, 10.5)], "crouch_shoot": [Vector2(15.0, 10.5), Vector2(17.0, 11.5), Vector2(16.0, 10.5), Vector2(15.0, 11.5)], "crouch_windup": [Vector2(17.0, 10.5), Vector2(17.0, 10.5), Vector2(17.0, 11.5)], "knife": [Vector2(15.0, 7.5), Vector2(13.0, 7.5), Vector2(20.0, 7.5), Vector2(21.0, 7.5), Vector2(21.0, 7.5), Vector2(18.0, 7.5)], "crouch_knife": [Vector2(15.0, 10.5), Vector2(13.0, 10.5), Vector2(20.0, 10.5), Vector2(21.0, 10.5), Vector2(21.0, 10.5), Vector2(18.0, 10.5)], "cling": [Vector2(9.0, 8.5), Vector2(9.0, 8.5), Vector2(10.0, 8.5), Vector2(10.0, 8.5)], "flip": [Vector2(16.0, 4.5), Vector2(0.0, -5.5), Vector2(11.0, -5.5), Vector2(8.0, 5.5)], "reload": [Vector2(17.0, 7.5), Vector2(18.0, 8.5), Vector2(18.0, 10.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 10.5), Vector2(18.0, 8.5), Vector2(17.0, 7.5), Vector2(17.0, 7.5)], "climb": [Vector2(17.0, 12.5), Vector2(17.0, 11.5), Vector2(17.0, 10.5)]},
+	"blala": {"idle": [Vector2(16.0, 2.5), Vector2(16.0, 3.5)], "run": [Vector2(15.0, 2.5), Vector2(16.0, 3.5)], "jump": [Vector2(16.0, 1.5)], "shoot": [Vector2(17.0, -2.5), Vector2(18.0, -2.5)], "crouch": [Vector2(16.0, 4.5), Vector2(16.0, 5.5)], "crouch_walk": [Vector2(16.0, 5.5), Vector2(16.0, 4.5), Vector2(16.0, 5.5), Vector2(16.0, 4.5)], "crouch_shoot": [Vector2(16.0, 4.5), Vector2(17.0, 4.5)], "knife": [Vector2(16.0, 5.5), Vector2(16.0, -14.5), Vector2(18.0, 2.5), Vector2(16.0, 9.5), Vector2(16.0, 9.5), Vector2(16.0, 9.5)], "run_shoot": [Vector2(15.0, 2.5), Vector2(16.0, 2.5), Vector2(16.0, 3.5), Vector2(17.0, 3.5)], "cling": [Vector2(-2.0, 2.5), Vector2(-2.0, 2.5), Vector2(-1.0, 2.5), Vector2(-1.0, 2.5)], "flip": [Vector2(16.0, -0.5), Vector2(2.0, 8.5), Vector2(10.0, -1.5), Vector2(7.0, 5.5)], "climb": [Vector2(16.0, 6.5), Vector2(16.0, 5.5), Vector2(16.0, 4.5)], "crouch_knife": [Vector2(16.0, 8.5), Vector2(16.0, -11.5), Vector2(18.0, 5.5), Vector2(16.0, 12.5), Vector2(16.0, 12.5), Vector2(16.0, 12.5)], "roll": [Vector2(16.0, 5.5), Vector2(3.0, 16.5), Vector2(3.0, 5.5), Vector2(3.0, 2.5), Vector2(6.0, 4.5), Vector2(7.0, 7.5), Vector2(3.0, 11.5), Vector2(16.0, 4.5)], "reload": [Vector2(16.0, 2.5), null, null, null, null, null, null, Vector2(11.0, 5.5), Vector2(11.0, 5.5), Vector2(11.0, 5.5), Vector2(11.0, 5.5), Vector2(16.0, 3.5), Vector2(16.0, 3.5), Vector2(16.0, 2.5)], "run_reload": [Vector2(16.0, 2.5), null, null, null, null, null, null, Vector2(11.0, 5.5), Vector2(11.0, 5.5), Vector2(11.0, 5.5), Vector2(11.0, 5.5), Vector2(16.0, 3.5), Vector2(16.0, 3.5), Vector2(16.0, 2.5)]},
+	"bro": {"idle": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "run": [Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "jump": [Vector2(14.0, -0.5)], "shoot": [Vector2(14.0, -2.5), Vector2(15.0, -2.5)], "crouch": [Vector2(14.0, 1.5), Vector2(14.0, 2.5)], "crouch_walk": [Vector2(14.0, 2.5), Vector2(14.0, 1.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)], "crouch_shoot": [Vector2(14.0, 1.5), Vector2(15.0, 1.5)], "knife": [null, null, null, Vector2(17.0, -9.5), Vector2(17.0, -9.5), Vector2(17.0, -9.5)], "run_shoot": [Vector2(13.0, 2.5), Vector2(14.0, 2.5), Vector2(13.0, 3.5), Vector2(14.0, 3.5)], "cling": [Vector2(4.0, 0.5), Vector2(4.0, 0.5), Vector2(5.0, 0.5), Vector2(5.0, 0.5)], "flip": [Vector2(14.0, -0.5), Vector2(2.0, 13.5), Vector2(8.0, -2.5), Vector2(7.0, -2.5)], "climb": [Vector2(14.0, 3.5), Vector2(14.0, 2.5), Vector2(14.0, 1.5)], "crouch_knife": [null, null, null, Vector2(17.0, -4.5), Vector2(17.0, -4.5), Vector2(17.0, -4.5)], "roll": [Vector2(14.0, 2.5), Vector2(1.0, 10.5), Vector2(5.0, 3.5), Vector2(5.0, 5.5), Vector2(6.0, 8.5), Vector2(8.0, 0.5), Vector2(8.0, 7.5), Vector2(14.0, 1.5)], "reload": [Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 3.5)], "run_reload": [Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 2.5), Vector2(13.0, 3.5), Vector2(13.0, 3.5)]},
+	"heavy": {"idle": [Vector2(17.0, 7.5), Vector2(17.0, 8.5)], "run": [Vector2(16.0, 7.5), Vector2(17.0, 8.5)], "shoot": [Vector2(15.0, 7.5), Vector2(17.0, 8.5), Vector2(16.0, 7.5), Vector2(15.0, 8.5)], "windup": [Vector2(17.0, 7.5), Vector2(17.0, 7.5), Vector2(17.0, 8.5)], "run_shoot": [Vector2(14.0, 7.5), Vector2(16.0, 7.5), Vector2(15.0, 8.5), Vector2(17.0, 8.5)], "run_windup": [Vector2(16.0, 7.5), Vector2(16.0, 7.5), Vector2(17.0, 8.5), Vector2(17.0, 8.5)], "jump": [Vector2(17.0, 5.5)], "crouch": [Vector2(17.0, 10.5), Vector2(17.0, 11.5)], "crouch_walk": [Vector2(17.0, 11.5), Vector2(17.0, 10.5), Vector2(17.0, 11.5), Vector2(17.0, 10.5)], "crouch_shoot": [Vector2(15.0, 10.5), Vector2(17.0, 11.5), Vector2(16.0, 10.5), Vector2(15.0, 11.5)], "crouch_windup": [Vector2(17.0, 10.5), Vector2(17.0, 10.5), Vector2(17.0, 11.5)], "knife": [Vector2(15.0, 7.5), Vector2(13.0, 7.5), Vector2(20.0, 7.5), Vector2(21.0, 7.5), Vector2(21.0, 7.5), Vector2(18.0, 7.5)], "crouch_knife": [Vector2(15.0, 10.5), Vector2(13.0, 10.5), Vector2(20.0, 10.5), Vector2(21.0, 10.5), Vector2(21.0, 10.5), Vector2(18.0, 10.5)], "cling": [Vector2(9.0, 8.5), Vector2(9.0, 8.5), Vector2(10.0, 8.5), Vector2(10.0, 8.5)], "flip": [Vector2(16.0, 4.5), Vector2(0.0, -5.5), Vector2(11.0, -5.5), Vector2(8.0, 5.5)], "reload": [Vector2(17.0, 7.5), Vector2(18.0, 8.5), Vector2(18.0, 10.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 10.5), Vector2(18.0, 8.5), Vector2(17.0, 7.5), Vector2(17.0, 7.5)], "climb": [Vector2(17.0, 12.5), Vector2(17.0, 11.5), Vector2(17.0, 10.5)], "roll": [Vector2(17.0, 11.5), Vector2(0.0, 8.5), Vector2(5.0, 5.5), Vector2(6.0, 3.5), Vector2(4.0, 8.5), Vector2(9.0, 6.5), Vector2(7.0, 0.5), Vector2(17.0, 10.5)], "run_reload": [Vector2(17.0, 7.5), Vector2(17.0, 7.5), Vector2(18.0, 8.5), Vector2(18.0, 8.5), Vector2(18.0, 10.5), Vector2(18.0, 10.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 12.5), Vector2(18.0, 10.5), Vector2(18.0, 10.5), Vector2(18.0, 8.5), Vector2(18.0, 8.5), Vector2(17.0, 7.5), Vector2(17.0, 7.5), Vector2(17.0, 7.5), Vector2(17.0, 7.5)]},
 	"helmet": {"idle": [Vector2(15.0, 1.5), Vector2(15.0, 2.5)], "walk": [Vector2(14.0, 1.5), Vector2(15.0, 2.5)], "shoot": [Vector2(15.0, -3.5), Vector2(14.0, -3.5)], "fall": [Vector2(15.0, -1.5)], "hurt": [Vector2(8.0, 15.5)], "dead_a": [null], "dead_b": [null], "headless_a": [null], "headless_b": [null], "head_a": [null], "head_b": [null], "piece_torso": [null], "piece_arm": [null], "piece_leg": [null], "piece_leg_bent": [null], "piece_bit_a": [null], "piece_bit_b": [null], "helmet_drop": [null]},
+	"mib": {"idle": [Vector2(21.0, -1.5), Vector2(21.0, -0.5)], "run": [Vector2(21.0, -1.5), Vector2(21.0, -0.5)], "shoot": [Vector2(21.0, -1.5), Vector2(18.0, -3.5), Vector2(20.0, -2.5)], "crouch": [Vector2(19.0, 4.5), Vector2(19.0, 5.5)], "crouch_walk": [Vector2(19.0, 5.5), Vector2(19.0, 4.5), Vector2(19.0, 5.5), Vector2(19.0, 4.5)], "crouch_shoot": [Vector2(19.0, 4.5), Vector2(16.0, 2.5), Vector2(18.0, 3.5)], "jump": [Vector2(21.0, -2.5)], "knife": [Vector2(18.0, -1.5), Vector2(3.0, -17.5), Vector2(4.0, -17.5), Vector2(5.0, -17.5), Vector2(5.0, -17.5), Vector2(18.0, -1.5)], "crouch_knife": [Vector2(16.0, 4.5), Vector2(1.0, -11.5), Vector2(2.0, -11.5), Vector2(3.0, -11.5), Vector2(3.0, -11.5), Vector2(16.0, 4.5)], "cling": [Vector2(7.0, 1.5), Vector2(7.0, 1.5), Vector2(8.0, 1.5), Vector2(8.0, 1.5)], "flip": [Vector2(13.0, 2.5), Vector2(-3.0, 16.5), Vector2(-19.0, 2.5), Vector2(-3.0, -15.5)], "run_shoot": [Vector2(21.0, -1.5), Vector2(21.0, -0.5)], "run_recoil": [Vector2(18.0, -3.5), Vector2(20.0, -2.5)], "climb": [Vector2(19.0, 6.5), Vector2(19.0, 5.5), Vector2(19.0, 4.5)], "roll": [Vector2(19.0, 5.5), null, null, null, null, null, null, Vector2(19.0, 4.5)], "reload": [Vector2(21.0, -1.5), Vector2(18.0, -1.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(18.0, -1.5), Vector2(21.0, -1.5)], "run_reload": [Vector2(21.0, -1.5), Vector2(18.0, -1.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(3.0, -17.5), Vector2(18.0, -1.5), Vector2(21.0, -1.5)]},
 	"mook": {"idle": [Vector2(15.0, 1.5), Vector2(15.0, 2.5)], "walk": [Vector2(14.0, 1.5), Vector2(15.0, 2.5)], "shoot": [Vector2(15.0, -3.5), Vector2(14.0, -3.5)], "fall": [Vector2(15.0, -1.5)], "hurt": [Vector2(8.0, 15.5)], "dead_a": [null], "dead_b": [null], "headless_a": [null], "headless_b": [null], "head_a": [null], "head_b": [null], "piece_torso": [null], "piece_arm": [null], "piece_leg": [null], "piece_leg_bent": [null], "piece_bit_a": [null], "piece_bit_b": [null]},
-	"sharif": {"idle": [Vector2(13.0, 3.5), Vector2(13.0, 4.5)], "run": [Vector2(12.0, 3.5), Vector2(13.0, 4.5)], "shoot": [Vector2(11.0, 3.5), Vector2(12.0, 3.5)], "pump": [Vector2(13.0, 3.5), Vector2(13.0, 3.5), Vector2(13.0, 3.5), Vector2(13.0, 3.5)], "run_shoot": [Vector2(10.0, 3.5), Vector2(11.0, 3.5), Vector2(11.0, 4.5), Vector2(12.0, 4.5)], "run_pump": [Vector2(12.0, 3.5), Vector2(13.0, 4.5), Vector2(12.0, 3.5), Vector2(13.0, 4.5)], "jump": [Vector2(13.0, 1.5)], "crouch": [Vector2(13.0, 6.5), Vector2(13.0, 7.5)], "crouch_walk": [Vector2(13.0, 7.5), Vector2(13.0, 6.5), Vector2(13.0, 7.5), Vector2(13.0, 6.5)], "crouch_shoot": [Vector2(11.0, 6.5), Vector2(12.0, 6.5)], "crouch_pump": [Vector2(13.0, 6.5), Vector2(13.0, 6.5), Vector2(13.0, 6.5), Vector2(13.0, 6.5)], "knife": [Vector2(-2.0, 3.5), Vector2(-5.0, 2.5), Vector2(1.0, 3.5), Vector2(8.0, 3.5), Vector2(8.0, 3.5), Vector2(8.0, 3.5)], "cling": [Vector2(4.0, 3.5), Vector2(4.0, 3.5), Vector2(5.0, 3.5), Vector2(5.0, 3.5)], "flip": [Vector2(14.0, 0.5), Vector2(1.0, 13.5), Vector2(6.0, -1.5), Vector2(2.0, -3.5)], "revolver": [Vector2(8.0, 6.5), Vector2(19.0, 2.5), Vector2(19.0, -0.5), Vector2(18.0, -0.5), Vector2(17.0, -1.5), Vector2(18.0, -0.5)], "crouch_revolver": [Vector2(8.0, 9.5), Vector2(19.0, 5.5), Vector2(19.0, 2.5), Vector2(18.0, 2.5), Vector2(17.0, 1.5), Vector2(18.0, 2.5)], "climb": [Vector2(13.0, 8.5), Vector2(13.0, 7.5), Vector2(13.0, 6.5)], "crouch_knife": [Vector2(-2.0, 6.5), Vector2(-5.0, 5.5), Vector2(1.0, 6.5), Vector2(8.0, 6.5), Vector2(8.0, 6.5), Vector2(8.0, 6.5)]},
+	"sharif": {"idle": [Vector2(13.0, 3.5), Vector2(13.0, 4.5)], "run": [Vector2(12.0, 3.5), Vector2(13.0, 4.5)], "shoot": [Vector2(11.0, 3.5), Vector2(12.0, 3.5)], "pump": [Vector2(13.0, 3.5), Vector2(13.0, 3.5), Vector2(13.0, 3.5), Vector2(13.0, 3.5)], "run_shoot": [Vector2(10.0, 3.5), Vector2(11.0, 3.5), Vector2(11.0, 4.5), Vector2(12.0, 4.5)], "run_pump": [Vector2(12.0, 3.5), Vector2(13.0, 4.5), Vector2(12.0, 3.5), Vector2(13.0, 4.5)], "jump": [Vector2(13.0, 1.5)], "crouch": [Vector2(13.0, 6.5), Vector2(13.0, 7.5)], "crouch_walk": [Vector2(13.0, 7.5), Vector2(13.0, 6.5), Vector2(13.0, 7.5), Vector2(13.0, 6.5)], "crouch_shoot": [Vector2(11.0, 6.5), Vector2(12.0, 6.5)], "crouch_pump": [Vector2(13.0, 6.5), Vector2(13.0, 6.5), Vector2(13.0, 6.5), Vector2(13.0, 6.5)], "knife": [Vector2(-2.0, 3.5), Vector2(-5.0, 2.5), Vector2(1.0, 3.5), Vector2(8.0, 3.5), Vector2(8.0, 3.5), Vector2(8.0, 3.5)], "cling": [Vector2(4.0, 3.5), Vector2(4.0, 3.5), Vector2(5.0, 3.5), Vector2(5.0, 3.5)], "flip": [Vector2(14.0, 0.5), Vector2(1.0, 13.5), Vector2(6.0, -1.5), Vector2(2.0, -3.5)], "revolver": [Vector2(8.0, 6.5), Vector2(19.0, 2.5), Vector2(19.0, -0.5), Vector2(18.0, -0.5), Vector2(17.0, -1.5), Vector2(18.0, -0.5)], "crouch_revolver": [Vector2(8.0, 9.5), Vector2(19.0, 5.5), Vector2(19.0, 2.5), Vector2(18.0, 2.5), Vector2(17.0, 1.5), Vector2(18.0, 2.5)], "climb": [Vector2(13.0, 8.5), Vector2(13.0, 7.5), Vector2(13.0, 6.5)], "crouch_knife": [Vector2(-2.0, 6.5), Vector2(-5.0, 5.5), Vector2(1.0, 6.5), Vector2(8.0, 6.5), Vector2(8.0, 6.5), Vector2(8.0, 6.5)], "roll": [Vector2(13.0, 7.5), Vector2(1.0, 11.5), null, null, null, Vector2(4.0, 3.5), null, Vector2(13.0, 6.5)]},
 	"vest": {"idle": [Vector2(15.0, 1.5), Vector2(15.0, 2.5)], "walk": [Vector2(14.0, 1.5), Vector2(15.0, 2.5)], "shoot": [Vector2(15.0, -3.5), Vector2(14.0, -3.5)], "fall": [Vector2(15.0, -1.5)], "hurt": [Vector2(8.0, 15.5)], "dead_a": [null], "dead_b": [null], "headless_a": [null], "headless_b": [null], "head_a": [null], "head_b": [null], "piece_torso": [null], "piece_arm": [null], "piece_leg": [null], "piece_leg_bent": [null], "piece_bit_a": [null], "piece_bit_b": [null]},
 }
 
 ## The second gun's tip per frame, for sprites with two_guns (null = only one gun shows).
 const MUZZLES_2 := {
-	"blala": {"idle": [Vector2(3.0, 4.5), Vector2(3.0, 5.5)], "run": [Vector2(2.0, 4.5), Vector2(3.0, 5.5)], "jump": [Vector2(3.0, 3.5)], "shoot": [Vector2(4.0, -0.5), Vector2(5.0, -0.5)], "crouch": [Vector2(3.0, 6.5), Vector2(3.0, 7.5)], "crouch_walk": [Vector2(3.0, 7.5), Vector2(3.0, 6.5), Vector2(3.0, 7.5), Vector2(3.0, 6.5)], "crouch_shoot": [Vector2(3.0, 6.5), Vector2(4.0, 6.5)], "knife": [Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5)], "run_shoot": [Vector2(2.0, 4.5), Vector2(3.0, 4.5), Vector2(3.0, 5.5), Vector2(4.0, 5.5)], "cling": [null, null, null, null], "flip": [Vector2(3.0, 1.5), Vector2(0.0, -4.5), Vector2(-3.0, 0.5), Vector2(0.0, -8.5)], "climb": [Vector2(3.0, 8.5), Vector2(3.0, 7.5), Vector2(3.0, 6.5)], "crouch_knife": [Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5)]},
+	"blala": {"idle": [Vector2(3.0, 4.5), Vector2(3.0, 5.5)], "run": [Vector2(2.0, 4.5), Vector2(3.0, 5.5)], "jump": [Vector2(3.0, 3.5)], "shoot": [Vector2(4.0, -0.5), Vector2(5.0, -0.5)], "crouch": [Vector2(3.0, 6.5), Vector2(3.0, 7.5)], "crouch_walk": [Vector2(3.0, 7.5), Vector2(3.0, 6.5), Vector2(3.0, 7.5), Vector2(3.0, 6.5)], "crouch_shoot": [Vector2(3.0, 6.5), Vector2(4.0, 6.5)], "knife": [Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5), Vector2(2.0, 4.5)], "run_shoot": [Vector2(2.0, 4.5), Vector2(3.0, 4.5), Vector2(3.0, 5.5), Vector2(4.0, 5.5)], "cling": [null, null, null, null], "flip": [Vector2(3.0, 1.5), Vector2(0.0, -4.5), Vector2(-3.0, 0.5), Vector2(0.0, -8.5)], "climb": [Vector2(3.0, 8.5), Vector2(3.0, 7.5), Vector2(3.0, 6.5)], "crouch_knife": [Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5), Vector2(2.0, 6.5)], "roll": [Vector2(3.0, 7.5), null, null, null, null, null, null, Vector2(3.0, 6.5)], "reload": [Vector2(3.0, 4.5), null, null, null, null, null, null, Vector2(0.0, 8.5), Vector2(0.0, 8.5), Vector2(0.0, 8.5), Vector2(0.0, 8.5), Vector2(3.0, 5.5), Vector2(3.0, 5.5), Vector2(3.0, 4.5)], "run_reload": [Vector2(3.0, 4.5), null, null, null, null, null, null, Vector2(0.0, 8.5), Vector2(0.0, 8.5), Vector2(0.0, 8.5), Vector2(0.0, 8.5), Vector2(3.0, 5.5), Vector2(3.0, 5.5), Vector2(3.0, 4.5)]},
 }
 
 ## Frame size (width, height) of every sprite (art/sprites/*.yaml).
 const SPRITE_SIZES := {
 	"airstrike": Vector2(6, 17),
+	"barrel": Vector2(26, 36),
 	"bg_forest": Vector2(512, 187),
 	"bg_hills": Vector2(512, 279),
 	"bg_jungle": Vector2(512, 142),
 	"bg_sky": Vector2(16, 286),
-	"barrel": Vector2(26, 36),
 	"blala": Vector2(39, 36),
 	"blala_dead": Vector2(47, 34),
 	"blood": Vector2(24, 24),
 	"bro": Vector2(39, 36),
 	"bro_dead": Vector2(47, 34),
-	"brute": Vector2(49, 45),
+	"brute": Vector2(48, 46),
 	"cracks": Vector2(24, 24),
+	"crate_ammo": Vector2(30, 27),
+	"crate_grenade": Vector2(30, 27),
+	"crate_med": Vector2(30, 27),
+	"disco_grenade": Vector2(16, 16),
 	"exit": Vector2(24, 48),
 	"explosion": Vector2(32, 32),
 	"explosion_big": Vector2(64, 64),
@@ -616,9 +720,12 @@ const SPRITE_SIZES := {
 	"helmet": Vector2(47, 34),
 	"items": Vector2(16, 16),
 	"kamikaze": Vector2(35, 34),
+	"mib": Vector2(47, 36),
+	"mib_dead": Vector2(47, 34),
 	"minigun_flash": Vector2(24, 13),
 	"mook": Vector2(47, 34),
 	"projectiles": Vector2(16, 10),
+	"raygun_flash": Vector2(24, 15),
 	"revolver_bullet": Vector2(22, 9),
 	"revolver_flash": Vector2(30, 17),
 	"sharif": Vector2(39, 36),
@@ -699,9 +806,18 @@ const LEVELS := {
 
 ## Run loop: level order and kill quotas (design/run.yaml)
 const RUN := {
-	"lives": 3,
+	"lives": 2,
 	"clear_delay": 2.0,
 	"run_over_delay": 3.0,
+	"upgrade_mag": 0.5,
+	"upgrade_rate": 0.3,
+	"upgrade_speed": 0.24,
+	"upgrade_damage": 1.0,
+	"upgrade_time": 30.0,
+	"run_multiplier": 2.0,
+	"run_start": 1.5,
+	"run_ramp_time": 1.2,
+	"double_tap_time": 0.3,
 	"background_parallax": 0.3,
 	"bg_forest_parallax": 0.5,
 	"bg_hills_parallax": 0.25,
@@ -719,7 +835,7 @@ const RUN := {
 	"bg_cloud_drift": 6.0,
 	"bg_cloud_top": 8.0,
 	"bg_cloud_bottom": 120.0,
-	"boss_every": 3,
+	"boss_every": 4,
 	"stone_biome_chance": 0.35,
 	"min_enemies": 15,
 	"enemies_per_depth": 2,
@@ -727,7 +843,7 @@ const RUN := {
 	"width_base": 110,
 	"width_per_depth": 6,
 	"width_max": 260,
-	"boss_width": 90,
+	"boss_width": 72,
 	"platform_towers_base": 4,
 	"platform_towers_per_depth": 0.5,
 	"platform_towers_max": 14,
@@ -737,7 +853,7 @@ const RUN := {
 	"vest_base": 0.08,
 	"vest_per_depth": 0.03,
 	"vest_max": 0.3,
-	"helmet_base": 0.0,
+	"helmet_base": 0.12,
 	"helmet_per_depth": 0.03,
 	"helmet_max": 0.2,
 	"barrel_clusters_base": 4,

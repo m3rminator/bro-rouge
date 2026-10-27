@@ -1,0 +1,71 @@
+# Entity: the Men in Black disco grenade.
+id: disco
+name: Disco grenade
+kind: weapon
+order: 2.95
+description: The grenade button of the Men in Black Bro. He throws a grenade (rainbow bands that keep scrolling). When it lands on the ground a party zone forms around it - a floor glow, spinning light spots and light beams that keep changing colour - and every enemy within lure_range walks toward it, forgetting the Bro. After party_time it goes off in a burst of light, and every enemy near it PANICS for panic_time - they jump around, run back and forth, and shoot at walls and at each other. Their bullets hit and hurt each other (friendly fire), and the Bro too. Bosses ignore it. Uses the disco_grenade sprite (disco / disco_hud).
+sprite: disco_grenade
+files:
+  - game/scripts/disco_grenade.gd
+  - game/scripts/enemy.gd
+  - game/scripts/mook.gd
+  - game/scripts/bullet.gd
+controls: [grenade]
+
+stats:
+  party_time:
+    value: 4.0
+    unit: s
+    description: How long the lights run before it goes off.
+  lure_range:
+    value: 280.0
+    unit: px
+    description: Enemies this close to the landed grenade walk toward it.
+  zone_radius:
+    value: 96.0
+    unit: px
+    description: Radius of the light zone, and of the burst that sends enemies into panic.
+  panic_time:
+    value: 6.0
+    unit: s
+    description: How long an enemy panics after the burst.
+  panic_speed:
+    value: 85.0
+    unit: px/s
+    description: Run speed while panicking, back and forth.
+  panic_jump:
+    value: 230.0
+    unit: px/s
+    description: Upward speed of a panic jump.
+  panic_jump_rate:
+    value: 1.2
+    unit: per s
+    description: Jumps per second while panicking (on average).
+  panic_turn:
+    value: [0.3, 0.8]
+    unit: s
+    description: Every so often (a random time between these) he picks a new direction to run and a new way to face.
+  panic_shot:
+    value: [0.35, 0.8]
+    unit: s
+    description: Time between wild shots while panicking (random between these).
+  gravity:
+    value: 700.0
+    unit: px/s²
+    description: Fall of the thrown grenade.
+  radius:
+    value: 3.0
+    unit: px
+    description: Size of the ball for bouncing and rolling.
+  bounce:
+    value: 0.35
+    unit: x
+    description: Speed kept after a bounce.
+  roll_friction:
+    value: 300.0
+    unit: px/s²
+    description: Slows the rolling grenade.
+  light_spots:
+    value: 7
+    unit: lights
+    description: Coloured light spots circling in the zone.

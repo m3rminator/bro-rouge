@@ -1,0 +1,14 @@
+# Entity: Sharif's revolver muzzle flash.
+id: revolver_flash
+name: Revolver flash
+kind: effect
+order: 33
+description: Sharif's revolver shot flash - bigger than his shotgun blast - a long white-hot jet with side sparks from the cylinder gap, then a smaller jet, then a dying spark. Shown at the revolver's tip on the shot frame of the sharif revolver / crouch_revolver animations.
+sprite: revolver_flash
+files:
+  - game/scripts/player.gd
+  - game/scripts/muzzle_flash.gd
+spawned_by: [sharif]
+
+animations:
+  revolver_flash/muzzle: Three frames at 20 fps (0.15 s), then it hides.

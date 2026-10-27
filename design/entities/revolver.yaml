@@ -1,0 +1,109 @@
+# Entity: Sharif's revolver.
+id: revolver
+name: Revolver round
+kind: weapon
+order: 2.8
+description: Sharif's grenade button. He draws a revolver and cannot move until the shot is done (he can only turn to face the other way before it goes off). One fixed shot straight ahead (no spread) - a fat fast round with a huge range that tears through up to pierce_blocks blocks (each one is destroyed) and pierce_enemies living enemies, then stops. It costs one of his per-level rounds (3, refilled only by finishing a level, or at the hub). Uses the sharif animations revolver / crouch_revolver (6 frames; the round leaves on frame 3, the moment he fires), the revolver_bullet picture and the revolver_flash muzzle flash.
+sprite: sharif
+files:
+  - game/scripts/player.gd
+  - game/scripts/bullet.gd
+controls: [grenade]
+
+stats:
+  speed:
+    value: 760.0
+    unit: px/s
+    description: Flight speed of the round.
+  lifetime:
+    value: 1.1
+    unit: s
+    description: Range ~ 836 px (~52 blocks), far past the screen edge.
+  damage:
+    value: 6
+    unit: hp
+    description: Damage to each living enemy it passes through.
+  size:
+    value: [16, 4]
+    unit: px
+    description: Hit box, length x height.
+  behead:
+    value: headshot
+    unit: mode
+    description: Head shots blow the head off, like the Bro's bullet.
+  pierce_enemies:
+    value: 5
+    unit: enemies
+    description: Living enemies it passes through before it stops (corpses and barrels do not count).
+  pierce_blocks:
+    value: 5
+    unit: blocks
+    description: Blocks it destroys before it stops.
+  shot_delay:
+    value: 0.2
+    unit: s
+    description: Time from pressing the button to the shot (the draw). He may still turn round until then.
+  lock_time:
+    value: 0.55
+    unit: s
+    description: Total time he stands rooted with the revolver out.
+  shake:
+    value: 5.0
+    unit: px
+    description: Screen shake of the shot.
+  shot_frame:
+    value: 3
+    unit: frame
+    description: Frame of the revolver animation on which the round leaves the gun.
+  sprite_scale:
+    value: 1.0
+    unit: x
+    description: Size of the round's picture.
+  bullet_sheet:
+    value: revolver_bullet
+    unit: sprite
+    description: Sprite sheet of the round (animation fly).
+  bullet_anim:
+    value: fly
+    unit: sprite
+    description: Which animation of that sheet is drawn.
+  flash:
+    value: revolver_flash
+    unit: sprite
+    description: Muzzle flash sheet of the shot.
+  charge_time:
+    value: 1.2
+    unit: s
+    description: How long Sharif must hold the button for a fully charged shot. Hold it, release to fire; a quick tap fires the plain shot above. In between, the round is stronger the longer it was held.
+  max_damage:
+    value: 18
+    unit: hp
+    description: Damage per enemy of a fully charged round (the plain round does damage).
+  max_pierce_enemies:
+    value: 10
+    unit: enemies
+    description: Living enemies a fully charged round passes through.
+  max_pierce_blocks:
+    value: 10
+    unit: blocks
+    description: Blocks a fully charged round destroys.
+  max_lifetime:
+    value: 2.2
+    unit: s
+    description: Flight time of a fully charged round (twice the range of the plain one).
+  max_shake:
+    value: 9.0
+    unit: px
+    description: Screen shake of a fully charged shot.
+  ring_radius:
+    value: 6.0
+    unit: px
+    description: Radius of the charge circle over his gun (the shared charge look, scripts/charge_ring.gd - the stroke fills white to green, then the whole circle goes green with a flash).
+  ring_offset:
+    value: [8, -26]
+    unit: px
+    description: Where the circle floats, from his middle (x is flipped with his facing) - a little above the gun.
+  flash_time:
+    value: 0.25
+    unit: s
+    description: How long the flash lasts at the moment the circle fills.

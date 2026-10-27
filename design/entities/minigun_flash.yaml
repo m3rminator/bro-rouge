@@ -1,0 +1,14 @@
+# Entity: Heavy's minigun muzzle flash.
+id: minigun_flash
+name: Minigun flash
+kind: effect
+order: 32
+description: Heavy's muzzle flash - bigger than the rifle's, smaller than Sharif's shotgun blast - a bright burst with tracer streaks, then a smaller star. Shown at the minigun's tip on every bullet (player.gd loads it into the Bro's MuzzleFlash when his muzzle_flash stat names it).
+sprite: minigun_flash
+files:
+  - game/scripts/player.gd
+  - game/scripts/muzzle_flash.gd
+spawned_by: [heavy]
+
+animations:
+  minigun_flash/muzzle: Two frames at 25 fps (0.08 s), then it hides; every bullet restarts it.

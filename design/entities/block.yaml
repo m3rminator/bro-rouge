@@ -21,7 +21,7 @@ stats:
   hp:
     value: 3
     unit: hits
-    description: Bullet hits needed to destroy one block. Each hit before the last adds cracks.
+    description: Hits (bullets, knife) needed to destroy one block - three. Each hit before the last adds cracks. Explosions and the raygun shockwave still break a block at once.
   crack_stages:
     value: 4
     unit: stages
@@ -31,9 +31,9 @@ stats:
     unit: tiles
     description: A block grows grass only if this many tiles directly above it are air (or it is near the top of the map). Keeps cave and tunnel floors bare.
   debris_amount:
-    value: 34
+    value: 24
     unit: particles
-    description: Dirt chunks thrown when the block breaks.
+    description: Dirt chunks thrown when the block breaks - a lot of them, so a broken block is easy to see.
   chain_break:
     value: 0.3
     unit: chance

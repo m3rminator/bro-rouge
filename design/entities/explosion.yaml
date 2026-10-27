@@ -35,11 +35,11 @@ stats:
     unit: s
     description: In a cluster, delay between the small blasts on each barrel (they ripple through the pile).
   smoke_puffs:
-    value: 2
+    value: 1
     unit: puffs
     description: Smoke puffs left by a small blast (a cluster leaves this many per barrel).
   fire_particles:
-    value: 24
+    value: 12
     unit: particles
     description: Burning sparks thrown by a small blast (doubled for a cluster, plus 8 per extra barrel).
   fling_speed:
@@ -55,11 +55,11 @@ stats:
     unit: px
     description: Extra screen shake for every other barrel in a cluster (max 18 px).
   embers:
-    value: 34
+    value: 16
     unit: embers
     description: Glowing specks in blast colors thrown out by a blast; they fall, land on the ground and fade away.
   embers_per_extra:
-    value: 10
+    value: 5
     unit: embers
     description: Extra embers for every other barrel in a cluster.
   ember_life:

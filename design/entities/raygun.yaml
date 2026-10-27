@@ -1,0 +1,54 @@
+# Entity: the Men in Black raygun.
+id: raygun
+name: Raygun beam
+kind: weapon
+order: 2.9
+description: The raygun of the Men in Black Bro. Every shot draws a blue beam (a bright line that fades fast) from the muzzle straight ahead to the first thing it hits (blocks, enemies, barrels) - or to the end of its range. At the impact point a SHOCKWAVE bursts - a ring of force, not a fire explosion - it breaks every block close to the point, throws every enemy in the wave back and leaves them stunned (blinking, birds over the head, like a melee stun). A direct hit on an enemy kills him; bosses only take the direct hit's damage. It never hurts the Bro.
+sprite: mib
+files:
+  - game/scripts/raygun.gd
+  - game/scripts/shockwave.gd
+  - game/scripts/player.gd
+controls: [shoot]
+
+stats:
+  range:
+    value: 420.0
+    unit: px
+    description: Longest distance the beam reaches (~17 blocks).
+  beam_time:
+    value: 0.16
+    unit: s
+    description: How long the blue line stays visible (it thins out while it fades).
+  direct_damage:
+    value: 12
+    unit: hp
+    description: Damage to the enemy the beam hits head on (kills soldiers; a boss survives it).
+  boss_damage:
+    value: 4
+    unit: hp
+    description: Damage of a direct hit on a boss - three shots take one full health block (a Brute block is 10 hp and a hit never goes past the end of its block).
+  wave_radius:
+    value: 30.0
+    unit: px
+    description: Radius of the shockwave - every block whose middle is inside it breaks, every enemy inside is thrown and stunned.
+  wave_time:
+    value: 0.45
+    unit: s
+    description: How long the visible ring takes to spread out and fade.
+  knock_speed:
+    value: 240.0
+    unit: px/s
+    description: Sideways speed an enemy in the wave is thrown away from the centre.
+  knock_up:
+    value: 150.0
+    unit: px/s
+    description: Upward speed of the throw.
+  stun_time:
+    value: 2.5
+    unit: s
+    description: How long a thrown enemy stays stunned (no moving, no shooting).
+  shake:
+    value: 5.0
+    unit: px
+    description: Screen shake of the shockwave.

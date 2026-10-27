@@ -10,6 +10,10 @@ files:
 spawned_by: [mook, brute]
 
 stats:
+  ghost_time:
+    value: 0.5
+    unit: s
+    description: For this long after an enemy dies his body cannot be hit - bullets fly through it to whoever stands behind.
   bump_speed:
     value: 0.3
     unit: × Bro speed
@@ -59,7 +63,7 @@ stats:
     unit: beats/s
     description: The jet pumps in heartbeats this fast.
   fountain_drops:
-    value: 3
+    value: 2
     unit: drops
     description: Real blood drops thrown every 0.1 s on top of the particles, so the ground around gets soaked.
 

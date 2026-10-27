@@ -1,0 +1,13 @@
+# Entity: the picture of Sharif's revolver round (the round's stats are in revolver.yaml).
+id: revolver_bullet
+name: Revolver round (picture)
+kind: effect
+order: 34
+description: The flying picture of Sharif's revolver round - a long fat tracer (20 x 6 px core) with a white-hot head, yellow body and orange tail, longer and brighter than every other bullet because it flies far and pierces. Points right; the game flips it for shots to the left. Stats live in revolver.yaml.
+sprite: revolver_bullet
+files:
+  - game/scripts/bullet.gd
+spawned_by: [sharif]
+
+animations:
+  revolver_bullet/fly: Two frames at 12 fps, looping - the soft glow around the core pulses on and off.

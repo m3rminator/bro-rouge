@@ -5,7 +5,7 @@ id: blala
 name: Balal (playable Bro)
 kind: player
 order: 1.5
-description: A glass-cannon Bro with an SMG in each hand. He fires twice as fast as the default Bro (the two guns take turns, each with its own muzzle flash) and the magazine holds 60 rounds, but the bullets die out after a short range and fly all over the place. He runs faster and jumps higher. He carries no knife - his melee swings one SMG up over his head and slams it down on the enemy; it needs two hits - the first throws the enemy back and stuns him (he blinks white with birds circling his head, unable to move or shoot for about two seconds, see stun.yaml), the second kills. Hanging on a wall he holds on with his bare hand. Has his own sprite (art/sprites/blala.yaml) - dark skin, black buzz cut, white tank top, green pants. Pick him on the character select screen at the start of the game.
+description: A glass-cannon Bro with an SMG in each hand. He fires twice as fast as the default Bro (the two guns take turns, each with its own muzzle flash) and the magazine holds 60 rounds, but the bullets die out after a short range and fly all over the place. He runs faster and jumps higher. He carries no knife - his melee swings one SMG up over his head and slams it down on the enemy; it needs two hits - the first throws the enemy back and stuns him (he blinks white with birds circling his head, unable to move or shoot for about two seconds, see stun.yaml), the second kills. Hanging on a wall he holds on with his bare hand. He carries C4 instead of grenades - tap the grenade button to throw a charge that sticks where it lands (or to an enemy); hold the button to set every planted charge off at once (see c4.yaml); the HUD shows c4_hud icons for the charges left. Has his own sprite (art/sprites/blala.yaml) - dark skin, black buzz cut, white tank top, green pants. Pick him on the character select screen at the start of the game.
 sprite: blala
 files:
   - game/scripts/character_select.gd
@@ -15,6 +15,12 @@ files:
 controls: [move_left, move_right, jump, crouch, shoot, reload, knife, grenade]
 
 stats:
+  drop_mag:
+    value: false
+    description: Blala drops his two SMGs instead of a magazine.
+  drop_guns:
+    value: true
+    description: Both SMGs fall out as particles on frame 1 of the reload animation.
   fire_interval:
     value: 0.055
     unit: s
@@ -51,6 +57,10 @@ stats:
     value: gun_bash
     unit: sound
     description: The SMG slammed into an enemy - a metallic clonk instead of a knife stab.
+  knife_hits_plain:
+    value: 2
+    unit: hits
+    description: Knife hits needed to kill an ordinary soldier (every other Bro kills one in a single hit) - the first throws him back and stuns him, the second kills. A soldier in helmet AND vest needs knife_hits.
   knife_stun:
     value: 2.0
     unit: s
@@ -59,3 +69,15 @@ stats:
     value: 0.5
     unit: px
     description: Screen shake per shot - small, because he fires so fast.
+  hud_mag_icon:
+    value: smg_mag_hud
+    unit: sprite
+    description: The HUD draws a small SMG magazine for each spare magazine.
+  pickup_icon:
+    value: smg_mag_pickup
+    unit: sprite
+    description: A "+" with an SMG magazine floats over his head when a knife kill gives him a magazine.
+  explosive:
+    value: c4
+    unit: kind
+    description: His grenade button throws C4 instead of a grenade (design/entities/c4.yaml).

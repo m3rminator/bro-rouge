@@ -48,21 +48,21 @@ stats:
     unit: s
     description: A real blood drop (stains blocks) falls from a bleeding piece this often.
   drip_droplets:
-    value: 5
+    value: 3
     unit: particles
     description: Droplets per drip from a bleeding piece.
   piece_droplets:
-    value: 120
+    value: 60
     unit: particles
     description: Blood droplets sprayed by each piece the moment the body is torn (they fall and stain blocks and walls around).
   bounce_droplets:
-    value: 40
+    value: 20
     unit: particles
     description: Extra droplets every time a piece bounces off the ground.
   rest_time:
-    value: 5.0
+    value: 2.0
     unit: s
-    description: How long a piece lies on the ground before it starts to fade.
+    description: How long a piece, a severed head or an enemy corpse lies untouched on the ground before it starts to sink and fade (touching it - a kick, a bump, a shot - starts the count again).
   fade_time:
     value: 1.5
     unit: s

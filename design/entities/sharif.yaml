@@ -5,7 +5,7 @@ id: sharif
 name: Sharif (playable Bro)
 kind: player
 order: 1.6
-description: A shotgun Bro - a silver-haired sheriff in a cowboy hat, khaki shirt, brown vest with a gold star, jeans and brown boots. Every pull of the trigger throws a fan of pellets that spread out and die at short range - devastating up close, weak far away. Slow to fire (one blast about every 0.7 seconds), six shells in a magazine, and a slow reload. Every blast kicks his upper body back with a huge muzzle flash, then he racks the pump - standing, running or crouched. His melee is drawn as a shotgun-stock bash (turns the gun around and rams the wooden stock forward); its numbers are the default Bro's knife. Grenades and wall cling are the default Bro's (he hangs on by his bare fist, shotgun in the other hand). Pick him on the character select screen.
+description: A shotgun Bro - a silver-haired sheriff in a cowboy hat, khaki shirt, brown vest with a gold star, jeans and brown boots. Every pull of the trigger throws a fan of pellets that spread out and die at short range - devastating up close, weak far away. Slow to fire (one blast about every 0.7 seconds), no magazines and no reload - one pool of shells (16 at the start and at most; the HUD shows a shell icon and the number), every shot uses one shell, every melee kill gives 6 more with a "+6" pop-up, and at zero the gun only clicks. After every pump a spent shell is kicked out of the gun and falls to the ground. Every blast kicks his upper body back with a huge muzzle flash, then he racks the pump - standing, running or crouched. His melee is drawn as a shotgun-stock bash (turns the gun around and rams the wooden stock forward); its numbers are the default Bro's knife. Grenades and wall cling are the default Bro's (he hangs on by his bare fist, shotgun in the other hand). Pick him on the character select screen.
 sprite: sharif
 files:
   - game/scripts/character_select.gd
@@ -23,6 +23,10 @@ stats:
     value: shotgun_flash
     unit: sprite
     description: His muzzle flash is the big shotgun blast (art/sprites/shotgun_flash.yaml) instead of the rifle's small one.
+  pellet_pierce:
+    value: 2
+    unit: enemies
+    description: Every pellet passes through the first living enemy it hits and also hits the second, then stops (blocks still stop it).
   pellets:
     value: 7
     unit: bullets
@@ -76,6 +80,32 @@ stats:
     unit: px
     description: Heavy screen shake on every blast - far more than the others.
 
+  shells_start:
+    value: 16
+    unit: shells
+    description: Shells at the start of a level - one total count, no magazines and no reload (the old magazine numbers are not used). Each shot uses one shell.
+  shells_max:
+    value: 16
+    unit: shells
+    description: Most shells he can carry. The hub's ammo station refills to this.
+  shells_per_kill:
+    value: 6
+    unit: shells
+    description: Shells he gets for every melee (stock-bash) kill; the shell_pickup pop-up shows "+6" over his head.
+  eject_shells:
+    value: true
+    unit: flag
+    description: After every pump - standing, running or crouched - a spent shell (a red pixel with a brass end) is kicked out of the gun and falls to the ground, bouncing a little, then fades. Made in code (scripts/shell_casing.gd), no sprite.
+  pickup_icon:
+    value: shell_pickup
+    unit: sprite
+    description: The pop-up over his head after a melee kill.
+
+  explosive:
+    value: revolver
+    unit: kind
+    description: His grenade button draws a revolver instead of throwing a grenade (design/entities/revolver.yaml). He carries 3 rounds per level (the default grenade count).
+
 animations:
   idle: Standing with the pump shotgun at the hip, breathing (the upper body bobs 1px).
   run: Bro's run - the stride (back leg bent, boot kicked up, front leg straight) and the passing pose.
@@ -91,5 +121,5 @@ animations:
   knife: Shotgun-stock bash - turns the shotgun around, pulls it back, then rams the wooden stock forward with a swoosh (hit on frame 3).
   cling: Hanging on a wall by his bare fist (the Bro's raised arm with a short sleeve), shotgun in the hanging hand pointed at the wall; sways slowly.
   flip: The tucked jump pose turning a full somersault in four quarter turns.
-  hurt: Dead - for now the jump pose (the death pose gets redrawn for all three Bros together).
+  sharif_dead/dead: Dead - he turns straight into his corpse (face down, hat on). Blown up, he tears into the shared gore (gibs).
   climb: Unused by the game (same as the Bro's).

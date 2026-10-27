@@ -1,0 +1,18 @@
+# Entity: the shared gore pieces.
+id: gibs
+name: Gore pieces
+kind: effect
+order: 17
+description: What flies out when anyone is blown apart - a Bro or an enemy. Instead of the character's own body parts, everybody throws the same shared gore - a rib cage, a long bone, a small bone and meat chunks, all covered in meat and blood (art/sprites/gibs.yaml, one animation per piece). The head still flies off on its own.
+sprite: gibs
+files:
+  - game/scripts/body_piece.gd
+spawned_by: [mook, bro, blala, sharif, heavy]
+
+animations:
+  gibs/ribcage: The rib cage - spine on top, meat between the ribs, dripping blood.
+  gibs/bone: A long bone, half wrapped in meat.
+  gibs/bone_small: A small bone with meat on it.
+  gibs/meat_a: A round chunk of meat.
+  gibs/meat_b: A small chunk of meat.
+  gibs/meat_c: A chunk of meat with a bone stub.

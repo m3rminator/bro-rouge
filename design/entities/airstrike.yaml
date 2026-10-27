@@ -1,0 +1,58 @@
+# Entity: the Gunner's air strike.
+id: airstrike
+name: Air strike
+kind: weapon
+order: 2.7
+description: The Gunner's grenade button. He fires a laser at a spot `distance` px in front of him (on the ground there) - a red beam from the sky and a blinking marker, for `delay` seconds - then a row of `bombs` bombs falls on the spot, spread sideways over `spread` px, each exploding where it lands on a block or enemy and breaking blocks like a small grenade. The spot is far enough away that he is not hurt where he stands. If a wall is in the way the call fails and costs nothing. It costs one of the grenades he has per level (grenades_per_level, refilled only by finishing a level). Enemies do not react to the laser or the bombs. The beam and marker are drawn in code (scripts/airstrike.gd); the bombs are small missiles (art/sprites/airstrike.yaml, animation "missile", nose down).
+sprite: airstrike
+files:
+  - game/scripts/airstrike.gd
+  - game/scripts/player.gd
+controls: [grenade]
+spawns: [explosion]
+
+stats:
+  distance:
+    value: 170.0
+    unit: px
+    description: How far in front of him the laser lands (~7 blocks). With the bomb spread and blast radius the nearest explosion edge is still about 80 px from him.
+  delay:
+    value: 1.3
+    unit: s
+    description: Time from the laser to the first bomb - the beam flickers faster and faster.
+  warn_radius:
+    value: 66.0
+    unit: px
+    description: The red warning circle on the ground around the marker (the same marker the Brute's strikes use) - the bombs land inside it, so run out of it.
+  bombs:
+    value: 6
+    unit: bombs
+    description: Bombs in one strike.
+  bomb_interval:
+    value: 0.12
+    unit: s
+    description: Time between two bombs leaving the sky.
+  spread:
+    value: 46.0
+    unit: px
+    description: Each bomb lands up to this far left or right of the marker.
+  start_height:
+    value: 260.0
+    unit: px
+    description: How high above the marker the bombs start falling.
+  fall_speed:
+    value: 320.0
+    unit: px/s
+    description: How fast a bomb falls.
+  blast_radius:
+    value: 44.0
+    unit: px
+    description: Blast radius of one bomb (a little smaller than a grenade).
+  blast_damage:
+    value: 4
+    unit: hp
+    description: Damage to enemies in one blast.
+  blast_player_damage:
+    value: 2
+    unit: hearts
+    description: Hearts one blast takes from the Bro if he stands in it.

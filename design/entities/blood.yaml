@@ -15,16 +15,16 @@ spawned_by: [mook, kamikaze, brute]
 
 stats:
   droplets_hit:
-    value: 28
+    value: 14
     unit: particles
     description: Loose droplets per bullet hit (on top of the spray sprite).
   droplets_death:
-    value: 90
+    value: 45
     unit: particles
     description: Loose droplets per death.
 
   droplets_gore:
-    value: 450
+    value: 225
     unit: particles
     description: Loose droplets when a kamikaze blows up or a body bursts (both death bursts play at once too) — soaks the ground and walls around.
   gibs_death:

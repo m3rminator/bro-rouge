@@ -1,0 +1,121 @@
+# Entity: the Gunner, a playable Bro (the fourth character, named Hamid, id "heavy").
+# Only the numbers that differ from the default Bro live here; everything else comes from
+# design/entities/bro.yaml. Generated into GameData.HEAVY and laid over GameData.BRO by Run.bro_stats().
+id: heavy
+name: Hamid (playable Bro)
+kind: player
+order: 1.7
+description: A slow minigun Bro. He sprays far more bullets than Balal - a faster fire rate, a bigger magazine, a wider spread and more than twice the range - but runs slower than every other Bro (slower than Sharif). His grenade button calls in an air strike instead of throwing a grenade (see airstrike.yaml). Pressing Shoot first spins the barrels up for a moment (windup_time) before the bullets start. Melee is a gun bash like Balal's (two hits, the first stuns). Drawn with his own sprite (art/sprites/heavy.yaml) - bald, beard, leather jacket, jeans, minigun at the hip. Pick him on the character select screen.
+sprite: heavy
+files:
+  - game/scripts/character_select.gd
+  - game/scripts/run.gd
+  - game/scripts/player.gd
+  - game/scripts/airstrike.gd
+controls: [move_left, move_right, jump, crouch, shoot, reload, knife, grenade]
+
+stats:
+  speed:
+    value: 88.0
+    unit: px/s
+    description: Run speed - the slowest Bro (the default Bro runs at 120, Sharif at 95), still very slow.
+  windup_time:
+    value: 0.4
+    unit: s
+    description: The minigun has to spin up first - 0.4 seconds of whirring barrels after he presses Shoot, then the bullets start. Letting go spins it down over windup_decay (0.6 s), so tapping Shoot again quickly starts sooner.
+  fire_interval:
+    value: 0.04
+    unit: s
+    description: Time between shots while holding Shoot - 25 shots per second, faster than Balal's 18.
+  magazine_size:
+    value: 120
+    unit: rounds
+    description: Rounds in one magazine (a minigun belt).
+  magazines:
+    value: 2
+    unit: magazines
+    description: Magazines carried at the start, the loaded one included.
+  reload_time:
+    value: 2.4
+    unit: s
+    description: Time to swap the belt - long, so he cannot spray forever.
+  bullet_lifetime:
+    value: 0.6
+    unit: s
+    description: Bullets vanish after this long - about 250 px (~10 blocks), more than twice Balal's range (118 px) but still shorter than the Bro's.
+  base_spread:
+    value: 14.0
+    unit: degrees
+    description: Every bullet leaves the gun up to this many degrees off line, up or down - a wider spray than Balal's 12.
+  recoil:
+    value: 50.0
+    unit: px/s
+    description: Every bullet shoves him backwards this hard - huge for a gun this fast (the Bro's rifle pushes 22, Sharif's shotgun 230 but only once per second).
+  recoil_max:
+    value: 150.0
+    unit: px/s
+    description: Cap on the built-up push. Holding fire reaches it in a few shots, and then he is driven backwards faster than he can walk forward (his run speed is 75).
+  recoil_decay:
+    value: 260.0
+    unit: px/s²
+    description: How fast the push fades once he stops shooting.
+  recoil_ground:
+    value: 0.3
+    unit: ×
+    description: On the ground the push is only this share of its size, so he is not shoved far back while standing and firing.
+  recoil_air:
+    value: 1.8
+    unit: ×
+    description: In the air the push (and its cap) is this many times bigger, so he flies backwards.
+  shoot_shake:
+    value: 0.9
+    unit: px
+    description: Screen shake per shot (small, since he fires so fast).
+  knife_hits:
+    value: 2
+    unit: hits
+    description: Melee hits needed to kill an ordinary enemy (the first throws him back and stuns him, see stun.yaml).
+  knife_hits_plain:
+    value: 2
+    unit: hits
+    description: Knife hits needed to kill an ordinary soldier (every other Bro kills one in a single hit) - the first throws him back and stuns him, the second kills. A soldier in helmet AND vest needs knife_hits.
+  knife_stun:
+    value: 2.0
+    unit: s
+    description: How long an enemy stands stunned after the first hit.
+  muzzle_flash:
+    value: minigun_flash
+    unit: sprite
+    description: His own muzzle flash (art/sprites/minigun_flash.yaml), bigger than the rifle's.
+  shot_sound:
+    value: blala_shoot
+    unit: sound
+    description: Uses Balal's SMG sound for now.
+  melee_hit_sound:
+    value: gun_bash
+    unit: sound
+    description: The gun slammed into an enemy.
+  explosive:
+    value: airstrike
+    unit: kind
+    description: His grenade button calls in an air strike (design/entities/airstrike.yaml) instead of throwing a grenade.
+  grenades:
+    value: 2
+    unit: missiles
+    description: He carries TWO air strikes per level (the HUD shows a missile icon for each).
+  reload_move_mult:
+    value: 0.35
+    unit: x
+    description: While he swaps the belt he moves at 35% of his speed; the "reload" animation (the minigun bobbing) plays.
+  overheat_shots:
+    value: 80
+    unit: shots
+    description: Shots in a row (fire held, no pause longer than overheat_reset) before the minigun overheats.
+  overheat_time:
+    value: 1.5
+    unit: s
+    description: How long the overheated gun cannot fire - steam pours from it.
+  overheat_reset:
+    value: 0.5
+    unit: s
+    description: A pause in firing this long cools the gun and resets the shot count.

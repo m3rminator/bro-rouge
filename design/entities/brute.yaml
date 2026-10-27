@@ -3,7 +3,7 @@ id: brute
 name: Brute (mini-boss)
 kind: enemy
 order: 6
-description: Two blocks tall, gas mask, armor vest, a minigun in each hand. Walks slowly. He sees much further than a mook and much higher and lower, and also notices the Bro behind him when he is close (he turns around). When he spots the Bro his guns spin up, then he sprays long bursts from both guns in a wide fan (spread_angle), alternating guns. His bullets chew through blocks and barrels. A health bar appears at the top of the screen while you fight him. When he dies he stays down in a big pool of blood.
+description: (Boss every 4th level, 3 health blocks = 3 phases, see the phase stats below; the arena has a hill and a barrel bridge over him, level_gen.gd _gallery.) Two blocks tall, gas mask, armor vest, a minigun in each hand. Walks slowly. He sees much further than a mook and much higher and lower, and also notices the Bro behind him when he is close (he turns around). When he spots the Bro his guns spin up, then he sprays long bursts from both guns in a wide fan (spread_angle), alternating guns. His bullets chew through blocks and barrels. A health bar appears at the top of the screen while you fight him. When he dies he stays down in a big pool of blood.
 sprite: brute
 files:
   - game/scenes/brute.tscn
@@ -76,6 +76,70 @@ stats:
     value: 3.0
     unit: s
     description: How long he keeps firing at the last spot after losing sight of the Bro.
+  phases:
+    value: 3
+    unit: phases
+    description: His health bar is split into this many equal blocks (hud.gd draws the dividers). Phase 1 (full bar) - only his minigun bursts. Phase 2 (second block) begins with him down and invulnerable while a barrage of air strikes falls on the Bro (barrage_*), then he gets up and from then on calls a single strike now and then. Phase 3 (last block) begins with him down and invulnerable while suicide soldiers drop into the arena and run at the Bro - he gets up when they are all dead - and the strikes (and now and then more soldiers) go on. A hit never takes him past the end of the block he is in.
+  barrage_min:
+    value: 3
+    unit: strikes
+    description: Phase 2 begins with him down on the ground, nothing can hurt him, and he calls this many (at least) air strikes one after another, each on the spot where the Bro stands at that moment.
+  barrage_max:
+    value: 4
+    unit: strikes
+    description: ...and at most this many (random between the two). Then he gets up.
+  barrage_gap:
+    value: 1.8
+    unit: s
+    description: Time between two strikes of the barrage.
+  barrage_delay:
+    value: 1.4
+    unit: s
+    description: Warning time of a barrage strike (red zone on the ground until the missile leaves the sky) - shorter than a normal strike, so the Bro has to keep moving.
+  barrage_end:
+    value: 2.0
+    unit: s
+    description: Time after the last strike of the barrage before he gets up.
+  transition_timeout:
+    value: 30.0
+    unit: s
+    description: Safety - a phase change never keeps him invulnerable longer than this.
+  strike_interval:
+    value: 10.0
+    unit: s
+    description: From phase 2 on, time between his air strike calls (the first comes strike_first after the phase starts).
+  strike_first:
+    value: 2.0
+    unit: s
+    description: Delay of the first air strike after phase 2 begins.
+  strike_delay:
+    value: 2.2
+    unit: s
+    description: From the red warning zone appearing on the ground to the missile leaving the sky (the Bro's time to run away). Only ONE missile falls.
+  strike_radius:
+    value: 56.0
+    unit: px
+    description: Radius of the red warning zone drawn on the ground (a bit wider than the blast).
+  rage_fire_mult:
+    value: 1.5
+    unit: x
+    description: Phase 3 - rage. Once he gets up from the kamikaze drop he fires this many times faster (bullets come closer together). Where the sheet has a rage_<name> animation (rage_walk, rage_shoot...) it is used in rage.
+  drop_interval:
+    value: 14.0
+    unit: s
+    description: Phase 3 - time between two drops of suicide soldiers.
+  drop_count:
+    value: 3
+    unit: kamikazes
+    description: Suicide soldiers dropped at once. They are extra - killing them does not count toward the kill quota.
+  drop_max:
+    value: 4
+    unit: soldiers
+    description: No new drop while this many dropped soldiers (suicide and ordinary) are still alive.
+  drop_soldiers:
+    value: 5
+    unit: soldiers
+    description: Ordinary soldiers dropped with every batch of suicide soldiers. They know roughly where the Bro is and go for him sloppily - each waits up to 4 seconds, walks at his own pace and sometimes stops or wanders off - so they arrive one by one. Extra bodies, no kill credit; he stays down until all of them and the suicide soldiers are dead.
   hitbox:
     value: [24, 42]
     unit: px

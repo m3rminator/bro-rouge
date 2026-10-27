@@ -1,0 +1,103 @@
+# Entity: Men in Black, a playable Bro (the fifth character, id "mib", Persian name mard dar siah).
+# Only the numbers that differ from the default Bro live here; everything else comes from
+# design/entities/bro.yaml. Generated into GameData.MIB and laid over GameData.BRO by Run.bro_stats().
+id: mib
+name: Men in Black (playable Bro)
+kind: player
+order: 1.8
+description: A slow-firing raygun Bro in a black suit, tie and sunglasses. Every shot draws a blue beam from the raygun to where it hits, and a shockwave (not a fire explosion) bursts there - it breaks many blocks, throws enemies back and stuns them; only a direct hit on an enemy kills him (design/entities/raygun.yaml). His grenade button throws a DISCO grenade (design/entities/disco.yaml) - when it lands a party zone with changing lights forms, enemies walk toward it, and when it goes off they panic and shoot each other. His melee is a punch with the free hand (the raygun comes up in front of his chest first). Pick him on the character select screen.
+sprite: mib
+files:
+  - game/scripts/character_select.gd
+  - game/scripts/run.gd
+  - game/scripts/player.gd
+  - game/scripts/raygun.gd
+  - game/scripts/disco_grenade.gd
+controls: [move_left, move_right, jump, crouch, shoot, reload, knife, grenade]
+
+stats:
+  drop_mag:
+    value: false
+    description: No magazine falls - the raygun cools instead.
+  steam_reload:
+    value: true
+    description: Steam puffs rise from the raygun tip while it is held up during the reload animation.
+  hud_mag_icon:
+    value: cell_hud
+    unit: sprite
+    description: The HUD draws a small light-blue power cell for each spare magazine.
+  pickup_icon:
+    value: cell_pickup
+    unit: sprite
+    description: A power cell floats over his head when a knife kill gives him one.
+  speed:
+    value: 105.0
+    unit: px/s
+    description: Run speed - a little slower than the default Bro (120).
+  muzzle_flash:
+    value: raygun_flash
+    unit: sprite
+    description: His muzzle flash is the raygun's glow (art/sprites/raygun_flash.yaml).
+  weapon:
+    value: raygun
+    unit: kind
+    description: Shoot fires the raygun beam instead of bullets.
+  fire_interval:
+    value: 0.9
+    unit: s
+    description: Time between shots while holding Shoot - a low fire rate.
+  magazine_size:
+    value: 8
+    unit: rounds
+    description: Raygun charges in one magazine.
+  magazines:
+    value: 3
+    unit: magazines
+    description: Magazines carried at the start.
+  reload_time:
+    value: 1.6
+    unit: s
+    description: Time to swap a magazine.
+  base_spread:
+    value: 0.0
+    unit: degrees
+    description: The beam goes dead straight.
+  spread_after:
+    value: 1000
+    unit: shots
+    description: The aim never goes sloppy (the beam is exact).
+  recoil:
+    value: 115.0
+    unit: px/s
+    description: A small kick back on every shot (Sharif's is 230); the real punch is the upward hop.
+  recoil_max:
+    value: 115.0
+    unit: px/s
+    description: Cap on the push.
+  shoot_shake:
+    value: 3.0
+    unit: px
+    description: Screen shake of every shot.
+  recoil_hop:
+    value: 160.0
+    unit: px/s
+    description: Every shot throws him a little upward as well (about 18 px hop), the raygun kicks that hard.
+  explosive:
+    value: disco
+    unit: kind
+    description: His grenade button throws the disco grenade (design/entities/disco.yaml).
+  shot_sound:
+    value: raygun_shot
+    unit: sound
+    description: The raygun's own shot sound (played quietly, around -8 dB, so it is not harsh).
+
+animations:
+  idle: Standing with the raygun stretched out in front, breathing.
+  run: The run.
+  shoot: Every shot kicks his upper body back 2px, then settles.
+  run_shoot: A plain run - the raygun fires slowly, so no shake.
+  run_recoil: One-shot kick, played once per shot while running, then back to run_shoot.
+  knife: A punch with the free hand - the raygun comes up in front of his chest, the body turns away, then the punch (hit on frame 3).
+  cling: Hanging by the free fist, the raygun across his waist.
+  flip: The tucked jump pose turning a somersault.
+  mib_dead/dead: His corpse.

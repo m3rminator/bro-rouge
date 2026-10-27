@@ -14,4 +14,7 @@ animations:
   heart_empty: A lost hit point.
   items/mag_hud: One spare magazine (drawn from the magazine reference).
   items/grenade_hud: One grenade left (drawn from the grenade reference).
+  items/smg_mag_hud: Balal's spare magazine icon (an SMG magazine) in place of mag_hud.
+  items/c4_hud: Balal's C4 icon, one per charge left, in place of grenade_hud.
+  items/shell_hud: Sharif's ammo icon - a single shotgun shell with the shell count written next to it (he has no magazines, so no magazine icons and no AMMO text; the number turns red at 5 or fewer).
   font/g_A: "Pixel font glyph (A-Z, 0-9 and the signs / ! : - . + > <), all in the sprite font."

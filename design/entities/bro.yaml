@@ -75,6 +75,9 @@ stats:
     value: 1.4
     unit: s
     description: Time to swap magazines. He cannot shoot meanwhile.
+  drop_mag:
+    value: true
+    description: The empty magazine falls out as a particle on frame 3 of the reload animation.
   recoil:
     value: 22.0
     unit: px/s
@@ -128,7 +131,7 @@ stats:
     unit: px/s
     description: Upward speed a knifed enemy is thrown with (negative = up). Divided by the enemy's mass.
   knife_blood:
-    value: 70
+    value: 35
     unit: drops
     description: Extra blood drops sprayed by a knife kill, on top of the normal death burst. They fall and stain the ground.
   mag_popup_time:
@@ -159,6 +162,18 @@ stats:
     value: [120.0, -300.0]
     unit: px/s
     description: Jump while clinging kicks him off the wall - sideways away from it, and up.
+  cling_climb_mult:
+    value: 1.0
+    unit: x
+    description: Jump while clinging (without pressing away from the wall) hops him up the wall - a full normal jump, with the somersault - and he stabs the knife in again at the top of the hop by himself. Hold Jump to keep climbing; press away from the wall and Jump to kick off instead.
+  cling_hop_cooldown:
+    value: 0.5
+    unit: s
+    description: After a climbing hop off a wall he cannot grab a wall again for this long (so each hop gets some height before the next stab).
+  auto_crouch:
+    value: true
+    unit: flag
+    description: Walking into a gap just one block high (a crawl tunnel) he crouches by himself, no Crouch button needed (made for the touch controls). He stands up again when the tunnel ends, unless Crouch is held.
   cling_cooldown:
     value: 0.25
     unit: s
@@ -171,6 +186,58 @@ stats:
     value: 0.0
     unit: degrees
     description: Random aim error on every shot, always (the Bro's rifle is dead straight). Characters with a sloppy gun set this higher.
+  shells_start:
+    value: 0
+    unit: shells
+    description: 0 = the normal magazines. A shell-count Bro (Sharif) has no magazines and no reload; this is how many shells he starts a level with.
+  shells_max:
+    value: 0
+    unit: shells
+    description: Most shells a shell-count Bro can hold (melee kills and the hub restock fill up to this).
+  shells_per_kill:
+    value: 0
+    unit: shells
+    description: Shells a shell-count Bro gets for every melee kill.
+  eject_shells:
+    value: false
+    unit: flag
+    description: A spent shell is kicked out of the gun at every pump and falls to the ground (a small code-made particle, no sprite).
+  hud_mag_icon:
+    value: mag_hud
+    unit: sprite
+    description: The items sprite animation drawn in the HUD for each spare magazine.
+  pickup_icon:
+    value: mag_pickup
+    unit: sprite
+    description: The items sprite animation floating over his head when a knife kill gives him ammo.
+  explosive:
+    value: grenade
+    unit: kind
+    description: What the grenade button throws - grenade (explodes on a fuse; enemies run from it) c4 (sticks where it lands; hold the button to set all off) airstrike (a laser marks a spot far in front and bombs fall on it).
+  recoil_hop:
+    value: 0.0
+    unit: px/s
+    description: Every shot also throws him a little upward (a heavy kick). 0 = none.
+  weapon:
+    value: rifle
+    unit: kind
+    description: What Shoot fires - rifle (bullets, with every number around it) or raygun (a blue beam to where it hits, with a shockwave there; design/entities/raygun.yaml).
+  windup_time:
+    value: 0.0
+    unit: s
+    description: Minigun wind-up - after Shoot is pressed the barrels spin for this long before the first bullet leaves (0 = fires at once). Plays the optional windup / run_windup / crouch_windup animation.
+  windup_decay:
+    value: 0.6
+    unit: s
+    description: How long fully spun-up barrels take to spin down once he lets go of Shoot; pressing again before that keeps part of the spin, so the wind-up is shorter.
+  grenades:
+    value: 0
+    unit: charges
+    description: Grenades (or C4 charges, missiles, revolver rounds) carried per level. 0 = the default (grenades_per_level in grenade.yaml).
+  reload_move_mult:
+    value: 1.0
+    unit: x
+    description: Run speed multiplier while a magazine is being swapped (1 = no slowdown).
   pellets:
     value: 1
     unit: bullets
@@ -188,11 +255,11 @@ stats:
     unit: s
     description: How long his bullets fly before disappearing - bullet speed times this is his weapon range (336 px).
   knife_hits:
-    value: 1
+    value: 2
     unit: hits
     description: Knife hits needed to kill an ordinary enemy (the Bro kills in one).
   knife_stun:
-    value: 0.0
+    value: 2.0
     unit: s
     description: When the knife needs more than one hit, how long an enemy stands stunned (no moving, no shooting) after a hit that did not kill.
   shot_sound:
@@ -220,8 +287,12 @@ animations:
   flip: Kicking off a wall he hangs on - a forward somersault away from it, the tucked ball turning a quarter turn per frame.
   climb: Not used yet (crouched landing frames drawn with the flip).
   cling: Hanging on a wall from his knife (knife level, driven into the wall), one arm up; the other hand holds his rifle pointed at the wall (Blala - one SMG, hanging on by his bare hand). His body, legs and gun sway slowly under it.
-  hurt: Dead — the body is knocked back and falls over.
+  bro_dead/dead: Dead - he turns straight into his corpse (face down, the enemy corpse pose in his colors), knocked back and sliding to a stop. Blown up, he tears into the shared gore (gibs).
   knife: Knife attack, traced from the knife references — knife drawn (held 3 frames), then the arm up with a silver swing trail that fades over 3 frames. The hit lands on the first arm-up frame.
+  items/smg_mag_hud: Balal's HUD icon - one per spare SMG magazine (replaces mag_hud for him).
+  items/smg_mag_pickup: Balal's pop-up over his head when a knife kill gives him a magazine (replaces mag_pickup).
+  items/shell_hud: Sharif's HUD icon - the shell count is written next to it.
+  items/shell_pickup: Sharif's pop-up (a "+" and a small shell) over his head after a melee kill; the number of shells gained is written next to it.
   items/mag_pickup: Floats over his head for mag_popup_time after a knife kill gave him a magazine.
 
 sounds:

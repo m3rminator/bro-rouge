@@ -1,0 +1,98 @@
+# Entity: basic enemy soldier.
+id: vest
+name: Vest soldier
+kind: enemy
+order: 3.1
+description: A tougher mook - a masked soldier in a tactical vest with an AK. Behaves exactly like the mook (patrol, the ! bubble, reaction_time, bursts, turns round after turn_delay) but takes 3 Bro bullet hits to kill, and one headshot kills him instantly and blows the head off. Rarer than the mook (see run.yaml vest_base). Drawn in art/sprites/vest.yaml.
+sprite: vest
+files:
+  - game/scenes/vest.tscn
+  - game/scripts/vest.gd
+  - game/scripts/mook.gd
+  - game/scripts/enemy.gd
+level_symbols:
+  "V": vest soldier start position (air tile)
+level_preview:
+  "V": {anim: idle, flip: true}
+spawns: [enemy_bullet, blood, head]
+
+stats:
+  hp:
+    value: 3
+    unit: hp
+    description: Bro bullet hits needed to kill him (a headshot kills at once).
+  walk_speed:
+    value: 30.0
+    unit: px/s
+    description: Patrol speed (the Bro runs 4× faster).
+  turn_pause:
+    value: 0.8
+    unit: s
+    description: How long he stands still after reaching a wall or ledge before walking back.
+  gravity:
+    value: 800.0
+    unit: px/s²
+    description: Downward acceleration while falling.
+  fall_death_height:
+    value: 72
+    unit: px
+    description: A fall of this much or more (measured from the highest point of his flight, so being blasted into the air counts) kills him on landing — three blocks or more. 0 = immune to falls.
+  vision_range:
+    value: 150.0
+    unit: px
+    description: How far ahead he can see (≈ 9 blocks). He never sees behind himself.
+  vision_height:
+    value: 20.0
+    unit: px
+    description: How far above/below his eyes the Bro can be and still be seen (a bit more than one block either way).
+  reaction_time:
+    value: 1.0
+    unit: s
+    description: Delay between spotting the Bro ("!" bubble) and the first shot — the player's window to react. Also the delay before the first shot after he has turned round to face a Bro who got behind him.
+  turn_delay:
+    value: 0.6
+    unit: s
+    description: How long the Bro must stay behind a fighting soldier before the soldier notices and turns round. After turning he shows "!" and waits reaction_time again, so jumping over him and getting behind him gives time to shoot first.
+  fire_interval:
+    value: 0.18
+    unit: s
+    description: Time between bullets inside a burst.
+  burst_count:
+    value: 3
+    unit: shots
+    description: Bullets per burst.
+  burst_pause:
+    value: 0.9
+    unit: s
+    description: Pause between bursts.
+  forget_time:
+    value: 1.5
+    unit: s
+    description: How long he keeps aiming after losing sight of the Bro before patrolling again.
+  head_height:
+    value: 9
+    unit: px
+    description: The top of his hit box that counts as his head. A Bro bullet hitting it kills him and blows his head off (head.yaml).
+  hitbox:
+    value: [12, 30]
+    unit: px
+    description: Collision box, width × height (same as the Bro).
+
+animations:
+  dead_a: His body, lying pose A (stays for the rest of the level). Each body gets A or B, 50 / 50.
+  dead_b: His body, lying pose B — one leg and one hand raised.
+  headless_a: His body after his head was blown off (pose A, neck stump).
+  headless_b: His body after his head was blown off (pose B, neck stump).
+  head_a: His head flying off (from pose A).
+  head_b: His head flying off (from pose B).
+  idle: Waiting at a patrol turn, or watching the spot where he last saw the Bro.
+  walk: Patrolling.
+  shoot: Firing (gun kicks back 1 px).
+  fall: In the air (walked off a ledge, or the block under him was destroyed).
+  hurt: Flying through the air after dying, being shot dead, bumped or blasted.
+  fx/alert: The "!" bubble above his head when he spots the Bro.
+
+sounds:
+  enemy_alert: He spots the Bro (together with the "!" bubble).
+  enemy_shoot: Every bullet he fires.
+  enemy_death: He dies.
