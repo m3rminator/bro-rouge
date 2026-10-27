@@ -39,6 +39,16 @@
     "file_sha": "c28712e93e6028f35bce855279dabc27ef85d61054b57ef01120e8b807b5eb11",
     "spec_sha": "a5b5ad25e57786714481e6630d030483bbbdb5240553511f2c20f6c5006ce473"
   },
+  "sfx/disco_burst": {
+    "file": "game/assets/sfx/disco_burst.mp3",
+    "file_sha": "0b4bf7223207b975742560ba73a091a7b5f4b4f13a717555df53ea505e45414c",
+    "spec_sha": "aa4aebaab38372da555643d8642b612611b71835743e55ac2f4f162dab66cc7b"
+  },
+  "sfx/disco_party": {
+    "file": "game/assets/sfx/disco_party.mp3",
+    "file_sha": "5e2739e01f6ad7c9552710be3b3ba2cc8fc1ad5120bdcd2cadde4f310286b45d",
+    "spec_sha": "ad481ec02e53fb9c76565df4f689c5583181cb8081982055c0235c837feeb738"
+  },
   "sfx/dry_fire": {
     "file": "game/assets/sfx/dry_fire.mp3",
     "file_sha": "c637aa733be5cdc708f7b7366d8c7df5f7fc4478a6fda160e5998af359c75fb9",
@@ -153,6 +163,16 @@
     "file": "game/assets/sfx/quota_reached.mp3",
     "file_sha": "26dea87d239fb4d859e2aa4ea67a8ed9f95cf0f368a5c18870bec5835b1d6833",
     "spec_sha": "5e935993f5dcfe4bef77dc19b6c4fb36cf1977982cbe8b8c0f0735e97b4a127a"
+  },
+  "sfx/raygun_shot": {
+    "file": "game/assets/sfx/raygun_shot.mp3",
+    "file_sha": "4f119a88d52a3cbc0e7eb0354cca040968eeffe0e81516c0ec128073d84f8a39",
+    "spec_sha": "c9e416b1fb8a19d2a52e85933462bb96eb7f1224305e57a05f59b7d23013b49e"
+  },
+  "sfx/raygun_wave": {
+    "file": "game/assets/sfx/raygun_wave.mp3",
+    "file_sha": "85e1b4a9235c2c872f6b208e9f63057976919fff81b1bf66f6354c2cbdcb24d6",
+    "spec_sha": "04ec7c61f6e41a0aa372c9cd7043dd7139af9f72c213d814527cb0436cc4efd9"
   },
   "sfx/reload": {
     "file": "game/assets/sfx/reload.mp3",

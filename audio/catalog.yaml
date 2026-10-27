@@ -101,6 +101,18 @@ sfx:
   enemy_panic:
     prompt: "Short panicked male yell 'grenade!' of an enemy soldier running away, retro action video game voice"
     duration: 0.8
+  raygun_shot:
+    prompt: "Retro 16-bit sci-fi raygun blast: a sharp rising electric zap with a bright laser 'pew' and a short crackle tail, punchy, no reverb, video game"
+    duration: 0.7
+  raygun_wave:
+    prompt: "Retro sci-fi energy shockwave impact: a deep bassy 'whoomp' pulse with a rushing air ripple and electric crackle, no fire, no explosion debris, no music, video game"
+    duration: 1.0
+  disco_party:
+    prompt: "Short funky 70s disco groove loop for a retro video game: four-on-the-floor kick, open hi-hats, slap bass and a wah guitar stab, playful, instrumental, seamless loop"
+    duration: 4.0
+  disco_burst:
+    prompt: "Comic party burst in a retro video game: a big confetti cannon pop with a glittery synth sparkle sweep, playful, short, no music"
+    duration: 1.0
 
 music:
   level_jungle:
