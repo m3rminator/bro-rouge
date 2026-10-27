@@ -1,0 +1,92 @@
+# Shared gore: what flies out when anyone (a Bro or an enemy) is blown apart - not the character's own body parts but
+# a rib cage, bones and chunks of meat, all with lots of meat and blood on them. One animation per piece, each
+# centered in the frame; the game spins and throws them.
+name: gibs
+description: Shared gore pieces for every torn-apart body - a rib cage (spine on top, meat between the ribs, dripping blood), a long bone half wrapped in meat, a small bone with meat, and three meat chunks (one with a bone stub).
+palette: gibs
+frame: [20, 14]
+anchors:
+  center: [10, 7]
+
+parts:
+  ribcage: |
+    ...o.o.o.o.o.o....
+    ..oWoWoWoWoWoWoo..
+    .oWwWwWwWwWwWwFfo.
+    .obbbbbbbbbbbFffEo
+    oFfWfoWfoWEoWEfEo.
+    oFfWEoWffWDoWfEDo.
+    ofEoWfoWEoWfoWDo..
+    .oWoWDfWfoWEfWo...
+    .oFEoWfoWDoWffo...
+    .offoWEoWffWfEo...
+    ..oEDofDoBEoEDo...
+    ...oEDooBEoooo....
+    ....oo..oo........
+  bone: |
+    .oo.......oo.
+    oWWoooo..oWwo
+    oWwFffEoooWbo
+    .oFfffEEwwbo.
+    oWfEEDDDbbwbo
+    oWboEDDooobbo
+    .oo.oo....oo.
+  bone_small: |
+    .o.......
+    oWoooo...
+    .oFffEoo.
+    .ofEDDWwo
+    ..oDooobo
+    ...o...o.
+  meat_a: |
+    ..ooo..
+    .oFffo.
+    oFffEfo
+    offEEDo
+    .oEDDo.
+    ..ooo..
+  meat_b: |
+    .ooo.
+    oFfEo
+    ofEDo
+    .ooo.
+  meat_c: |
+    .oo.....
+    oWWooo..
+    .oFfffo.
+    oFffEEfo
+    offEEDDo
+    .oEDDDo.
+    ..oooo..
+
+animations:
+  ribcage:
+    fps: 1
+    loop: false
+    frames:
+      - [[ribcage, 1, 0]]
+  bone:
+    fps: 1
+    loop: false
+    frames:
+      - [[bone, 3, 3]]
+  bone_small:
+    fps: 1
+    loop: false
+    frames:
+      - [[bone_small, 5, 4]]
+  meat_a:
+    fps: 1
+    loop: false
+    frames:
+      - [[meat_a, 6, 4]]
+  meat_b:
+    fps: 1
+    loop: false
+    frames:
+      - [[meat_b, 7, 5]]
+  meat_c:
+    fps: 1
+    loop: false
+    frames:
+      - [[meat_c, 6, 3]]

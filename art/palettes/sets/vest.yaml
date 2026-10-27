@@ -1,0 +1,29 @@
+# Palette set for the vest soldier (and the helmet soldier, which adds its helmet colors).
+# Sampled from refrences/enemies/default/9f4f42a7...: black balaclava with two eye holes,
+# olive sleeves and pants, a dark grey-teal tactical vest, dark brown boots, an AK with
+# wooden furniture. "." is always transparent.
+symbols:
+  o: grunt_black         # outline
+  M: mook_mask_dark      # balaclava shadow
+  m: mook_mask           # balaclava
+  s: grunt_skin          # skin in the eye holes
+  S: grunt_skin_dark
+  T: mook_cloth_light    # sleeves / pants
+  t: mook_cloth
+  P: mook_cloth_dark
+  d: mook_cloth_edge
+  p: mook_cloth          # pants
+  L: mook_cloth_light
+  K: mook_vest_light     # tactical vest
+  V: mook_vest
+  v: mook_vest_dark
+  l: mook_steel_light    # rifle
+  g: grunt_steel
+  G: grunt_steel_dark
+  W: mook_wood
+  w: mook_wood_dark
+  B: mook_boot
+  b: mook_boot_dark
+  r: blood_bright        # torn flesh (body pieces)
+  R: blood
+  D: blood_dark

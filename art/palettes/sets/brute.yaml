@@ -1,21 +1,45 @@
-# Palette set for the Brute mini-boss. Same colors as the traced enemy soldier (grunt_*),
-# with a dark olive armor suit, red gas-mask lenses and two miniguns.
-# "." is always transparent.
+# Palette set for the Brute mini-boss (redesign after refrences/enemies/brute, then given Heavy's look - the
+# Bro he unlocks): black balaclava, black leather jacket open over a white shirt, blue jeans, black
+# boots, black fingerless gloves and one minigun in Heavy's colors (dark steel body, brass ammo drum, steel
+# barrels, steel muzzle - no red). "." is always transparent.
 symbols:
-  o: grunt_black
-  d: grunt_brown_dark
-  M: grunt_mask_dark
-  m: grunt_mask
-  p: grunt_pants
-  P: grunt_brown
-  S: grunt_skin_dark
-  s: grunt_skin
-  t: olive_dark     # armor
-  L: olive
-  e: red_light      # mask lenses
-  E: rambo_red
-  G: grunt_steel_dark
-  g: grunt_steel
-  l: steel_light
-  y: fire_yellow
-  Y: fire_orange
+  o: brt_black
+  M: brt_mask_dark
+  m: brt_mask
+  L: brt_skin_light
+  s: brt_skin
+  S: brt_skin_dark
+  k: brt_skin_deep
+  v: heavy_jacket         # leather vest
+  w: brt_jacket_dark      # its seams
+  W: brt_jacket_deep
+  z: brt_zip
+  J: heavy_jacket_light   # leather sleeves: lit fold
+  j: brt_sleeve           # leather sleeves
+  F: heavy_shirt          # white shirt under the open vest
+  f: heavy_shirt_shadow
+  P: heavy_jeans          # blue jeans like Heavy (were camo)
+  p: heavy_jeans
+  q: heavy_jeans_shadow
+  B: heavy_boot           # black boots like Heavy
+  b: rambo_black
+  K: brt_glove
+  l: brt_steel_light
+  g: brt_steel
+  G: brt_steel_dark
+  n: brt_steel_deep
+  A: rambo_steel_dark     # minigun body (Heavy's housing)
+  a: heavy_steel_black
+  R: rambo_steel          # muzzle block, steel like Heavy's (was red)
+  r: rambo_steel_dark
+  D: heavy_steel_black
+  c: brt_sweat
+  C: brt_sweat_dark
+  e: brt_eye_glow
+  E: brt_eye_hot
+  X: blood_dark
+  x: blood
+  h: blood_bright
+  Y: sharif_badge         # ammo drum: brass like Heavy's ammo belt
+  O: heavy_brass_dark
+  u: brt_brass_deep

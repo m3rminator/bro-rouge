@@ -1,21 +1,22 @@
-# Palette set for the suicide bomber. Same colors as the traced enemy soldier (grunt_*),
-# so he reads as the same army; olive vest with red dynamite sticks and a red headband.
+# Palette set for the suicide bomber, reworked from refrences/enemies/kamikaze: bald and
+# tanned with a red headband, charcoal long sleeves, a vest of red dynamite sticks on black
+# straps, khaki pants and brown boots, a lit stick in his fist.
 # "." is always transparent.
 symbols:
   o: grunt_black
-  d: grunt_brown_dark
-  M: grunt_mask_dark
-  m: grunt_mask
-  p: grunt_pants
-  P: grunt_brown
-  S: grunt_skin_dark
-  s: grunt_skin
+  d: kami_pants_dark     # pants shadow
+  p: kami_pants
+  e: kami_skin_light
+  s: kami_skin
+  S: kami_skin_dark
+  t: kami_sleeve         # long sleeves
+  L: kami_sleeve_light
+  P: kami_sleeve_dark
+  B: kami_boot
   G: grunt_steel_dark
   g: grunt_steel
-  t: olive          # vest
-  L: olive_light
-  r: rambo_red      # dynamite, headband
+  r: rambo_red           # dynamite, headband
   R: rambo_red_dark
-  k: grunt_brown_dark  # vest straps
-  y: fire_yellow    # lit fuse
+  k: grunt_black         # vest straps
+  y: fire_yellow         # lit fuse
   w: fire_white

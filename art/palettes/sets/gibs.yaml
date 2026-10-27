@@ -1,0 +1,11 @@
+# Palette set for the shared gore pieces (rib cage, bones, meat) thrown out when anyone is torn apart.
+symbols:
+  o: rambo_black        # outline
+  W: gore_bone_light
+  w: gore_bone
+  b: gore_bone_dark
+  F: gore_flesh_light
+  f: gore_flesh
+  B: blood_bright
+  E: blood
+  D: blood_dark
