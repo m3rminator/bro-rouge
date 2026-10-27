@@ -55,9 +55,9 @@
     "game/assets/sprites/bro_dead_frames.tres": "599bef1dc4e2d335145469db2bfd881294550ec46c3e3b37eea557688494ca9b"
   },
   "bruce": {
-    "docs/previews/bruce.png": "fbc1528ecc0add3ce0ed945e33d452ce5997b7ea42844c59771c1de484e35747",
-    "game/assets/sprites/bruce.png": "f32f18d03257fd84e73e2f3f1b77e1670217d07e6aa2485651e2fcc04b6da2f1",
-    "game/assets/sprites/bruce_frames.tres": "65ef42a829b9c4afd329163f5bbd6781a0278d680f4ebbd4f70aa9dfe9564835"
+    "docs/previews/bruce.png": "b270520c25d40f7a994a9e12703dda4f80903b5036b6d9eced66310450fd45ee",
+    "game/assets/sprites/bruce.png": "406792b8b86c080052398243f077cbeb9f4189af4528c1f52639679f4e3d4a81",
+    "game/assets/sprites/bruce_frames.tres": "4be8b6070466706e58d4cef75ac7b2cae7dbb5a2e8966d23ec2e0f4fefef0054"
   },
   "bruce_dead": {
     "docs/previews/bruce_dead.png": "e0fc37e13ad0bd1cb2dbc25bb6a564d743cf75a965dda4c5583f53cb53edffd4",

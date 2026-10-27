@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=70 format=3]
+[gd_resource type="SpriteFrames" load_steps=77 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/bruce.png" id="1"]
 
@@ -274,6 +274,34 @@ region = Rect2(0, 468, 51, 36)
 atlas = ExtResource("1")
 region = Rect2(51, 468, 51, 36)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_68"]
+atlas = ExtResource("1")
+region = Rect2(102, 468, 51, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_69"]
+atlas = ExtResource("1")
+region = Rect2(153, 468, 51, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_70"]
+atlas = ExtResource("1")
+region = Rect2(204, 468, 51, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_71"]
+atlas = ExtResource("1")
+region = Rect2(255, 468, 51, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_72"]
+atlas = ExtResource("1")
+region = Rect2(306, 468, 51, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_73"]
+atlas = ExtResource("1")
+region = Rect2(0, 504, 51, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_74"]
+atlas = ExtResource("1")
+region = Rect2(51, 504, 51, 36)
+
 [resource]
 animations = [{
 "frames": [{
@@ -545,6 +573,32 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_67")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_68")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_69")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_71")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_72")
+}],
+"loop": false,
+"name": &"cling_kick",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_73")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_74")
 }],
 "loop": true,
 "name": &"defend",
