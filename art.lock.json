@@ -30,9 +30,9 @@
     "game/assets/sprites/bg_sky_frames.tres": "30efd2366bbd1a9aa42e6db6427353322dea0bd93dcee4a35f78273a031f6822"
   },
   "blala": {
-    "docs/previews/blala.png": "dd8478816fa134c335218a81a1002482f26c9b502ae9c412163941a14302efd3",
-    "game/assets/sprites/blala.png": "7659fe25659069f38f752460c3f02c761d836cafd37b71c7e8b47765c83d1ed7",
-    "game/assets/sprites/blala_frames.tres": "2bb03ec65fefc2c5701fc3d28a9794964b5ea729d1ba71915d5736f05b669944"
+    "docs/previews/blala.png": "34498d90d07581658ee498bf2dc12c912bc5cf6508668e2d910d70ebb3e16d55",
+    "game/assets/sprites/blala.png": "ffd20640e7fc27e51b08b551fed6a6742663687b06c1c399bc5fef7aadfcf451",
+    "game/assets/sprites/blala_frames.tres": "069ccd4a7ce475212ddaf1d3b34db22c7be4c7088c60a3b0f41edcf8a66f3ff0"
   },
   "blala_dead": {
     "docs/previews/blala_dead.png": "92c9b5a3390ef681c8a3876b221c7f1ee1302905ad6c82e35052989de5461d97",
@@ -45,9 +45,9 @@
     "game/assets/sprites/blood_frames.tres": "34ae4822738da8b0429e9dd00db41331bafe78268b02cdf0f5c5a93ff4df2202"
   },
   "bro": {
-    "docs/previews/bro.png": "9bda01b659b8b4b0098b9ba978b2fe09c5bf07ff3881beeabb786e67d3c61e5b",
-    "game/assets/sprites/bro.png": "98915708de931b9684eb19fbf4770a660fed52278dd88eaebad1b67464dad353",
-    "game/assets/sprites/bro_frames.tres": "7a77f9b67ea961eaedf9f2802e569c82cd6acc9ada4487c36ca07add33c86704"
+    "docs/previews/bro.png": "91ce9de5d1a9203ac1688646ea3dd4b794b7f31f11f674e00e52d2f3dcecdf2b",
+    "game/assets/sprites/bro.png": "24b111feceb73a8986cbde52e87df4dcae55038c1f2314a86fae0cc368f5f659",
+    "game/assets/sprites/bro_frames.tres": "b7f84f91968d30dc7e6f0ae3f88b0d9a1a9fc338fc43fbf199f613bac80bceae"
   },
   "bro_dead": {
     "docs/previews/bro_dead.png": "f25d31d88692dbcc37bef8a40990b76c3d1623bb2d7003b7b026fd380a40f2ea",
@@ -55,14 +55,34 @@
     "game/assets/sprites/bro_dead_frames.tres": "599bef1dc4e2d335145469db2bfd881294550ec46c3e3b37eea557688494ca9b"
   },
   "brute": {
-    "docs/previews/brute.png": "28f7811f4966ba79d5a4489b26b955134bb88664ffb8f9420b55f9bbc656eea8",
-    "game/assets/sprites/brute.png": "4b43e96e8220a32317578769a0625a2c6645212adcb06bc0094127c3d33c1a9f",
-    "game/assets/sprites/brute_frames.tres": "c238f6be0268f4ff3d2cf6481bdc492c1d4a9cfca73771771cd8493938c17c5d"
+    "docs/previews/brute.png": "9f0cfbc56927c5d3459632666d3e17a13bc6e9d243ac34e37df12a7268a0c650",
+    "game/assets/sprites/brute.png": "467d64b908be9fcfaa1b747180d5c89eb97ac1c12fcdae7526c458022466b1c3",
+    "game/assets/sprites/brute_frames.tres": "ef0e0819e52e32ad6d89199946600f2b20993d0a20fa50682b991906fb875d7f"
   },
   "cracks": {
     "docs/previews/cracks.png": "17215bbffda9de4c170f5698630b97aa19ec91c33da3bbbc6bf7c12f4dd59e81",
     "game/assets/sprites/cracks.png": "a38938e9d16914824bd94cccdeb3bd7873ca32015d59ab45ec608e2034f7fd70",
     "game/assets/sprites/cracks_frames.tres": "c724181d4796a1e5effef2c645cd396f91fd49e3433ec297a7d98a1b6fb35dd9"
+  },
+  "crate_ammo": {
+    "docs/previews/crate_ammo.png": "9fb2d6ca6e9463736250c7fc65cc314ca71c29d059cb426d41ab4dd1ff96aea0",
+    "game/assets/sprites/crate_ammo.png": "16518c499ee3ea351a1f9b10b3415119ff85f8a1bb8f06631dab23850496c21f",
+    "game/assets/sprites/crate_ammo_frames.tres": "8cc8506214c2c9bb72507e0ca5802bcde9ca45d7284562aee31b6db58b171863"
+  },
+  "crate_grenade": {
+    "docs/previews/crate_grenade.png": "4bee92235450c2165cb2877252925e5a5ec73f2f50cac93757979e2be54577d0",
+    "game/assets/sprites/crate_grenade.png": "557577b59ea10deb236251aac9ff8ea7a400ef728db116008887f2ec4275f9d2",
+    "game/assets/sprites/crate_grenade_frames.tres": "046b18ddb60f92130c9e55bfbb0c965c5b7675f65bfe4c3a9bc1fbb39c8f3c05"
+  },
+  "crate_med": {
+    "docs/previews/crate_med.png": "ee12a99eaa446565682f08887c2e443f6d04de3a3e50f845aa9006c6a3d52433",
+    "game/assets/sprites/crate_med.png": "d1787315e4d6977feb9ccd71dae50007bb4b2fd4ad5389985da8d845f6577f26",
+    "game/assets/sprites/crate_med_frames.tres": "f42b9519f1676d1034da0480d6f9acd754b4a888b78b0ed6c691173f663c4c3b"
+  },
+  "disco_grenade": {
+    "docs/previews/disco_grenade.png": "849907d355169b5b2b69413a09f89a73ac5a08da3c71d4332f8751ac8f6ec641",
+    "game/assets/sprites/disco_grenade.png": "1898d555a79ec1822c126eaac9260f4a6d4b4c8588a60f16fe7df0e7cf6492fd",
+    "game/assets/sprites/disco_grenade_frames.tres": "6e7161dac54b44ffc47b116bc63b0836f637f0f29984d0c9a47645071aeca232"
   },
   "exit": {
     "docs/previews/exit.png": "8797901196d010cd94222e7fa29ba85ea274dff296efda6cb4b1fb6e0f71c610",
@@ -95,9 +115,9 @@
     "game/assets/sprites/gibs_frames.tres": "c0870eb62c49b220b2d25a13d8b331d51e6aa8116b09f818b1064012d6feb7b8"
   },
   "heavy": {
-    "docs/previews/heavy.png": "5a4f3a85e08b97285787ddec863f0389d25464f7a223b5b2db7bbd494e3b76a5",
-    "game/assets/sprites/heavy.png": "6dbe08cf7d5c43b41a9a289ba1f6f2e74cab256e7fec2f7f74e39a44eb704752",
-    "game/assets/sprites/heavy_frames.tres": "0cb166c1b9d6dd3c57183c1e0cf64065effc0e3a8bbd4e284cfa9eaae4182620"
+    "docs/previews/heavy.png": "e6b0d1c349ea0241bd1653d9d61fea9ac1e25e24fa325f98a11c72a608db050d",
+    "game/assets/sprites/heavy.png": "61dc825a4cc05e5457f0026f5af220f5503440e7360b9d1adafdf536aa9c0a02",
+    "game/assets/sprites/heavy_frames.tres": "95839c60d6ef301644311b779d7480e286b3a575a2f62301dcfd87e7f6fa6102"
   },
   "heavy_dead": {
     "docs/previews/heavy_dead.png": "7f38bfd1cd4ce0528fba0b47f64b2dbfe930692037106d6b109b11a99365c5b3",
@@ -110,14 +130,24 @@
     "game/assets/sprites/helmet_frames.tres": "29c9988d2d13d4274fb49b0b6336a4c66a2ed8a1161a12a9304c2abb03bc1bc0"
   },
   "items": {
-    "docs/previews/items.png": "0f43c02bb1b5fa7b480850d43b87065fa915e7f27e9bc993eb42db4d564818c4",
-    "game/assets/sprites/items.png": "35ab675a12e6144d313374a2017dd54accab5e9566c69872346bd7ae2bc6bdf0",
-    "game/assets/sprites/items_frames.tres": "43e3796a7f286db40d3c1b58da0c647f29b6856319ab8888ddaab949af86cc2f"
+    "docs/previews/items.png": "2db5fc9e94dd6556504a8a3aaac93f1fd14a3d6b2d9399decfd0cba059615e40",
+    "game/assets/sprites/items.png": "096472401f69949f6b9e7cb6939c8b28ad1eb83dd26fb106bf276bf7df52e9cd",
+    "game/assets/sprites/items_frames.tres": "5dce5f350476a579eafc3eac44195d1fe1da121c45feff55c0101dcca7fcc267"
   },
   "kamikaze": {
     "docs/previews/kamikaze.png": "de6d5ef0aaf9c57a72eaae72280af11d7e35a1fdeba203be75a313b13c1fc847",
     "game/assets/sprites/kamikaze.png": "c0d16eefd6b3210c77816176b9be99d230e2e3df2d405749619787cc05bd5176",
     "game/assets/sprites/kamikaze_frames.tres": "491e34c305548419d534b45af0add61231341c0d39f59461f55974f8f4bd472f"
+  },
+  "mib": {
+    "docs/previews/mib.png": "628ba26fc17e73c174e48272de2dd5d12e0a0c86548edc700e58ad1280e5a7ed",
+    "game/assets/sprites/mib.png": "907beb1036683703fdaae23b246016be4d0b012d6136749aa65b36e13ec09a5d",
+    "game/assets/sprites/mib_frames.tres": "2b6272a58cca259e1ec1865ffa8be4dc5d63b81cac2b11734ad2120fd9195a26"
+  },
+  "mib_dead": {
+    "docs/previews/mib_dead.png": "9c1eb3bc7ff4b85e33fb13c358af855182fcb923273e4bcad0b976f683863dd3",
+    "game/assets/sprites/mib_dead.png": "8c2e419db4f84b0f1d193d07764ab2bab358a7d21dfc41777eca790a0568e8e0",
+    "game/assets/sprites/mib_dead_frames.tres": "3572484b2055739276f3d14b53a1f9c245008872119dfcd256c4e217ae0a01c7"
   },
   "minigun_flash": {
     "docs/previews/minigun_flash.png": "5bf882ed0f9ef2aa3ffcda812ea5ddfb189f161e49db6de11a748a5173134bbe",
@@ -134,6 +164,11 @@
     "game/assets/sprites/projectiles.png": "16954e2c6e79a39351f18fe0023664daf3eb5d5c12631a0de292fd4e8b77f3d6",
     "game/assets/sprites/projectiles_frames.tres": "e261eb29ce4ea8374c34dfdb19731e00e5ef0e61bc29659e30351048fedbfd92"
   },
+  "raygun_flash": {
+    "docs/previews/raygun_flash.png": "79662428b576ffa68a62f3cdb76cc20ef3561348ca3cc6735eee196404b436c4",
+    "game/assets/sprites/raygun_flash.png": "e8f1fd7bc526b8cdb3f06a8c2ebd1493841b52bfef7b6b6cb1afca28f8daed23",
+    "game/assets/sprites/raygun_flash_frames.tres": "a8127d8e6efe3d646fb4bd3991653c69b04bfa7c50c286578b906b5fb35b799d"
+  },
   "revolver_bullet": {
     "docs/previews/revolver_bullet.png": "a2b434fa6c5c60cbdda3719fe59302c08d33383dc7c3aec9174bdf47e062e611",
     "game/assets/sprites/revolver_bullet.png": "51177c2b027f159d5ac632a3086c693d4c9a3847a87fabc59f4aece37742eb3b",
@@ -145,9 +180,9 @@
     "game/assets/sprites/revolver_flash_frames.tres": "91c4fe43b8a5e3ea741c377adb43a9afac7e8419140a372ede163d13005c49b5"
   },
   "sharif": {
-    "docs/previews/sharif.png": "3dac92fe6965b88632364af8a7c522667987143c047e7d7e331c840e28a98b3f",
-    "game/assets/sprites/sharif.png": "e03472752e5df9dde3ee46093010f3cb89119ea80bb6b8bbdccb8a87a46f1456",
-    "game/assets/sprites/sharif_frames.tres": "58d0a4db2e6a93578adde3c4376fb68ad8f188ce429f26b43112f54850c44e99"
+    "docs/previews/sharif.png": "2c71725752ee884b0d1d686eeb0f0fcec5a20f00be3bc77e99e8ecdb45eaae03",
+    "game/assets/sprites/sharif.png": "c1375632578e29c8e8155b0a1891f39b0758fcde469dd991e2de468f5bf65696",
+    "game/assets/sprites/sharif_frames.tres": "fc72e2f055ba1e8cd303f67d206157c4811213e33ebd25eb782c9bb43c24ceea"
   },
   "sharif_dead": {
     "docs/previews/sharif_dead.png": "0746f3b476dbf11cb562aa0319bcf872eb929c604b66dd0e3f0c9ddc49fda162",
