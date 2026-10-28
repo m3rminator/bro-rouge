@@ -54,6 +54,8 @@ var _cling_time := 0.0
 var _cling_side := 0  # which side the wall is on (+1 right, -1 left)
 var _cling_cooldown := 0.0  # no re-grab right after letting go
 var riding := false  # on a zipline
+var _climb_speed := 0.0  # how fast he is climbing, builds up while Jump is held
+var _ladder: Ladder = null  # the ladder he is climbing
 var zip_load := 0.0  # 0..1, how much of his weight the cable carries (eases in and out)
 var _zip_spark := 0.0
 var zip_cooldown := 0.0  # no grabbing the cable again right after getting off
@@ -196,7 +198,7 @@ func _physics_process(delta: float) -> void:
 	if riding:
 		_zip_step(delta)
 		return
-	if not is_on_floor():
+	if not is_on_floor() and _ladder == null:
 		velocity.y += STATS.gravity * delta
 	if dead or frozen:
 		velocity.x = move_toward(velocity.x, 0.0, 200.0 * delta)
@@ -213,7 +215,7 @@ func _physics_process(delta: float) -> void:
 			return
 	else:
 		_crush = 0.0
-	var dir := Input.get_axis("move_left", "move_right")
+	var dir := 0.0 if _shield > 0.0 else Input.get_axis("move_left", "move_right")  # shielded he stands his ground
 	_dir = dir
 	_double_tap(dir)
 	_sprint_time = _sprint_time + delta if _sprint != 0 else 0.0
@@ -224,6 +226,7 @@ func _physics_process(delta: float) -> void:
 	if _clinging:
 		_cling_process(delta, dir)
 		return
+	_ladder_update()
 	if Input.is_action_just_pressed("knife") and _revolver < 0.0 and not _fists():
 		_start_knife()
 	_revolver_step(delta, dir)
@@ -237,8 +240,8 @@ func _physics_process(delta: float) -> void:
 	if _stagger > 0.0:
 		_stagger -= delta
 		velocity.x = move_toward(velocity.x, 0.0, 400.0 * delta)
-	elif _revolver >= 0.0:
-		velocity.x = 0.0  # the revolver is out: he does not move
+	elif _revolver >= 0.0 or _shield > 0.0:
+		velocity.x = 0.0  # the revolver is out, or the shield is up: he does not move
 	elif _fist >= 0:
 		if is_on_floor():  # a short step into every punch, planted otherwise
 			var lunging: bool = not _fist_low and _fist_t >= STATS.fist_hit_time - 0.05 and _fist_t <= STATS.fist_hit_time + 0.05
@@ -260,11 +263,12 @@ func _physics_process(delta: float) -> void:
 			sprite.flip_h = facing < 0
 
 	var stepped := Input.is_action_just_pressed("jump") and is_on_floor() and dir != 0.0 and not _knifing and _step_up(int(signf(dir)))
-	if Input.is_action_just_pressed("jump") and is_on_floor() and not crouching and not stepped:
+	if Input.is_action_just_pressed("jump") and is_on_floor() and not crouching and not stepped and _shield <= 0.0 and _ladder == null:
 		velocity.y = STATS.jump_velocity
 		Sfx.play(self, "jump", -4.0)
 		DustPuff.burst(get_parent(), _feet(), 14, 55.0, 1.5, 0.8)  # kick-off cloud
 
+	_ladder_climb(delta)
 	var was_on_floor := is_on_floor()
 	move_and_slide()
 	if not is_on_floor():
@@ -341,6 +345,7 @@ func _double_tap(dir: float) -> void:
 			var side := -1 if action == "move_left" else 1
 			if now - _tap_time[action] <= GameData.RUN.double_tap_time:
 				_sprint = side
+				WindGust.spawn(get_parent(), position + Vector2(-side * 6.0, -4.0), side)  # the sprint begins with a gust off his chest
 			_tap_time[action] = now
 	if int(signf(dir)) != _sprint:
 		_sprint = 0
@@ -437,6 +442,7 @@ func freeze() -> void:
 
 func _die(direction: int) -> void:
 	dead = true
+	_ladder = null
 	_shield = 0.0
 	_fist = -1
 	sprite.modulate = Color.WHITE
@@ -995,7 +1001,7 @@ func _update_animation(dir: float) -> void:
 	_kicking = false
 	_pumping = false
 	var anim := "idle"
-	if not is_on_floor():
+	if not is_on_floor() and _ladder == null:
 		anim = "jump"
 	elif crouching:
 		anim = "crouch_walk" if dir != 0 else ("crouch_shoot" if shooting > 0.0 else "crouch")
@@ -1003,6 +1009,8 @@ func _update_animation(dir: float) -> void:
 		anim = "run_shoot" if shooting > 0.0 else "run"
 		if _sprint != 0:
 			sprite.speed_scale = 1.6  # legs keep up with the faster pace
+			if shooting <= 0.0 and sprite.sprite_frames.has_animation("sprint"):
+				anim = "sprint"  # leaning run (test art, only some characters have it)
 		if _kick_due and shooting > 0.0:
 			_kick_due = false
 			_kicking = true
@@ -1043,7 +1051,7 @@ func _pump_name(dir: float) -> String:
 ## Hold Crouch on the ground to shrink to one block. Letting go only stands up when there is
 ## room above; otherwise he stays crouched under the low ceiling.
 func _update_stance() -> void:
-	var want := (Input.is_action_pressed("crouch") and is_on_floor()) or _low_gap_ahead()  # the gap squeeze works in mid-jump too
+	var want := (Input.is_action_pressed("crouch") and is_on_floor() and _shield <= 0.0 and _ladder == null) or _low_gap_ahead()  # the gap squeeze works in mid-jump too
 	if want == crouching:
 		return
 	if want or not _ceiling_above():
@@ -1133,6 +1141,13 @@ func _zip_step(delta: float) -> void:
 	if _zip_v != 0.0:
 		facing = 1 if _zip_v > 0.0 else -1
 		sprite.flip_h = facing < 0
+	if Input.is_action_just_pressed("crouch"):  # Down lets go and drops straight off the cable
+		riding = false
+		_zip_saved_t = 0.0
+		zip_cooldown = 0.4
+		velocity = Vector2.ZERO
+		_recoil = 0.0
+		return
 	if Input.is_action_just_pressed("jump"):  # lets go and jumps, carrying the speed
 		riding = false
 		_zip_saved_v = _zip_v
@@ -1248,7 +1263,7 @@ func _reload_span() -> int:
 
 
 func _on_frame_changed() -> void:
-	if sprite.animation == "run" and sprite.frame % 2 == 0:
+	if (sprite.animation == "run" or sprite.animation == "sprint") and sprite.frame % 2 == 0:
 		Sfx.play(self, "footstep", -14.0, 0.15)
 	elif _reload_frame("reload", 3) and STATS.get("drop_mag", false):
 		MagDrop.drop(get_parent(), position + sprite.position + Vector2(facing * -0.5, 10.0), facing)  # the empty one falls
@@ -1305,6 +1320,8 @@ func _fist_step(delta: float) -> void:
 		_fist_queued = STATS.fist_buffer
 	elif Input.is_action_pressed("shoot"):
 		_fist_queued = maxf(_fist_queued, 0.05)  # held: chains on and on
+	if _shield > 0.0:
+		_fist_queued = 0.0  # no blows from behind the shield
 	if _fist < 0:
 		_fist_idle += delta
 		if _fist_idle > STATS.fist_reset:
@@ -1385,49 +1402,59 @@ func _fist_strike() -> void:
 		Sfx.play(self, STATS.melee_hit_sound, -2.0, 0.08)
 		shake(2.0)
 	query.collision_mask = 4 | 8  # enemies and bodies
-	var target: Enemy = null
+	var front: Array[Enemy] = []
 	var corpses: Array[Enemy] = []
-	for hit_info in get_world_2d().direct_space_state.intersect_shape(query, 16):
-		var e = hit_info.collider
-		if not e is Enemy:
-			continue
-		if e.dead:
-			corpses.append(e)
-			continue
-		if target == null or absf(e.global_position.x - global_position.x) < absf(target.global_position.x - global_position.x):
-			target = e
+	var seen := {}
+	for side in [facing]:  # a blow only reaches the way he faces
+		query.transform = Transform2D(0.0, global_position + Vector2(side * (reach - behind) / 2.0, Block.SIZE / 2.0 - body_h / 2.0))
+		for hit_info in get_world_2d().direct_space_state.intersect_shape(query, 16):
+			var e = hit_info.collider
+			if not e is Enemy or seen.has(e):
+				continue
+			seen[e] = true
+			if e.dead:
+				corpses.append(e)
+			elif (e.global_position.x - global_position.x) * facing >= 0.0:
+				front.append(e)
+	var nearest := func(a: Enemy, b: Enemy) -> bool: return absf(a.global_position.x - global_position.x) < absf(b.global_position.x - global_position.x)
+	front.sort_custom(nearest)
+	var targets: Array[Enemy] = front.slice(0, 2)  # the two nearest in front, no more
 	for body in corpses:  # a blow into a body bursts it, like a knife stab does
 		body.stab(facing, 0, 0.0, 0.0, 0)
 	if not corpses.is_empty():
 		Sfx.play(self, STATS.melee_hit_sound, -2.0, 0.08)
 		shake(2.0)
-	if target == null:
+	if targets.is_empty():
 		if hit_barrels.is_empty() and corpses.is_empty():
 			_knife_block(reach)  # nothing to hit: the blow breaks the block in front, one per swing
 		return
-	var share: float = STATS.fury_share if fury else [STATS.jab_share, STATS.cross_share, STATS.kick_share][stage]
-	var boss: int = [STATS.jab_boss, STATS.cross_boss, STATS.kick_boss][stage]
-	var knock: float = [STATS.jab_knock, STATS.cross_knock, STATS.kick_knock][stage]
-	var hop: float = STATS.kick_hop if stage == 2 else 0.0
-	var stun: float = [STATS.jab_stun, STATS.cross_stun, STATS.kick_stun][stage]
-	if target.party_doom:  # a kamikaze dies from any blow and is thrown away, so his blast does not reach Bruce
-		share = 1.0
-		knock *= STATS.kamikaze_throw
-		hop = minf(hop, -150.0)
 	Sfx.play(self, STATS.melee_hit_sound, -2.0, 0.08)
 	shake(1.5 + stage)
-	if target == _combo_target:
-		_combo_hits += 1
-	else:
-		_combo_target = target
-		_combo_hits = 1
-	if target.punched(share, boss, facing, knock, hop, stun):
-		if stage == 2 and _combo_hits >= 3:
-			_finisher()
-		elif fury:
-			_fury = STATS.fury_time  # every kill in fury starts the time again
-		_combo_target = null
-		_combo_hits = 0
+	for target in targets:
+		var share: float = STATS.fury_share if fury else [STATS.jab_share, STATS.cross_share, STATS.kick_share][stage]
+		var boss: int = [STATS.jab_boss, STATS.cross_boss, STATS.kick_boss][stage]
+		var knock: float = [STATS.jab_knock, STATS.cross_knock, STATS.kick_knock][stage]
+		var hop: float = STATS.kick_hop if stage == 2 else 0.0
+		var stun: float = [STATS.jab_stun, STATS.cross_stun, STATS.kick_stun][stage]
+		if target.party_doom:  # a kamikaze dies from any blow and is thrown away, so his blast does not reach Bruce
+			share = 1.0
+			knock *= STATS.kamikaze_throw
+			hop = minf(hop, -150.0)
+		var primary: bool = target == targets[0]  # the combo counts the first one only
+		if primary:
+			if target == _combo_target:
+				_combo_hits += 1
+			else:
+				_combo_target = target
+				_combo_hits = 1
+		if target.punched(share, boss, facing, knock, hop, stun):
+			if primary and stage == 2 and _combo_hits >= 3:
+				_finisher()
+			elif fury:
+				_fury = STATS.fury_time  # every kill in fury starts the time again
+			if primary:
+				_combo_target = null
+				_combo_hits = 0
 
 
 ## A full combo, finished by the kick: fury for fury_time, and every heal_kills of them a half heart.
@@ -1468,6 +1495,8 @@ func _defend() -> void:
 		return
 	Run.grenades -= 1
 	grenades_changed.emit(Run.grenades)
+	if _fist >= 0:
+		_end_fist()  # a swing in progress is dropped for the guard
 	_shield = STATS.defend_time
 	_defend_cd = STATS.defend_cooldown
 	_shield_icon = AnimatedSprite2D.new()
@@ -1527,3 +1556,48 @@ func _fist_cling(delta: float) -> void:
 		_cling_kick_t = -1.0
 		sprite.speed_scale = 1.0
 		sprite.play("cling")
+
+
+## A ladder takes nothing from him: he keeps every control. Jump (held, not rising) over one climbs it and Crouch climbs
+## down, with no gravity while he is on it. He walks off either side, and once his body leaves the rails he falls.
+func _ladder_update() -> void:
+	var near := Ladder.near(_feet())
+	if _ladder != null and (near != _ladder or dead or frozen):
+		_ladder = null
+		return
+	if _ladder != null or near == null or _stagger > 0.0 or _rolling or velocity.y < -30.0:
+		return
+	var up := Input.is_action_pressed("jump")
+	if (up or Input.is_action_pressed("crouch")) and Ladder.find(_feet(), up) == near:
+		_ladder = near
+		if crouching:
+			_set_stance(false)
+		_clinging = false
+		velocity.y = 0.0
+
+
+func _ladder_climb(delta: float) -> void:
+	var l := _ladder
+	if l == null:
+		_climb_speed = 0.0
+		return
+	var run: Dictionary = GameData.RUN
+	var way := 0.0
+	if Input.is_action_pressed("jump"):
+		way = -1.0
+	elif Input.is_action_pressed("crouch"):
+		way = 1.0
+	if way < 0.0:  # the longer he holds Jump, the faster he climbs (up to a limit)
+		_climb_speed = minf(maxf(_climb_speed, run.ladder_speed) + run.ladder_accel * delta, run.ladder_speed_max)
+	else:
+		_climb_speed = 0.0
+	velocity.y = way * (_climb_speed if way < 0.0 else run.ladder_speed)
+	if way < 0.0 and _feet().y <= l.top - 1.0:  # the top: he keeps his speed and jumps off
+		var t := clampf((_climb_speed - run.ladder_speed) / (run.ladder_speed_max - run.ladder_speed), 0.0, 1.0)
+		velocity.y = STATS.jump_velocity * lerpf(run.ladder_jump_min, 1.0, t)
+		_ladder = null
+		_climb_speed = 0.0
+		Sfx.play(self, "jump", -8.0)
+	elif way > 0.0 and _feet().y >= l.bottom - 2.0:  # the foot: back on the ground
+		_ladder = null
+		velocity.y = 0.0

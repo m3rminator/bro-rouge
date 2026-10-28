@@ -229,17 +229,57 @@ stats:
     unit: tiles
     description: Width of the first boss level - just a short run-up and the arena (it also grows with width_per_depth per boss cleared). There are no other enemies - the Bro steps off the truck into the Brute's arena and the Brute goes for him at once.
   platform_towers_base:
-    value: 5
+    value: 3
     unit: towers
     description: Towers of floating platforms (2-4 tiers, each two blocks higher than the last, one jump apart) in the first level. Enemies and barrels also stand on them.
   platform_towers_per_depth:
-    value: 1.0
+    value: 0.5
     unit: towers
     description: Extra towers for every fight of the loops already completed (steps up once per loop).
   platform_towers_max:
-    value: 17
+    value: 10
     unit: towers
     description: Cap on towers per level.
+  level_rows:
+    value: 36
+    unit: rows
+    description: How many blocks tall a fight level is (a boss arena stays 17). Everything above the ground is room for hills, temples and towers, so the Bro climbs a long way up - the ground sits near the bottom and the rest is height.
+  hill_extra:
+    value: 4
+    unit: rows
+    description: Hills may rise this many rows higher than they used to (the tall levels have the room).
+  temple_base:
+    value: 2
+    unit: temples
+    description: Stone temples in the first level - stacked floors of carved stone, four blocks apart, each shorter than the one below, joined by ladders. Every floor holds one or two soldiers. Enemies and barrels also stand on them.
+  temple_per_depth:
+    value: 0.5
+    unit: temples
+    description: Extra temples for every fight of the loops already completed (steps up once per loop).
+  temple_max:
+    value: 8
+    unit: temples
+    description: Cap on temples per level.
+  temple_floors_max:
+    value: 4
+    unit: floors
+    description: Most floors a temple has above the ground (it has at least two).
+  ladder_speed:
+    value: 180.0
+    unit: px/s
+    description: How fast the Bro starts climbing a ladder. Jump over it climbs up, Crouch climbs down, and he can walk off either side at any time.
+  ladder_speed_max:
+    value: 380.0
+    unit: px/s
+    description: The fastest he climbs, reached by holding Jump on the ladder.
+  ladder_accel:
+    value: 220.0
+    unit: px/s2
+    description: How quickly the climb speeds up while Jump is held.
+  ladder_jump_min:
+    value: 0.55
+    unit: x
+    description: Share of a normal jump he launches with off the top of a ladder after a slow climb.
   kamikaze_base:
     value: 0.12
     unit: share

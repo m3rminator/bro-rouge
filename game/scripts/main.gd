@@ -86,6 +86,13 @@ func _ready() -> void:
 		line.a = Vector2(zip.a.x * tile + tile / 2.0, zip.a.y * tile + tile / 2.0)
 		line.b = Vector2(zip.b.x * tile + tile / 2.0, zip.b.y * tile + tile / 2.0)
 		add_child(line)
+	for info: Dictionary in lv.get("ladders", []):  # the ladders of the temples
+		var ladder := Ladder.new()
+		ladder.position = Vector2(info.x * tile + tile / 2.0, 0.0)
+		ladder.top = info.top * tile
+		ladder.bottom = info.bot * tile
+		ladder.step = info.step
+		add_child(ladder)
 	_seal_arena(lv, tile)
 	_seal_trucks(rows)
 	move_child(player, -1)  # drawn and processed after the level
@@ -417,7 +424,10 @@ func _on_station_used(kind: String, station: HubStation) -> void:
 			Sfx.play(self, "reload", -4.0)
 		"H":
 			player.heal()
-			hud.message("HEARTS REFILLED", Hud.GREEN, 1.5)
+			var lost: bool = Run.lives < Run.RULES.lives  # the extra life comes back if it is spent, never more than the one
+			Run.lives = maxi(Run.lives, Run.RULES.lives)
+			hud.set_lives(Run.lives)
+			hud.message("HEARTS AND LIFE REFILLED" if lost else "HEARTS REFILLED", Hud.GREEN, 1.5)
 			Sfx.play(self, "quota_reached", -6.0)
 		"G":
 			Run.grenades = Run.grenade_max()
