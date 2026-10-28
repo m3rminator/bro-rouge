@@ -4,7 +4,7 @@ extends Node2D
 ## (user://touch_layout.cfg, scripts/touch_controls.gd).
 
 const BACKDROP := preload("res://assets/backgrounds/jungle.jpg")
-const VIEW := Vector2(480, 270)
+var VIEW := Screen.view()
 const YELLOW := Color("ffd23e")
 const PANEL := Color("23202f")
 const STEP := 0.1
@@ -20,7 +20,7 @@ func _ready() -> void:
 	var back := Sprite2D.new()
 	back.texture = BACKDROP
 	back.centered = false
-	back.scale = Vector2.ONE * VIEW.y / BACKDROP.get_height()
+	back.scale = Vector2.ONE * maxf(VIEW.y / BACKDROP.get_height(), VIEW.x / BACKDROP.get_width())
 	add_child(back)
 	var shade := ColorRect.new()
 	shade.size = VIEW

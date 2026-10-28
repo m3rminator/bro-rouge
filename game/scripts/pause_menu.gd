@@ -3,8 +3,8 @@ extends CanvasLayer
 ## Pause button in the top-right corner (click, tap, Esc or P) and its menu: resume, restart the
 ## run, or go back to the character select screen. Runs while the tree is paused.
 
-const VIEW := Vector2(480, 270)
-const BUTTON := Rect2(446, 4, 28, 20)
+var VIEW := Screen.view()
+var BUTTON := Rect2(Screen.view().x - 34.0, 4, 28, 20)
 const ITEMS := ["RESUME", "RESTART RUN", "TITLE SCREEN"]
 const ITEM_SIZE := Vector2(160, 22)
 const YELLOW := Color("ffd23e")

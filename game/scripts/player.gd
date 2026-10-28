@@ -255,7 +255,7 @@ func _physics_process(delta: float) -> void:
 		if _sprint != 0 and not crouching:
 			var run: Dictionary = GameData.RUN
 			walk *= lerpf(run.run_start, run.run_multiplier, clampf(_sprint_time / run.run_ramp_time, 0.0, 1.0))  # a running start that builds up
-		velocity.x = dir * walk + _recoil
+		velocity.x = dir * walk + (0.0 if _ladder != null else _recoil)  # no kick on a ladder: shooting must not throw him off
 		if _climb_side != 0 and dir == 0.0:
 			velocity.x = _climb_side * 30.0  # stays against the wall while hopping up it
 		if dir != 0:
@@ -301,7 +301,7 @@ func _physics_process(delta: float) -> void:
 		if is_on_floor() or _climb_time <= 0.0:
 			_climb_side = 0
 	var auto_grab := _climb_side != 0 and velocity.y >= -20.0  # top of the hop: knife back into the wall
-	if not is_on_floor() and _cling_cooldown <= 0.0 and not _knifing and _stagger <= 0.0 and (dir != 0.0 or auto_grab):
+	if not is_on_floor() and _cling_cooldown <= 0.0 and not _knifing and _stagger <= 0.0 and _ladder == null and Ladder.near(_feet()) == null and (dir != 0.0 or auto_grab):  # a ladder comes before a wall
 		var side := _wall_block_side()
 		if side != 0 and (auto_grab and side == _climb_side or (dir != 0.0 and side == int(signf(dir)))):
 			if not _squeeze_in(side) and not _knife_in_air(side) and is_nan(_squeeze_floor(side)):  # a wall his upper body clears, or a one-block gap he can crouch into, is not one to hang on
@@ -1160,19 +1160,47 @@ func _zip_step(delta: float) -> void:
 			_zip_roll = sprite.sprite_frames.get_frame_count("roll") / sprite.sprite_frames.get_animation_speed("roll")
 			sprite.play("roll")
 		return
+	_zip_fire(delta)
 	_zip_x += _zip_v * delta
 	var t := clampf(_zip_x / span, 0.0, 1.0)
-	position = _zip_a.lerp(_zip_b, t) + Vector2(0, sin(t * PI) * 6.0 + Zipline.DIP * zip_load)  # hangs lower as the cable takes his weight
+	position = _zip_a.lerp(_zip_b, t) + Vector2(0, sin(t * PI) * 6.0 + Zipline.dip_for(_zip_a, _zip_b) * zip_load)  # hangs lower as the cable takes his weight
 	velocity = Vector2.ZERO
 	_zip_spark -= delta
 	if _zip_spark <= 0.0 and absf(_zip_v) > 5.0:
 		_zip_spark = randf_range(0.03, 0.08)
-		ZipSparks.emit(get_parent(), position + Vector2(-facing * 2.0, -19.0), -facing)  # the handle scraping the cable above his head
+		ZipSparks.emit(get_parent(), position + Vector2(-facing * 2.0, -19.0), -facing, (_zip_b.y - _zip_a.y) / span)  # the handle scraping the cable above his head
 	if _zip_x <= 0.0 or _zip_x >= span:  # the end of the cable
 		riding = false
 		zip_cooldown = 0.6
 		_zip_saved_t = 0.0
 		position = _zip_a if _zip_x <= 0.0 else _zip_b
+
+
+## Hanging on the cable he still shoots and throws grenades (the gun's kick does not move him).
+func _zip_fire(delta: float) -> void:
+	fire_cooldown -= delta
+	shooting -= delta
+	_burst_gap += delta
+	_overheat -= delta
+	if _burst_gap > STATS.burst_reset:
+		_burst_shots = 0
+	if _burst_gap > STATS.get("overheat_reset", 0.5):
+		_heat = 0
+	_update_reload(delta)
+	if Input.is_action_just_pressed("grenade"):
+		_throw_grenade()
+	if _fists():
+		return
+	var spun_up := _windup_step(delta, Input.is_action_pressed("shoot") and _reload <= 0.0 and ammo > 0 and _overheat <= 0.0)
+	if Input.is_action_pressed("shoot") and fire_cooldown <= 0.0 and _reload <= 0.0 and _overheat <= 0.0:
+		if ammo > 0:
+			if spun_up:
+				_shoot()
+		else:
+			fire_cooldown = 0.4
+			Sfx.play(self, "dry_fire", -6.0)
+			_start_reload()
+	_recoil = 0.0
 
 
 ## Rises first, then edges over onto the step, in the crouch pose.
@@ -1570,6 +1598,7 @@ func _ladder_update() -> void:
 	var up := Input.is_action_pressed("jump")
 	if (up or Input.is_action_pressed("crouch")) and Ladder.find(_feet(), up) == near:
 		_ladder = near
+		_recoil = 0.0
 		if crouching:
 			_set_stance(false)
 		_clinging = false
@@ -1591,6 +1620,7 @@ func _ladder_climb(delta: float) -> void:
 		_climb_speed = minf(maxf(_climb_speed, run.ladder_speed) + run.ladder_accel * delta, run.ladder_speed_max)
 	else:
 		_climb_speed = 0.0
+	_recoil = 0.0  # shooting on a ladder never kicks him off it
 	velocity.y = way * (_climb_speed if way < 0.0 else run.ladder_speed)
 	if way < 0.0 and _feet().y <= l.top - 1.0:  # the top: he keeps his speed and jumps off
 		var t := clampf((_climb_speed - run.ladder_speed) / (run.ladder_speed_max - run.ladder_speed), 0.0, 1.0)

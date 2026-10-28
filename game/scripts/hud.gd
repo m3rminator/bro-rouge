@@ -4,7 +4,7 @@ extends CanvasLayer
 ## Under them: spare magazines, then grenades left. Top-right: kills / quota. Center: big messages. Under the top line: the Brute's health bar.
 
 const FX_FRAMES := preload("res://assets/sprites/fx_frames.tres")
-const VIEW_W := 480
+var VIEW_W := int(Screen.view().x)
 # master palette
 const WHITE := Color("f4f2e8")
 const YELLOW := Color("ffd23e")
@@ -26,6 +26,8 @@ var _level := PixelText.make(Vector2(VIEW_W / 2.0, 4), PixelText.Align.CENTER)
 var _kills := PixelText.make(Vector2(VIEW_W - 36, 4), PixelText.Align.RIGHT)
 var _message := PixelText.make(Vector2(VIEW_W / 2.0, 92), PixelText.Align.CENTER, 2)
 var _sub := PixelText.make(Vector2(VIEW_W / 2.0, 110), PixelText.Align.CENTER)
+var _note := PixelText.make(Vector2(VIEW_W / 2.0, 16), PixelText.Align.CENTER)  # the small line for short notices
+var _note_time := 0.0
 var _boss_name := PixelText.make(Vector2(VIEW_W / 2.0, 14), PixelText.Align.CENTER)
 var _boss_back := ColorRect.new()
 var _boss_fill := ColorRect.new()
@@ -37,7 +39,7 @@ var _shell_count := PixelText.make(Vector2(22, 31), PixelText.Align.LEFT)
 
 func _ready() -> void:
 	layer = 10
-	for t in [_lives, _ammo, _boosts, _level, _kills, _message, _sub, _boss_name]:
+	for t in [_lives, _ammo, _boosts, _level, _kills, _message, _sub, _note, _boss_name]:
 		add_child(t)
 	_boss_back.position = Vector2(VIEW_W / 2.0 - 60, 22)
 	_boss_back.size = Vector2(120, 5)
@@ -133,8 +135,14 @@ func set_kills(kills: int, quota: int) -> void:
 	_kills.color = GREEN if kills >= quota else WHITE
 
 
-## Big center message. seconds = 0 keeps it until the next message.
+## A short notice is a small line under the level name; only a message that stays (seconds = 0: dying, a cleared level)
+## is the big one in the middle, until the next message.
 func message(text: String, color: Color, seconds := 2.0, sub := "") -> void:
+	if seconds > 0.0:
+		_note.text = text if sub == "" else "%s - %s" % [text, sub]
+		_note.color = color
+		_note_time = seconds
+		return
 	_message.text = text
 	_message.color = color
 	_sub.text = sub
@@ -158,6 +166,9 @@ func _process(delta: float) -> void:
 		boosts += "FURY %d" % ceili(_player.fury_left())
 		_boosts.color = RED
 	_boosts.text = boosts
+	_note_time -= delta
+	if _note_time <= 0.0 and _note.text != "":
+		_note.text = ""
 	_message_time -= delta
 	if _message_time <= 0.0 and _message.text != "":
 		_message.text = ""

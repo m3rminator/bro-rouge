@@ -15,6 +15,7 @@ extends RefCounted
 ## platforms - spread over the different heights, not along one line.
 
 const ROWS := 17  # the height of the hand-made maps, boss arenas, the start zone and the hub
+const UNDER := 16  # rows of earth under the old ground level in tall fight levels: room for tunnels under the surface
 static var _rows := ROWS  # the level being built (tall fight levels: run.yaml level_rows)
 static var _shift := 0  # rows added above the old 17: the ground sits this much lower
 const GROUP_REACH := 3  # soldiers on one row this many columns apart or closer count as standing together
@@ -26,6 +27,8 @@ const ARENA_GROUND := 12  # its ground top row (leaves room for the gallery abov
 const START_COLS := 12  # flat safe run-up at the left edge
 const END_COLS := 10  # flat run before the exit
 const SKYLINE_MIN_WIDTH := 90  # levels at least this wide get a skyline (two towers over a chasm) and underground rooms
+const TEMPLE_ROOM := 4  # free height of a building room (at least three)
+const TEMPLE_PERIOD := 6  # one room plus the two block slab above it
 const GATE_CHASM := 16  # the chasm behind a gate temple
 const CHASM_WIDTH := 14  # too wide to jump: the zipline between the tower tops is the way over
 const STEP_WIDTH := 3  # width of one stair tread
@@ -34,6 +37,10 @@ const TITLES := ["Jungle Outpost", "Ruined Camp", "River Crossing", "Overgrown R
 const R := GameData.RUN
 
 static var _gaps := {}  # columns that are gap floors in the level being built
+static var tunnels_made := 0
+static var tunnel_info: Array = []  # {from, to, ground, shaft} of each tunnel, for the level report
+static var _signs: Array = []  # cells of the signposts that point up beside a chasm
+static var _bridges: Array = []  # cells of the boards of an underground rope bridge over a chasm (rope_bridge.gd)
 static var _reserved := {}  # columns taken by a skyline, so nothing else is built over it
 
 ## Every level draws one of these "personalities": how many skylines (towers over a chasm or a street) and underground
@@ -63,8 +70,12 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 		width = mini(R.boss_width + R.width_per_depth * (depth / R.boss_every), R.width_max)
 	_gaps = {}
 	_reserved = {}
-	_rows = ROWS if boss else R.level_rows  # fight levels are tall: room for temples and high hills
-	_shift = _rows - ROWS
+	_signs = []
+	_bridges = []
+	tunnels_made = 0
+	tunnel_info = []
+	_rows = ROWS if boss else R.level_rows + UNDER  # fight levels are tall: room for temples and high hills above, tunnels below
+	_shift = 0 if boss else R.level_rows - ROWS
 	var persona: Dictionary = PERSONAS[rng.randi() % PERSONAS.size()]
 	var heights := _terrain(width, boss, rng)
 	if _shift > 0:
@@ -88,6 +99,7 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 		gate = _temples(grid, heights, rng, 1, START_COLS + 6, width - END_COLS - 14, walls, stone, ladders, true)
 		extra.append_array(gate.spots)
 		zips.append_array(gate.zips)
+		extra.append_array(_tunnels(grid, heights, rng, 1 + (1 if width >= 120 else 0), START_COLS + 4, width - END_COLS - 6, walls, ladders))
 	if not boss and width >= SKYLINE_MIN_WIDTH:
 		var skylines := maxi(1, roundi(width / 100.0 * persona.sky * rng.randf_range(0.7, 1.3)))
 		for i in skylines:
@@ -113,6 +125,8 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 	grid[heights[exit_x] - 1][exit_x] = "X"  # the truck is 5 blocks long, centred on this tile
 
 	var taken := {}  # Vector2i(x, row) of things already standing somewhere
+	for sign_cell: Vector2i in _signs:
+		_take(taken, sign_cell, 1)
 	for l: Dictionary in ladders:  # nothing stands at a ladder's foot or where it lets out
 		_take(taken, Vector2i(l.x, l.bot - 1), 1)
 		_take(taken, Vector2i(l.x + l.step, l.top - 1), 1)
@@ -209,6 +223,10 @@ static func combat(depth: int, rng: RandomNumberGenerator = null) -> Dictionary:
 		"zips": zips,
 		"ladders": ladders,
 		"gate": gate.zips.size() > 0,
+		"signs": _signs.duplicate(),
+		"bridges": _bridges.duplicate(),
+		"tunnels": tunnels_made,
+		"tunnel_info": tunnel_info.duplicate(),
 		"unbreakable": unbreakable,
 		"stone": stone,
 		"arena": arena_info,
@@ -400,6 +418,7 @@ static func _skyline(grid: Array, heights: PackedInt32Array, rng: RandomNumberGe
 		for x in range(xa + w + 2, xb - 1, 3):
 			spots.append(Vector2i(x, g - 1))
 	else:
+		_signs.append(Vector2i(xa - 2, g - 1))
 		for x in range(xa + w, xb):  # the chasm: no floor at all
 			for y in _rows:
 				grid[y][x] = "."
@@ -477,20 +496,21 @@ static func _cave(grid: Array, heights: PackedInt32Array, rng: RandomNumberGener
 	return []
 
 
-## Stone temples: stacked floors of carved stone (one block thick, four blocks of room between them), each floor two blocks
-## shorter than the one below on both ends, like a stepped pyramid. The ground is the first floor. A plain ladder stands
-## at the end of every floor and runs up to the next - alternately on the right and on the left, so he crosses every floor
-## to reach the next, past its soldiers (one or two on each). The dark back wall shows in the rooms. A crate waits on one
-## floor with a soldier beside it. Returns {spots: the soldiers' cells, crate: its cell or (-1, -1)}.
+## Stone buildings in the way of the Broforce ones: boxes of stacked rooms, each at least four blocks high and walled in
+## by stone on both sides (the doors are at ground level only). Between two rooms lies a two block slab: its walking
+## surface is carved stone and the layer under it is earth, so nothing he breaks can lock him out. A ladder shaft cuts
+## through every slab, with stone around it, alternately at the left and at the right end of the room. The top floor is
+## an open roof with no walls. One or two soldiers in every room (more in the gate), a crate with a guard in one of them.
+## The gate (`gate_only`) is built first and has a chasm right behind its right wall: he has to climb it and ride the
+## zipline from its roof over to the ground beyond. Returns {spots, crate, tops, zips}.
 static func _temples(grid: Array, heights: PackedInt32Array, rng: RandomNumberGenerator, count: int, from: int, to: int, walls: Array, stone: Array, ladders: Array, gate_only := false) -> Dictionary:
 	var out := {"spots": [], "crate": Vector2i(-1, -1), "tops": [], "zips": []}
 	for t in count:
 		for attempt in (500 if gate_only else 150):
-			var gate := gate_only  # the gate: built first, wherever it fits, with a chasm beyond it so he has to climb it and ride the zipline over
+			var gate := gate_only
 			var ext := GATE_CHASM + 7 if gate else 0
-			var floors := rng.randi_range(3 if gate else 2, maxi(R.temple_floors_max, 3))
-			var len1 := 6 + 4 * (floors - 1) + rng.randi_range(0, 4)  # the lowest floor; the top one is still six blocks long
-			var w := len1 + 1  # plus the ladder column beside the lowest floor
+			var floors := rng.randi_range(3 if gate else 2, mini(maxi(R.temple_floors_max, 3), 4 if gate else 3))
+			var w := rng.randi_range(10, 14) + 2  # the interior plus the two walls
 			var x0 := rng.randi_range(from, maxi(from, to - w - ext))
 			if gate:
 				x0 = rng.randi_range(from + (to - from) / 5, maxi(from + (to - from) / 5, (to - from) * 3 / 5 + from - w - ext))
@@ -514,7 +534,7 @@ static func _temples(grid: Array, heights: PackedInt32Array, rng: RandomNumberGe
 					if (grid[y][x] == "#") != (y >= heights[x]):
 						bare = false
 						break
-			var ytop := g - 5 * floors - 2
+			var ytop := g - TEMPLE_PERIOD * floors - 2
 			if gate:
 				bare = true
 				high = low
@@ -526,42 +546,365 @@ static func _temples(grid: Array, heights: PackedInt32Array, rng: RandomNumberGe
 				for y in _rows:
 					grid[y][x] = "#" if y >= g else "."
 				heights[x] = g
-			if gate:  # the chasm right after the lowest floor, too wide to jump
+			if gate:  # the chasm right behind the right wall, too wide to jump
 				for x in range(x0 + w, x0 + w + GATE_CHASM):
 					for y in _rows:
 						grid[y][x] = "."
 					heights[x] = _rows
-			var right_first := rng.randf() < 0.5  # the first ladder, from the ground, is on this side
-			var lo := func(k: int) -> int: return x0 + 2 * (k - 1)  # first column of floor k (k = 1 is the lowest)
-			var hi := func(k: int) -> int: return x0 + len1 - 1 - 2 * (k - 1)
+			var lo := x0  # the left wall; the right wall is `hi`
+			var hi := x0 + w - 1
+			var roof := g - TEMPLE_PERIOD * floors  # the top row of the roof slab
+			var surface := func(r: int) -> int: return g - TEMPLE_PERIOD * r  # the row he stands on in room r (r = floors is the roof)
+			var start_left := rng.randf() < 0.5
+			var left_of := func(k: int) -> bool: return start_left == (k % 2 == 1)  # which end ladder k stands at
+			if gate:
+				left_of = func(k: int) -> bool: return (floors - k) % 2 == 0  # the top ladder is at the left, away from the zipline post
+			var shaft := {}  # ladder number -> its column
 			for k in range(1, floors + 1):
-				var s := g - 5 * k  # the row of floor k's slab: its top edge is where he stands
-				for x in range(lo.call(k), hi.call(k) + 1):
-					grid[s][x] = "#"
-					stone.append(Vector2i(x, s))
-					for y in range(s + 1, s + 5):
-						walls.append(Vector2i(x, y))  # the room under this floor
-				var side_right: bool = (k % 2 == 1) == right_first  # the ladder up to this floor
-				ladders.append({"x": hi.call(k) + 1 if side_right else lo.call(k) - 1, "top": s, "bot": s + 5, "step": -1 if side_right else 1})
-				var cols := range(lo.call(k) + 2, hi.call(k) - 1)  # soldiers keep off the ends where the ladders are
+				shaft[k] = lo + 1 if left_of.call(k) else hi - 1
+			for y in range(roof, g):  # the walls: stone columns on both sides, from the roof down to the ground
+				for x in [lo, hi]:
+					grid[y][x] = "#"
+					stone.append(Vector2i(x, y))
+			for k in range(1, floors + 1):  # the slabs and the rooms above them
+				var s: int = surface.call(k)  # top row of slab k
+				for x in range(lo + 1, hi):
+					for y in [s, s + 1]:
+						grid[y][x] = "#"
+						if y == s or absi(x - shaft[k]) <= 1:  # the walking surface and the rim of the shaft are stone, the layer between is earth
+							stone.append(Vector2i(x, y))
+				for y in [s, s + 1]:  # the shaft through the slab
+					grid[y][shaft[k]] = "."
+					walls.append(Vector2i(shaft[k], y))
+				if k < floors:
+					for y in range(s - TEMPLE_ROOM, s):  # the room above this slab
+						for x in range(lo + 1, hi):
+							walls.append(Vector2i(x, y))
+			for y in range(g - TEMPLE_ROOM, g):  # the ground room
+				for x in range(lo + 1, hi):
+					walls.append(Vector2i(x, y))
+			for y in range(g - 3, g):  # the doors (the gate is shut on the chasm side)
+				grid[y][lo] = "."
+				walls.append(Vector2i(lo, y))
+				if not gate:
+					grid[y][hi] = "."
+					walls.append(Vector2i(hi, y))
+			for k in range(1, floors + 1):
+				ladders.append({"x": shaft[k], "top": surface.call(k), "bot": surface.call(k - 1), "step": 1 if left_of.call(k) else -1})
+			for r in range(0, floors + 1):  # people: one or two in every room, a crate with a guard in one of them
+				var row: int = surface.call(r)
+				var cols := []
+				for x in range(lo + 2 if r < floors else lo + 3, hi - 1 if r < floors else hi - 2):
+					var clear := true
+					for k in [r, r + 1]:
+						if shaft.has(k) and absi(x - shaft[k]) < 2:
+							clear = false
+					if clear:
+						cols.append(x)
+				if cols.is_empty():
+					continue
 				var first: int = cols[rng.randi() % cols.size()]
-				out.spots.append(Vector2i(first, s - 1))
-				if gate and rng.randf() < 0.55:  # the other temples hold fewer soldiers
+				out.spots.append(Vector2i(first, row - 1))
+				if gate and rng.randf() < 0.55:  # the other buildings hold fewer soldiers
 					var second: int = cols[rng.randi() % cols.size()]
 					if absi(second - first) >= 4:
-						out.spots.append(Vector2i(second, s - 1))
-				if k == floors - rng.randi_range(0, floors - 1) and out.crate.x < 0 and rng.randf() < 0.6:
+						out.spots.append(Vector2i(second, row - 1))
+				if r == rng.randi_range(0, floors) and out.crate.x < 0 and rng.randf() < 0.7:
 					var at: int = cols[rng.randi() % cols.size()]
-					out.crate = Vector2i(at, s - 1)
-					out.spots.append(Vector2i(clampi(at + 3, lo.call(k) + 1, hi.call(k) - 1), s - 1))  # his guard
-					out.spots.append(Vector2i(clampi(at - 3, lo.call(k) + 1, hi.call(k) - 1), s - 1))
-			out.tops.append({"lo": lo.call(floors), "hi": hi.call(floors), "row": g - 5 * floors})
+					out.crate = Vector2i(at, row - 1)
+					out.spots.append(Vector2i(clampi(at + 3, cols[0], cols[-1]), row - 1))  # his guard
+					out.spots.append(Vector2i(clampi(at - 3, cols[0], cols[-1]), row - 1))
+			if gate:
+				_cellar(grid, heights, rng, lo, hi, g, shaft[1] == lo + 1, walls, ladders, out.spots)
+			out.tops.append({"lo": lo, "hi": hi, "row": roof, "ladder_left": left_of.call(floors)})
 			if gate:  # the zipline from the roof to the ground on the far side of the chasm
-								out.zips.append({"a": Vector2i(hi.call(floors), g - 5 * floors - 1), "b": Vector2i(x0 + w + GATE_CHASM + 3, g - 1)})
+				_signs.append(Vector2i(x0 - 2, g - 1))
+				out.zips.append({"a": Vector2i(hi, roof - 1), "b": Vector2i(x0 + w + GATE_CHASM + 3, g - 1)})
 			for x in range(x0 - 3, x0 + w + 3 + ext):
 				_reserved[x] = true
 			break
 	return out
+
+
+## The gate building's cellar: up to three floors under the whole ground floor, joined by ladders (a zigzag from end to
+## end), a corridor out under the ground in front of it on the first floor to a ladder up to the surface, and on the
+## lowest floor the bridge over the chasm. Skipped when the earth under it is not all solid.
+static func _cellar(grid: Array, heights: PackedInt32Array, rng: RandomNumberGenerator, lo: int, hi: int, g: int, up_left: bool, walls: Array, ladders: Array, spots: Array) -> void:
+	if _floor_count(g) < 1 or lo < 20:
+		return
+	var n := _floor_count(g)
+	var bottom := _floor_row(g, n)
+	var hx := _flat_near(heights, lo - 12, lo - 4)  # the way up to the surface
+	if hx < 0:
+		return
+	for c in range(hx - 2, hi + 1):
+		for y in range(g, bottom + 2):
+			if grid[y][c] != "#" or _gaps.has(c):
+				return
+	var fl := _floor_row(g, 1)
+	for c in range(hx, hi):
+		_hollow(grid, walls, c, fl - 3, fl - 1)
+	var down := hi - 2 if up_left else lo + 2
+	var other := lo + 2 if up_left else hi - 2
+	_dig_shaft(grid, walls, ladders, down, g, fl)
+	_dig_shaft(grid, walls, ladders, hx, heights[hx], fl)
+	for c in range(hx - 3, lo):
+		_reserved[c] = true
+	for c in [hx + 4, lo + 4 if absi(lo + 4 - down) > 2 else lo + 6, hi - 4 if absi(hi - 4 - down) > 2 else hi - 6]:
+		spots.append(Vector2i(c, fl - 1))
+	if n >= 2:
+		_stack(grid, walls, ladders, spots, lo + 1, hi - 1, g, n, down, g, other, 2)
+	_bridge(grid, heights, hi, g, n, walls, ladders, spots, other)
+
+
+## Floors `from_k`..`n` under columns xl..xr (floor k has its surface at _floor_row), each with a ladder up to the floor
+## above it (floor 1's goes to row `top1`): odd floors at column `odd_x`, even ones at `even_x`. Two soldiers on a floor.
+## With `door_k` only that floor is open at column `xl`; the others start one column in, so their end is a wall.
+static func _stack(grid: Array, walls: Array, ladders: Array, spots: Array, xl: int, xr: int, g: int, n: int, odd_x: int, top1: int, even_x: int, from_k: int, door_k := -1) -> void:
+	for k in range(from_k, n + 1):
+		var fl := _floor_row(g, k)
+		for c in range(xl if door_k < 0 or k == door_k else xl + 1, xr + 1):  # the left end is a wall, except where the door is
+			_hollow(grid, walls, c, fl - 3, fl - 1)
+		_dig_shaft(grid, walls, ladders, odd_x if k % 2 == 1 else even_x, top1 if k == 1 else _floor_row(g, k - 1), fl)
+		for c in [xl + (xr - xl) / 4, xl + 3 * (xr - xl) / 4]:
+			if absi(c - odd_x) > 2 and absi(c - even_x) > 2:
+				spots.append(Vector2i(c, fl - 1))
+
+
+## How many cellar floors fit under ground row `g` (at most three).
+static func _floor_count(g: int) -> int:
+	var n := 0
+	while n < 3 and _floor_row(g, n + 1) + 2 < _rows:
+		n += 1
+	return n
+
+
+## The row of the surface of cellar floor `k` (1 is the first under the ground floor): six rows apart (air, floor, rock).
+static func _floor_row(g: int, k: int) -> int:
+	return g + 5 + 6 * (k - 1)
+
+
+## The first column from `from` to `to` with level ground two columns to either side, else -1.
+static func _flat_near(heights: PackedInt32Array, from: int, to: int) -> int:
+	for c in range(from, to + 1):
+		if c < 2 or c + 2 >= heights.size():
+			continue
+		var level := true
+		for d in range(-2, 3):
+			if heights[c + d] != heights[c]:
+				level = false
+		if level:
+			return c
+	return -1
+
+
+## The cellar's other way out: a door in the wall of its lowest floor onto the chasm, a bridge of single planks across
+## (a rope bridge: see rope_bridge.gd), and the same floors on the far side with a ladder up to the surface.
+## Skipped when the far side is not solid.
+static func _bridge(grid: Array, heights: PackedInt32Array, hi: int, g: int, n: int, walls: Array, ladders: Array, spots: Array, even_x: int) -> void:
+	var a := hi + 1
+	while a < heights.size() and heights[a] < _rows:
+		a += 1
+	var b := a
+	while b < heights.size() and heights[b] >= _rows:
+		b += 1
+	if a - hi > 6 or b - a < 4 or b + 16 >= heights.size():
+		return
+	var far := _flat_near(heights, b + 5, b + 10)  # the way up on the far side
+	if far < 0:
+		return
+	var bottom := _floor_row(g, n)
+	for c in range(b, b + 14):
+		for y in range(g, bottom + 2):
+			if grid[y][c] != "#" or _gaps.has(c):
+				return
+	for y in range(bottom - 3, bottom):  # the door
+		_hollow(grid, walls, hi, y, y)
+	for c in range(a, b):
+		_bridges.append(Vector2i(c, bottom))
+	var far_even := b + 11 if far - b < 7 else b + 2
+	_stack(grid, walls, ladders, spots, b, b + 12, g, n, far, heights[far], far_even, 1, n)
+	for c in range(b - 1, b + 16):
+		_reserved[c] = true
+
+
+## Tunnels in the earth: two levels of corridors dug under the surface (the upper one at the first rows under the lowest
+## ground, the lower one under it), with rooms along them, ladders between the levels, a hole in a room floor that drops
+## to the lower level, and ladders up to the surface at both ends. Often a mountain stands over the middle of it: a
+## tunnel through its foot, a ladder from that tunnel down to the upper level, and one up to the top. Returns the soldiers' cells.
+static func _tunnels(grid: Array, heights: PackedInt32Array, rng: RandomNumberGenerator, count: int, from: int, to: int, walls: Array, ladders: Array) -> Array:
+	var spots := []
+	var made := 0
+	for attempt in 600:
+		if made >= count:
+			break
+		var mountain := rng.randf() < 0.55
+		var peak := rng.randi_range(12, 17)
+		var plateau := rng.randi_range(10, 16)
+		var mw := 2 * (peak - 4) + plateau
+		var xa := 0  # the underground: columns xa..xb
+		var xb := 0
+		var x0 := 0  # the mountain: columns x0..x0+mw-1
+		if mountain:
+			if to - from < mw + 26:
+				mountain = false
+		if mountain:
+			x0 = rng.randi_range(from + 10, to - mw - 10)
+			xa = x0 - 8
+			xb = x0 + mw + 7
+		else:
+			var uw := rng.randi_range(40, 60)
+			if to - from < uw + 6:
+				continue
+			xa = rng.randi_range(from + 3, to - uw - 3)
+			xb = xa + uw - 1
+		var free := true
+		var surface := 0  # the lowest the surface is (the biggest row) over the whole span
+		for c in range(xa - 3, xb + 4):
+			if _gaps.has(c) or _reserved.has(c) or heights[c] >= _rows:
+				free = false
+				break
+			if c >= xa and c <= xb:
+				surface = maxi(surface, heights[c])
+		if not free:
+			continue
+		var g := 0
+		if mountain:
+			g = heights[x0 - 1]
+			if g - peak < 4 or absi(heights[x0 + mw] - g) > 1:
+				continue
+			surface = maxi(surface, g)
+		var ya := surface + 3  # the upper corridor: air ya..ya+2, floor row fa
+		var fa := ya + 3
+		var yb := fa + 3  # the lower one
+		var fb := yb + 3
+		if fa > _rows - 2:
+			continue
+		var two := fb <= _rows - 2
+		var hatches := []  # a flat place for a ladder up to the surface near each end
+		for end in 2:
+			var found := -1
+			for k in 10:
+				var hx := xa + 2 + k if end == 0 else xb - 2 - k
+				if mountain and hx >= x0 - 2 and hx <= x0 + mw + 1:
+					continue
+				var level := true
+				for d in range(-2, 3):
+					if heights[hx + d] != heights[hx]:
+						level = false
+				if level:
+					found = hx
+					break
+			hatches.append(found)
+		if hatches[0] < 0 or hatches[1] < 0:
+			continue
+		var down := -1000  # the ladder from the mountain passage down to the upper corridor
+		if mountain:
+			for i in mw:  # the mountain: a cliff four blocks high at each end (the door and a block of rock over it), then slopes
+				var c := x0 + i
+				heights[c] = g - mini(mini(4 + i, 4 + (mw - 1 - i)), peak)
+				for y in _rows:
+					grid[y][c] = "#" if y >= heights[c] else "."
+			for c in range(x0, x0 + mw):  # the passage through its foot
+				for y in range(g - 3, g):
+					if grid[y][c] == "#":
+						walls.append(Vector2i(c, y))
+					grid[y][c] = "."
+			var top_shaft := x0 + mw / 2 + rng.randi_range(-2, 2)
+			for y in range(heights[top_shaft], g - 3):
+				grid[y][top_shaft] = "."
+				walls.append(Vector2i(top_shaft, y))
+			ladders.append({"x": top_shaft, "top": heights[top_shaft], "bot": g, "step": 1})
+			down = x0 + mw / 2 + (7 if top_shaft <= x0 + mw / 2 else -7)  # from the passage down to the upper corridor
+			_dig_shaft(grid, walls, ladders, down, g, fa)
+			for c in range(x0 + 3, x0 + mw - 3):  # soldiers in the passage
+				if absi(c - top_shaft) >= 2 and absi(c - down) >= 2 and (c - x0) % 7 == 3:
+					spots.append(Vector2i(c, g - 1))
+		for c in range(xa, xb + 1):  # the upper corridor
+			_hollow(grid, walls, c, ya, ya + 2)
+		var rooms_a := _rooms(grid, walls, rng, xa + 5, xb - 5, ya, 2, rng.randi_range(3, 4))
+		for hx: int in hatches:
+			_dig_shaft(grid, walls, ladders, hx, heights[hx], fa)
+		var occupied := [hatches[0], hatches[1], down]
+		if two:
+			for c in range(xa + 6, xb - 5):  # the lower corridor is a bit shorter
+				_hollow(grid, walls, c, yb, yb + 2)
+			var rooms_b := _rooms(grid, walls, rng, xa + 9, xb - 8, yb, 1, rng.randi_range(2, 3))
+			var link := (xa + xb) / 2 + rng.randi_range(-6, 6)  # a ladder between the two corridors
+			for shift in [0, 4, -4, 8, -8]:
+				if _clear_of(occupied, link + shift, 3):
+					link += shift
+					break
+			_dig_shaft(grid, walls, ladders, link, fa, fb)
+			occupied.append(link)
+			var hole := -1  # and a hole in the floor of an upper room, dropping into the lower corridor
+			for room: Vector2i in rooms_a:
+				var hx := room.x + room.y / 2
+				if hx > xa + 8 and hx < xb - 8 and _clear_of(occupied, hx, 4):
+					hole = hx
+					break
+			if hole >= 0:
+				for dx in 2:
+					for y in range(fa, yb):
+						grid[y][hole + dx] = "."
+						walls.append(Vector2i(hole + dx, y))
+				occupied.append(hole)
+			for room: Vector2i in rooms_b:
+				for c in [room.x + 2, room.x + room.y - 3]:
+					if _clear_of(occupied, c, 2):
+						spots.append(Vector2i(c, fb - 1))
+		for room: Vector2i in rooms_a:
+			for c in [room.x + 2, room.x + room.y - 3]:
+				if _clear_of(occupied, c, 2):
+					spots.append(Vector2i(c, fa - 1))
+		for c in range(xa + 4, xb - 3, 6):  # and a few in the corridor itself
+			if _clear_of(occupied, c, 2) and rng.randf() < 0.6:
+				spots.append(Vector2i(c, fa - 1))
+		for c in range(xa - 3, xb + 4):
+			_reserved[c] = true
+		made += 1
+		tunnels_made += 1
+		tunnel_info.append({"from": xa, "to": xb, "ground": surface, "mountain": mountain, "peak": peak if mountain else 0, "two": two})
+	return spots
+
+
+## Air in column `c` from row `y1` to `y2`; a block there that was solid shows the back wall.
+static func _hollow(grid: Array, walls: Array, c: int, y1: int, y2: int) -> void:
+	for y in range(y1, y2 + 1):
+		if grid[y][c] == "#":
+			walls.append(Vector2i(c, y))
+		grid[y][c] = "."
+
+
+## A ladder shaft in column `x`, from the floor surface at row `top` down to the one at row `bot`: the column in between
+## is hollowed out (the floor at the top too, so he climbs out beside it).
+static func _dig_shaft(grid: Array, walls: Array, ladders: Array, x: int, top: int, bot: int) -> void:
+	for y in range(top, bot):
+		_hollow(grid, walls, x, y, y)
+	ladders.append({"x": x, "top": top, "bot": bot, "step": 1})
+
+
+## Rooms along a corridor whose air starts at row `y` (three rows high): each is taller by `extra` rows on top, 7 to 11
+## wide. Returns {x: left column, y: width} of each one made (as Vector2i).
+static func _rooms(grid: Array, walls: Array, rng: RandomNumberGenerator, from: int, to: int, y: int, extra: int, count: int) -> Array:
+	var rooms := []
+	var slot := (to - from) / maxi(count, 1)
+	for i in count:
+		var w := rng.randi_range(7, 11)
+		var x := from + i * slot + rng.randi_range(0, maxi(slot - w, 0))
+		if x + w > to:
+			break
+		for c in range(x, x + w):
+			_hollow(grid, walls, c, y - extra, y - 1)
+		rooms.append(Vector2i(x, w))
+	return rooms
+
+
+static func _clear_of(taken: Array, c: int, gap: int) -> bool:
+	for t: int in taken:
+		if absi(t - c) < gap + 1:
+			return false
+	return true
 
 
 ## A zipline between the top floors of two temples that stand next to each other, when nothing is in the way of the cable.
@@ -570,6 +913,8 @@ static func _temple_zips(grid: Array, tops: Array, zips: Array) -> void:
 	for i in tops.size() - 1:
 		var p: Dictionary = tops[i]
 		var q: Dictionary = tops[i + 1]
+		if not p.ladder_left or q.ladder_left:
+			continue  # a zipline post never stands beside a ladder
 		var gap: int = q.lo - p.hi
 		if gap < 8 or gap > 40 or absi(p.row - q.row) > 5:
 			continue

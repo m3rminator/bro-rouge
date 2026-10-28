@@ -6,7 +6,7 @@ extends CanvasLayer
 
 signal chosen(id: String)
 
-const VIEW := Vector2(480, 270)
+var VIEW := Screen.view()
 const GAP := 8.0
 const TOP := 70.0
 

@@ -13,13 +13,14 @@ var _age := 0.0
 
 
 ## `back` is the direction the sparks fly (opposite to the ride, 1 or -1).
-static func emit(parent: Node, at: Vector2, back: int) -> void:
+static func emit(parent: Node, at: Vector2, back: int, slope := 0.0) -> void:
 	var s := ZipSparks.new()
 	s.position = at
 	s.z_index = 5
 	for i in randi_range(3, 5):
 		s._pos.append(Vector2.ZERO)
-		s._vel.append(Vector2(back * randf_range(25.0, 80.0), -randf_range(10.0, 55.0)))
+		var along := back * randf_range(25.0, 80.0)
+		s._vel.append(Vector2(along, along * slope - randf_range(10.0, 55.0)))  # back along the cable, which may slope
 	parent.add_child(s)
 
 

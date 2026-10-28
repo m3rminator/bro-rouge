@@ -876,7 +876,7 @@ const RUN := {
 	"enemy_hp_per_loop": 0.35,
 	"upgrade_time": 30.0,
 	"run_multiplier": 2.0,
-	"run_bullet_speed": 2.0,
+	"run_bullet_speed": 1.0,
 	"run_spread_min": 1.5,
 	"run_spread_mult": 2.0,
 	"run_start": 1.5,

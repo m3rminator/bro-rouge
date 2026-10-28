@@ -16,6 +16,7 @@ const MUSIC := "res://assets/music/level_jungle.mp3"
 @onready var player: CharacterBody2D = $Player
 
 var hud: Hud
+var _guide: GuideArrows
 var exit_flag: LevelExit
 var walls: BackWall  # the dark earth behind every block: what shows where one is shot away
 var _ending := false
@@ -93,6 +94,11 @@ func _ready() -> void:
 		ladder.bottom = info.bot * tile
 		ladder.step = info.step
 		add_child(ladder)
+	if not lv.get("bridges", []).is_empty():  # a rope bridge over a chasm that gives way
+		var bridge := RopeBridge.new()
+		bridge.cells = lv.bridges
+		bridge.player = player
+		add_child(bridge)
 	_seal_arena(lv, tile)
 	_seal_trucks(rows)
 	move_child(player, -1)  # drawn and processed after the level
@@ -118,6 +124,18 @@ func _ready() -> void:
 	background.track(cam)
 
 	_make_hud()
+	if _lv.kind != "start" and _lv.kind != "hub":
+		var guide_layer := CanvasLayer.new()
+		guide_layer.layer = 9
+		add_child(guide_layer)
+		_guide = GuideArrows.new()
+		_guide.target = exit_flag
+		_guide.show_start = _arena.is_empty()
+		guide_layer.add_child(_guide)
+	for cell: Vector2i in _lv.get("signs", []):  # beside a chasm: the way over is up
+		var sign_post := HintSign.new()
+		sign_post.position = Vector2(cell.x * tile + tile / 2.0, cell.y * tile + tile / 2.0)
+		add_child(sign_post)
 	Run.quota_reached.connect(_on_quota_reached)
 	Run.upgrade_ended.connect(_on_upgrade_ended)
 	player.died.connect(_on_player_died)
@@ -157,7 +175,6 @@ func _make_hud() -> void:
 	else:
 		hud.show_level(Run.depth + 1, Run.loop, _lv.title)
 		hud.set_kills(Run.kills, Run.quota())
-		hud.message("LEVEL %d" % (Run.depth + 1), Hud.WHITE, 2.5, "%s - KILL %d TO OPEN THE EXIT" % [_lv.title, Run.quota()])
 	Run.kills_changed.connect(hud.set_kills)
 
 
@@ -195,6 +212,8 @@ func _physics_process(delta: float) -> void:
 
 func _on_quota_reached() -> void:
 	exit_flag.set_open(true)
+	if _guide != null:
+		_guide.show_truck = true
 	hud.message("EXIT OPEN", Hud.GREEN, 2.5, "GET TO THE TRUCK >")
 	Sfx.play(self, "quota_reached")
 

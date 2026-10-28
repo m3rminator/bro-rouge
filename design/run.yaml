@@ -82,9 +82,9 @@ stats:
     unit: x
     description: Double-tap a direction and the Bro runs - starting at run_start and building up to this multiple of his normal speed over run_ramp_time - until he lets go.
   run_bullet_speed:
-    value: 2.0
+    value: 1.0
     unit: x
-    description: Shooting while running (any Bro but MIB, whose beam has no bullets) - the bullets fly this many times faster. They live this many times shorter, so the range stays the same.
+    description: Shooting while running - the bullets fly this many times faster (and live this many times shorter, so the range stays the same). 1 = same speed as standing still.
   run_spread_min:
     value: 1.5
     unit: degrees

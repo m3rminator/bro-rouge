@@ -28,7 +28,7 @@ const BUTTONS := {
 	"grenade": [Rect2(352, 220, 48, 44), "grenade", "grenade"],
 	"reload": [Rect2(390, 88, 48, 48), "reload", "reload"],
 }
-const VIEW := Vector2(480, 270)
+var VIEW := Screen.view()
 
 var selected := ""  # the button being edited (drawn with an outline)
 var editing := false  # the layout editor is open: touches move buttons instead of pressing them
@@ -90,7 +90,13 @@ func release_all() -> void:
 func rect_of(button: String) -> Rect2:
 	var base: Rect2 = BUTTONS[button][0]
 	var size := base.size * float(_scales.get(button, 1.0))
-	var center: Vector2 = _centers.get(button, base.get_center())
+	var home := base.get_center()  # the default spots hug the screen edges, whatever the screen's shape
+	var view := Screen.view()
+	if home.x > 240.0:
+		home.x += view.x - 480.0
+	if home.y > 135.0:
+		home.y += view.y - 270.0
+	var center: Vector2 = _centers.get(button, home)
 	return Rect2(center - size / 2.0, size)
 
 

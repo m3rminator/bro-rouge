@@ -6,12 +6,18 @@ extends Node2D
 
 const REACH := Vector2(22, 30)
 const SAG := 6.0  # how far the middle of the cable hangs
-const DIP := 9.0  # how much further it bends where the Bro hangs (his hands follow it, player.gd)
+const END_SKIP := 30.0  # within this of a post the cable does not catch him by itself
+const DIP := 9.0  # how much further it bends where the Bro hangs on a cable of ordinary length (his hands follow it, player.gd)
 const COLOR := Color("1f1b2c")
 const CABLE := Color("c9c7d6")
 const WIRE_OUTER := Color("0c0914")  # the cable in three layers: black outside, a lighter dark in the middle, a thin glint
 const WIRE_MID := Color("3b374d")
 const WIRE_GLINT := Color("8d89a3")
+
+## The bend under his weight: a long cable (a slope down from a roof) gives more, or it would hardly show.
+static func dip_for(from: Vector2, to: Vector2) -> float:
+	return DIP * clampf(from.distance_to(to) / 340.0, 1.0, 3.5)
+
 
 var a := Vector2.ZERO  # both ends: the centre of the cell the Bro stands on
 var b := Vector2.ZERO
@@ -48,10 +54,15 @@ func _process(_delta: float) -> void:
 	var t: float = (p.global_position.x - a.x) / span
 	if t < 0.0 or t > 1.0:
 		return
-	var cable_y := a.y + Block.SIZE / 2.0 - 30.0 + sin(t * PI) * SAG  # the cable, at his x
+	if absf(p.global_position.x - a.x) < END_SKIP or absf(p.global_position.x - b.x) < END_SKIP:
+		return  # beside a post he must press Interact: the cable does not snatch him
+	var cable_y := lerpf(a.y, b.y, t) + Block.SIZE / 2.0 - 30.0 + sin(t * PI) * SAG  # the cable, at his x (it may slope)
 	var head: float = p.global_position.y + Block.SIZE / 2.0 - 30.0  # top of his body
 	if head >= cable_y - 6.0 and head <= cable_y + 8.0:  # his hands reach the cable
-		p.start_zip(a, b, 1 if t < 0.5 else -1)
+		var way := 1 if t < 0.5 else -1
+		if absf(a.y - b.y) > Block.SIZE:  # a sloped cable carries him downhill
+			way = 1 if b.y > a.y else -1
+		p.start_zip(a, b, way)
 
 
 func _draw() -> void:
@@ -70,7 +81,7 @@ func _draw() -> void:
 	var points := PackedVector2Array()
 	for i in range(0, 25):
 		var t := i / 24.0
-		var bend := (t / load_t if t < load_t else (1.0 - t) / (1.0 - load_t)) * load * DIP  # two slopes meeting at the Bro
+		var bend := (t / load_t if t < load_t else (1.0 - t) / (1.0 - load_t)) * load * dip_for(a, b)  # two slopes meeting at the Bro
 		points.append(from.lerp(to, t) + Vector2(0, sin(t * PI) * SAG + bend))
 	draw_polyline(points, WIRE_OUTER, 3.0)
 	draw_polyline(points, WIRE_MID, 2.0)

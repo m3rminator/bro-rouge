@@ -15,6 +15,7 @@ var in_hub := false  # the safe house between boss levels
 var in_start := true  # the starting zone: walk to the box and be dealt three Bros (the game opens here)
 var perks := {}  # permanent safe-house perks of this run: kind -> how many were taken (see bro_stats)
 var upgrades := {}  # crate boosts running now: kind ("mag", "rate", "speed", "damage") -> seconds left (see bro_stats)
+var _start := {}  # grenades and crate boosts when this level was first entered: dying brings them back
 var loadout := {}  # hearts and ammo carried from one level to the next (see store_loadout)
 var _current := {}  # the level being played: generated once, kept for restarts after a death
 var loop := 1
@@ -155,6 +156,9 @@ func quota_met() -> bool:
 
 ## main.gd calls this when a level (re)starts: kills always start at 0.
 func begin_level() -> void:
+	var key := [depth, in_hub, in_start]
+	if _start.get("key") != key:  # a fresh level, not a retry after dying
+		_start = {"key": key, "grenades": grenades, "upgrades": upgrades.duplicate()}
 	kills = 0
 	spawned = -1
 
@@ -181,6 +185,9 @@ func next_level() -> void:
 ## Returns true if that was the last life (the run is over). A run starts with the Bro and one extra life.
 func lose_life() -> bool:
 	lives -= 1
+	if not _start.is_empty():
+		grenades = _start.grenades
+		upgrades = _start.upgrades.duplicate()
 	loadout.erase("hp")  # the level restarts with full hearts, and with the ammo he had when it began
 	return lives <= 0
 
@@ -202,6 +209,7 @@ func new_run() -> void:
 	depth = 0
 	in_hub = false
 	loadout = {}
+	_start = {}
 	_current = {}
 	loop = 1
 	lives = RULES.lives
