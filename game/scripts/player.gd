@@ -83,6 +83,7 @@ signal fury_ended
 var _fury := 0.0  # > 0 after a finished full combo: swings faster, two blows kill
 var _heal_kills := 0  # finishers toward the next half heart
 var _half_hearts := 0
+const SHIELD_FREE := 1.0  # seconds before the shield ends when he can move again
 var _shield := 0.0  # > 0 while Bruce's defend is up: nothing can hurt him
 var _defend_cd := 0.0
 var _shield_icon: AnimatedSprite2D
@@ -122,6 +123,9 @@ var _overheat := 0.0  # seconds the gun stays jammed
 
 func _ready() -> void:
 	add_to_group("player")
+	var marks := StatusIcons.new()  # the effects on him, over his head
+	marks.player = self
+	add_child(marks)
 	if not Run.loadout.is_empty():  # carried over from the last level (hub restocks refill it)
 		hp = Run.loadout.get("hp", hp)
 		ammo = Run.loadout.get("ammo", ammo)
@@ -215,7 +219,7 @@ func _physics_process(delta: float) -> void:
 			return
 	else:
 		_crush = 0.0
-	var dir := 0.0 if _shield > 0.0 else Input.get_axis("move_left", "move_right")  # shielded he stands his ground
+	var dir := 0.0 if movement_locked() else Input.get_axis("move_left", "move_right")  # shielded he stands his ground
 	_dir = dir
 	_double_tap(dir)
 	_sprint_time = _sprint_time + delta if _sprint != 0 else 0.0
@@ -240,7 +244,7 @@ func _physics_process(delta: float) -> void:
 	if _stagger > 0.0:
 		_stagger -= delta
 		velocity.x = move_toward(velocity.x, 0.0, 400.0 * delta)
-	elif _revolver >= 0.0 or _shield > 0.0:
+	elif _revolver >= 0.0 or movement_locked():
 		velocity.x = 0.0  # the revolver is out, or the shield is up: he does not move
 	elif _fist >= 0:
 		if is_on_floor():  # a short step into every punch, planted otherwise
@@ -263,7 +267,7 @@ func _physics_process(delta: float) -> void:
 			sprite.flip_h = facing < 0
 
 	var stepped := Input.is_action_just_pressed("jump") and is_on_floor() and dir != 0.0 and not _knifing and _step_up(int(signf(dir)))
-	if Input.is_action_just_pressed("jump") and is_on_floor() and not crouching and not stepped and _shield <= 0.0 and _ladder == null:
+	if Input.is_action_just_pressed("jump") and is_on_floor() and not crouching and not stepped and not movement_locked() and _ladder == null:
 		velocity.y = STATS.jump_velocity
 		Sfx.play(self, "jump", -4.0)
 		DustPuff.burst(get_parent(), _feet(), 14, 55.0, 1.5, 0.8)  # kick-off cloud
@@ -1017,7 +1021,7 @@ func _update_animation(dir: float) -> void:
 			anim = "run_recoil"
 	elif shooting > 0.0:
 		anim = "shoot"
-	if _shield > 0.0 and is_on_floor() and not crouching and dir == 0.0 and sprite.sprite_frames.has_animation("defend"):
+	if movement_locked() and is_on_floor() and not crouching and dir == 0.0 and sprite.sprite_frames.has_animation("defend"):
 		anim = "defend"  # both fists up while shielded and standing
 	if _reload > 0.0 and is_on_floor() and not crouching and sprite.sprite_frames.has_animation("reload"):
 		anim = "reload"  # the gun bobs while the belt is swapped (optional art)
@@ -1051,7 +1055,7 @@ func _pump_name(dir: float) -> String:
 ## Hold Crouch on the ground to shrink to one block. Letting go only stands up when there is
 ## room above; otherwise he stays crouched under the low ceiling.
 func _update_stance() -> void:
-	var want := (Input.is_action_pressed("crouch") and is_on_floor() and _shield <= 0.0 and _ladder == null) or _low_gap_ahead()  # the gap squeeze works in mid-jump too
+	var want := (Input.is_action_pressed("crouch") and is_on_floor() and not movement_locked() and _ladder == null) or _low_gap_ahead()  # the gap squeeze works in mid-jump too
 	if want == crouching:
 		return
 	if want or not _ceiling_above():
@@ -1403,10 +1407,10 @@ func _fist_strike() -> void:
 	var behind: float = STATS.hitbox[0] / 2.0 + 6.0
 	var body_h: float = Block.SIZE if _fist_low else STATS.hitbox[1]  # crouched he is one block tall
 	var probe := RectangleShape2D.new()
-	probe.size = Vector2(reach + behind, body_h)
+	probe.size = Vector2(reach + behind, body_h + 8.0)  # a little taller than him: an enemy on his head or feet is hit too
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = probe
-	query.transform = Transform2D(0.0, global_position + Vector2(facing * (reach - behind) / 2.0, Block.SIZE / 2.0 - body_h / 2.0))
+	query.transform = Transform2D(0.0, global_position + Vector2(facing * (reach - behind) / 2.0, Block.SIZE / 2.0 - body_h / 2.0 - 2.0))
 	query.collision_mask = 1  # barrels first: every barrel in reach is thrown forward, and so are the ones touching it further on
 	var hit_barrels := {}
 	for info in get_world_2d().direct_space_state.intersect_shape(query, 16):
@@ -1442,7 +1446,7 @@ func _fist_strike() -> void:
 			seen[e] = true
 			if e.dead:
 				corpses.append(e)
-			elif (e.global_position.x - global_position.x) * facing >= 0.0:
+			elif (e.global_position.x - global_position.x) * facing >= -behind:  # one standing right on him (a little behind his middle) is hit too
 				front.append(e)
 	var nearest := func(a: Enemy, b: Enemy) -> bool: return absf(a.global_position.x - global_position.x) < absf(b.global_position.x - global_position.x)
 	front.sort_custom(nearest)
@@ -1552,7 +1556,17 @@ func _shield_step(delta: float) -> void:
 		_shield_icon.position.y = -34.0 + sin(_shield * 8.0) * 1.5
 
 
-## Seconds of fury left (the HUD counts them down).
+## True while the shield is up (Bruce's defend).
+func shield_up() -> bool:
+	return _shield > 0.0
+
+
+## The shield holds him still, except for its last second (SHIELD_FREE): hands down, he can move again (still unhurtable).
+func movement_locked() -> bool:
+	return _shield > SHIELD_FREE
+
+
+## Seconds of fury left.
 func fury_left() -> float:
 	return _fury
 
@@ -1596,7 +1610,8 @@ func _ladder_update() -> void:
 	if _ladder != null or near == null or _stagger > 0.0 or _rolling or velocity.y < -30.0:
 		return
 	var up := Input.is_action_pressed("jump")
-	if (up or Input.is_action_pressed("crouch")) and Ladder.find(_feet(), up) == near:
+	var falling_in := not is_on_floor() and velocity.y > 10.0 and Ladder.find(_feet(), false) == near  # walked over its top: he takes hold
+	if falling_in or ((up or Input.is_action_pressed("crouch")) and Ladder.find(_feet(), up) == near):
 		_ladder = near
 		_recoil = 0.0
 		if crouching:

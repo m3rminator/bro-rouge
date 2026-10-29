@@ -14,11 +14,16 @@ var _h: PackedInt32Array
 var _bump: PackedInt32Array  # 0 plain, 1 bump on the left of the top, 2 on the right, 3 jutting out the side
 var _color: PackedColorArray
 var _age := 0.0
+var _budget := 0
 
 
 ## `amount` chunks from `pos` (in `parent`'s space), thrown upward-ish in every direction at up to `speed` px/s.
 static func emit(parent: Node, pos: Vector2, amount: int, speed: float) -> void:
+	amount = Quality.take("drops", Quality.n(amount))  # a cap on how many are alive at once
+	if amount <= 0:
+		return
 	var gibs := Gibs.new()
+	gibs._budget = amount
 	gibs.position = pos
 	gibs.z_index = 3
 	for i in amount:
@@ -31,6 +36,10 @@ static func emit(parent: Node, pos: Vector2, amount: int, speed: float) -> void:
 		gibs._bump.append(randi() % 4 if w >= 4 else 0)
 		gibs._color.append(Blood.GIB_COLORS[randi() % Blood.GIB_COLORS.size()])
 	parent.add_child(gibs)
+
+
+func _exit_tree() -> void:
+	Quality.give("drops", _budget)
 
 
 func _physics_process(delta: float) -> void:

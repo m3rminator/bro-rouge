@@ -7,7 +7,7 @@ var VIEW := Screen.view()
 const YELLOW := Color("ffd23e")
 const PANEL := Color("23202f")
 const ITEM_SIZE := Vector2(150, 24)
-const COUNT := 4
+const COUNT := 5
 
 var _index := 0
 var _labels: Array[PixelText] = []
@@ -17,6 +17,7 @@ var _held := false
 
 
 func _ready() -> void:
+	Screen.relayout_on_resize(self)
 	var back := Sprite2D.new()
 	back.texture = BACKDROP
 	back.centered = false
@@ -58,7 +59,7 @@ func _rect(i: int) -> Rect2:
 
 
 func _refresh() -> void:
-	var names := ["START", "EXIT", "TOUCH: " + ("ON" if TouchControls.is_shown() else "OFF"), "TOUCH LAYOUT"]
+	var names := ["START", "TOUCH: " + ("ON" if TouchControls.is_shown() else "OFF"), "TOUCH LAYOUT", "SETTINGS", "EXIT"]
 	for i in COUNT:
 		_labels[i].text = names[i]
 		_labels[i].color = YELLOW if i == _index else Color("c9c7d6")
@@ -96,11 +97,14 @@ func _choose(i: int) -> void:
 		Run.go_to_start()
 		get_tree().change_scene_to_file("res://scenes/main.tscn")
 	elif i == 1:
-		_going = true
-		get_tree().quit()
-	elif i == 3:
-		_going = true
-		get_tree().change_scene_to_file("res://scenes/touch_editor.tscn")
-	else:
 		TouchControls.toggle_forced()
 		_refresh()
+	elif i == 2:
+		_going = true
+		get_tree().change_scene_to_file("res://scenes/touch_editor.tscn")
+	elif i == 3:
+		_going = true
+		get_tree().change_scene_to_file("res://scenes/settings.tscn")
+	else:
+		_going = true
+		get_tree().quit()

@@ -144,7 +144,7 @@ static func blast(tree: SceneTree, center: Vector2, radius: float) -> void:
 func _shed(count: int) -> void:
 	var bits := CPUParticles2D.new()
 	bits.one_shot = true
-	bits.amount = count
+	bits.amount = Quality.n(count)
 	bits.lifetime = 1.4
 	bits.explosiveness = 0.9
 	bits.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE

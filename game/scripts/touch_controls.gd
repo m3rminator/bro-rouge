@@ -28,8 +28,6 @@ const BUTTONS := {
 	"grenade": [Rect2(352, 220, 48, 44), "grenade", "grenade"],
 	"reload": [Rect2(390, 88, 48, 48), "reload", "reload"],
 }
-var VIEW := Screen.view()
-
 var selected := ""  # the button being edited (drawn with an outline)
 var editing := false  # the layout editor is open: touches move buttons instead of pressing them
 
@@ -97,6 +95,7 @@ func rect_of(button: String) -> Rect2:
 	if home.y > 135.0:
 		home.y += view.y - 270.0
 	var center: Vector2 = _centers.get(button, home)
+	center = center.clamp(size / 2.0, view - size / 2.0)  # a layout saved on another screen shape still fits this one
 	return Rect2(center - size / 2.0, size)
 
 
@@ -111,7 +110,7 @@ func hit_test(at: Vector2) -> String:
 
 func move_button(button: String, center: Vector2) -> void:
 	var half := rect_of(button).size / 2.0
-	_centers[button] = center.clamp(half, VIEW - half)
+	_centers[button] = center.clamp(half, Screen.view() - half)  # the screen as it is now, not as it was at start-up
 	_canvas.queue_redraw()
 
 

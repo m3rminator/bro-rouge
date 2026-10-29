@@ -85,7 +85,7 @@ func _ready() -> void:
 	rotation = randf_range(-PI, PI)
 	_bleed = 0.0 if _clean else STATS.trail_time * randf_range(0.7, 1.3)
 	_trail = CPUParticles2D.new()  # blood streaming out of the torn end as it flies
-	_trail.amount = 24
+	_trail.amount = Quality.n(24)
 	_trail.lifetime = 0.5
 	_trail.local_coords = false
 	_trail.direction = Vector2.UP

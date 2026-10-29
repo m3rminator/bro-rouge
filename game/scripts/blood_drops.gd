@@ -12,12 +12,17 @@ var _vel: PackedVector2Array
 var _color: PackedColorArray
 var _size: PackedInt32Array
 var _age := 0.0
+var _budget := 0
 
 
 ## `amount` drops from `pos` (in `parent`'s space) flying around `dir`, within `spread`
 ## degrees either side, at up to `speed` px/s.
 static func emit(parent: Node, pos: Vector2, dir: Vector2, amount: int, spread: float, speed: float) -> void:
+	amount = Quality.take("drops", Quality.n(amount))  # a cap on how many are alive at once
+	if amount <= 0:
+		return
 	var drops := BloodDrops.new()
+	drops._budget = amount
 	drops.position = pos
 	drops.z_index = 3
 	for i in amount:
@@ -27,6 +32,10 @@ static func emit(parent: Node, pos: Vector2, dir: Vector2, amount: int, spread: 
 		drops._color.append(Blood.COLORS[randi() % Blood.COLORS.size()])
 		drops._size.append(randi_range(GameData.BLOOD.drop_size_min, GameData.BLOOD.drop_size_max))
 	parent.add_child(drops)
+
+
+func _exit_tree() -> void:
+	Quality.give("drops", _budget)
 
 
 func _physics_process(delta: float) -> void:

@@ -7,6 +7,18 @@ extends Node2D
 ## Child of its Block, so it disappears with it.
 
 const STATS := GameData.GRASS
+const SWAY: float = GameData.GRASS.sway
+const SWAY_SPEED: float = GameData.GRASS.sway_speed
+const STIFFNESS: float = GameData.GRASS.stiffness
+const DAMPING: float = GameData.GRASS.damping
+const PUSH_RADIUS: float = GameData.GRASS.push_radius
+const PUSH: float = GameData.GRASS.push
+const FLICK: float = GameData.GRASS.flick
+const CRUSH_HALF: float = GameData.GRASS.crush_width / 2.0
+const CRUSH_SPEED: float = GameData.GRASS.crush_speed
+const REACH := maxf(GameData.GRASS.push_radius, GameData.GRASS.crush_width / 2.0)
+const ACTIVE_TIME := 1.5
+const IDLE_STEP := 0.05
 const COLORS := [Color("24502a"), Color("3e8034"), Color("7cc04e"), Color("a2e24c")]  # master: grass_dark, grass, grass_light, grass_bright
 const TOP := -Block.SIZE / 2.0  # the block's top edge (blades stand on it)
 
@@ -22,6 +34,13 @@ var _crush := PackedFloat32Array()  # 0 standing .. 1 pressed down under a lying
 var _rim := PackedInt32Array()  # per column of the block: how many pixels the green rim stands above the top edge
 var _vines := []  # [x, length, loop width (0 = a single strand)] hanging down the block face
 var _time := 0.0
+var _active := 0.0  # seconds the spring still has to run (something pushed it, or a blast)
+var _idle_t := 0.0
+var _sig := -1  # what the blades looked like when last drawn
+
+static var _bodies_frame := -1
+static var _bodies_cache := []
+static var _bodies_at := PackedVector2Array()
 
 
 func _ready() -> void:
@@ -66,32 +85,96 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_time += delta
 	var pushers := _pushers()
+	if pushers.is_empty():
+		_active -= delta
+	else:
+		_active = ACTIVE_TIME
+	if _active <= 0.0:  # nothing touches it: the blades just follow the wind, a few times a second is plenty
+		_idle_t += delta
+		if _idle_t >= Quality.p("grass_step"):
+			_idle_t = 0.0
+			_sway_only()
+		return
+	var lying: Array[bool] = []
+	for b in pushers:
+		lying.append(b.get("_lying") == true)
+	var sig := 0
+	var gx := global_position.x
+	var t_sway := _time * SWAY_SPEED
+	var gain := -STIFFNESS * delta
+	var drag := DAMPING * delta
 	for i in _x.size():
-		var bx := global_position.x + _x[i]
-		var target: float = STATS.sway * sin(_time * STATS.sway_speed + bx * 0.12 + _phase[i] * 0.3)
+		var bx := gx + _x[i]
+		var target := SWAY * sin(t_sway + bx * 0.12 + _phase[i] * 0.3)
 		var flat := 0.0
-		for b in pushers:
+		var vel := _vel[i]
+		for k in pushers.size():
+			var b: Node2D = pushers[k]
 			var d: float = bx - b.global_position.x
-			if b.get("_lying") and absf(d) < STATS.crush_width / 2.0:
+			if lying[k] and absf(d) < CRUSH_HALF:
 				flat = 1.0  # a body lying on it presses the blade down, so the body stays in view
-			elif absf(d) < STATS.push_radius:
-				var near: float = 1.0 - absf(d) / STATS.push_radius
-				target += signf(d if d != 0.0 else 1.0) * STATS.push * near
-				_vel[i] += b.velocity.x * STATS.flick * near * delta * 10.0
-		_vel[i] += (-STATS.stiffness * (_lean[i] - target) - STATS.damping * _vel[i]) * delta
-		_lean[i] = clampf(_lean[i] + _vel[i] * delta, -_h[i] - 2.0, _h[i] + 2.0)
-		_crush[i] = move_toward(_crush[i], flat, STATS.crush_speed * delta)
-	queue_redraw()
+			elif absf(d) < PUSH_RADIUS:
+				var near: float = 1.0 - absf(d) / PUSH_RADIUS
+				target += signf(d if d != 0.0 else 1.0) * PUSH * near
+				vel += b.velocity.x * FLICK * near * delta * 10.0
+		var lean := _lean[i]
+		vel += gain * (lean - target) - drag * vel
+		lean = clampf(lean + vel * delta, -_h[i] - 2.0, _h[i] + 2.0)
+		_vel[i] = vel
+		_lean[i] = lean
+		var crush := _crush[i]
+		if crush != flat:
+			crush = move_toward(crush, flat, CRUSH_SPEED * delta)
+			_crush[i] = crush
+		sig = (sig * 31 + roundi(lean) + roundi(crush * 8.0)) & 0x7fffffff
+	for v in _vines:
+		sig = (sig * 31 + roundi(sin(_time * 1.3 + v[0]) * 0.6)) & 0x7fffffff
+	if sig != _sig:  # redraw only when a pixel would move: most frames the grass looks the same as the last
+		_sig = sig
+		queue_redraw()
+
+
+## At rest the blades sit on the wind's curve with no spring: the cheap path for nearly all the grass on screen.
+func _sway_only() -> void:
+	var sig := 0
+	var gx := global_position.x
+	var t_sway := _time * SWAY_SPEED
+	for i in _x.size():
+		var lean := SWAY * sin(t_sway + (gx + _x[i]) * 0.12 + _phase[i] * 0.3)
+		_lean[i] = lean
+		_vel[i] = 0.0
+		_crush[i] = 0.0
+		sig = (sig * 31 + roundi(lean)) & 0x7fffffff
+	for v in _vines:
+		sig = (sig * 31 + roundi(sin(_time * 1.3 + v[0]) * 0.6)) & 0x7fffffff
+	if sig != _sig:
+		_sig = sig
+		queue_redraw()
+
+
+## Every body that can press grass and where it is, listed once per frame for all the tufts.
+static func _bodies(tree: SceneTree) -> Array:
+	var frame := Engine.get_process_frames()
+	if frame != _bodies_frame:
+		_bodies_frame = frame
+		_bodies_cache = tree.get_nodes_in_group("player") + tree.get_nodes_in_group("enemies")
+		_bodies_at = PackedVector2Array()
+		for b in _bodies_cache:
+			_bodies_at.append(b.global_position)
+	return _bodies_cache
 
 
 ## Bodies standing on this block: the Bro, enemies and their bodies.
 func _pushers() -> Array:
 	var out := []
-	var standing_y := global_position.y - Block.SIZE  # a body on this block has its origin one tile up
-	for b in get_tree().get_nodes_in_group("player") + get_tree().get_nodes_in_group("enemies"):
-		if absf(b.global_position.y - standing_y) < Block.SIZE * 0.6 \
-				and absf(b.global_position.x - global_position.x) < Block.SIZE / 2.0 + maxf(STATS.push_radius, STATS.crush_width / 2.0):
-			out.append(b)
+	var bodies := _bodies(get_tree())
+	var reach := Block.SIZE / 2.0 + REACH
+	var gp := global_position
+	var standing_y := gp.y - Block.SIZE  # a body on this block has its origin one tile up
+	for j in _bodies_at.size():
+		var at := _bodies_at[j]
+		if absf(at.y - standing_y) < Block.SIZE * 0.6 and absf(at.x - gp.x) < reach:
+			out.append(bodies[j])
 	return out
 
 
@@ -150,6 +233,7 @@ static func blast(tree: SceneTree, center: Vector2, radius: float) -> void:
 		for i in g._x.size():
 			var side := signf(d + g._x[i]) if d + g._x[i] != 0.0 else 1.0
 			g._vel[i] += side * force * randf_range(0.7, 1.1)
+		g._active = ACTIVE_TIME
 
 
 ## The block breaks: every blade flies off as a green particle (red if it was bloody).
@@ -159,7 +243,9 @@ func burst() -> void:
 		return
 	var bits := CPUParticles2D.new()
 	bits.one_shot = true
-	bits.amount = maxi(1, _x.size() * STATS.burst_particles)
+	var got := Quality.take("cpu", Quality.n(maxi(1, _x.size() * STATS.burst_particles)))
+	bits.amount = maxi(1, got)
+	bits.finished.connect(Quality.give.bind("cpu", got))
 	bits.lifetime = 0.9
 	bits.explosiveness = 0.95
 	bits.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE

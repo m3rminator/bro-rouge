@@ -229,6 +229,11 @@
     "game/assets/sprites/truck.png": "c36d87c69e81b2f96b65083ca35aa513a786da7d13bd1c39f6f4085c650b9c39",
     "game/assets/sprites/truck_frames.tres": "e0fea93bc2566e473c5202322ef053547ac3e481aba777c33ec9eca40d77d2a1"
   },
+  "tunnel_door": {
+    "docs/previews/tunnel_door.png": "d3c445fb5e03886c3d8751d6f6e7057b8d06a18d9fd3ef4a591c949b66f3f7c3",
+    "game/assets/sprites/tunnel_door.png": "43b3b4df3340112f1a22e7a821333506aeca8d93ae9a285a64edd27b25c818ff",
+    "game/assets/sprites/tunnel_door_frames.tres": "2c3db4167254f5947e9cf7359f1097f9bb9eba10478a88152fceb0430581c214"
+  },
   "vest": {
     "docs/previews/vest.png": "02784c73901cba1a650b0e4049ad756029d7b1aa9b283dd01e88bceb868c3d2f",
     "game/assets/sprites/vest.png": "2b0e8252f0149679bb32d5b807a3d27462c4b2a9df79ca8122e419f79ecda0ed",

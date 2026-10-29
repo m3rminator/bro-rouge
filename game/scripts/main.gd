@@ -11,13 +11,15 @@ const ENEMY_SCENES := {
 	"M": preload("res://scenes/helmet.tscn"),
 	"B": preload("res://scenes/brute.tscn"),
 }
-const MUSIC := "res://assets/music/level_jungle.mp3"
+const MUSIC := "res://assets/music/level_jungle.ogg"
+const BOSS_MUSIC := "res://assets/music/boss_fight.ogg"
 
 @onready var player: CharacterBody2D = $Player
 
 var hud: Hud
 var _guide: GuideArrows
 var exit_flag: LevelExit
+var _wall_cells := {}  # cells of the level's `walls` (hollowed-out underground air): what stands on them is not grassy
 var walls: BackWall  # the dark earth behind every block: what shows where one is shot away
 var _ending := false
 var _by_truck := false  # this level started with the truck driving in
@@ -30,9 +32,66 @@ var _lv: Dictionary
 var _palms := {}  # tiles that have a palm (tree_decor.gd plan)
 
 
+## The level is built behind a LOADING cover while the tree is paused: first the window settles into its final size, then
+## the blocks, enemies and everything else are made, the sounds are loaded and a few frames are drawn, and only then the
+## fight starts. Without it a phone stutters through the first seconds.
 func _ready() -> void:
+	get_tree().paused = true
+	var cover := LoadingCover.new()
+	add_child(cover)
+	var last := Vector2i.ZERO
+	var steady := 0
+	while steady < 3:  # a phone settles into landscape a moment after start-up
+		await get_tree().process_frame
+		var now := get_tree().root.size
+		steady = steady + 1 if now == last else 0
+		last = now
+	cover.set_progress(0.15)
+	await get_tree().process_frame
+	_build()
+	player.hp_changed.emit(player.hp, player.STATS.max_hp)  # the HUD is new: the Bro's own first announcements came before it
+	player.ammo_changed.emit(player.ammo, player.spare_mags, false)
+	player.grenades_changed.emit(Run.grenades)
+	cover.set_progress(0.6)
+	await get_tree().process_frame
+	_preload_sounds()
+	for i in 24:  # a few frames drawn behind the cover: textures and grass are ready when it lifts
+		cover.set_progress(0.6 + 0.4 * i / 24.0)
+		await get_tree().process_frame
+	get_tree().paused = false
+	cover.finish()
+	_start_music()
+	if _lv.kind == "start":
+		_choose_bro()
+
+
+## The level's music loop; it starts when the loading cover is gone (not in the starting zone, a boss arena or a safe house).
+func _start_music() -> void:
+	if ResourceLoader.exists(MUSIC) and _lv.kind == "level":
+		Volume.ensure()
+		var music := AudioStreamPlayer.new()
+		var loop: AudioStreamOggVorbis = load(MUSIC)
+		loop.loop = true  # a loop cut from the song (2:11 to 2:23, three bars)
+		music.stream = loop
+		music.bus = Volume.MUSIC_BUS
+		music.volume_db = -12.0
+		add_child(music)
+		music.play()
+
+
+func _preload_sounds() -> void:
+	for file in DirAccess.get_files_at("res://assets/sfx"):
+		if file.ends_with(".mp3") or file.ends_with(".mp3.import"):
+			Sfx.preload_sound(file.get_basename() if file.ends_with(".import") else file.trim_suffix(".mp3"))
+
+
+func _build() -> void:
+	Quality.reset_budgets()
 	var lv: Dictionary = Run.level()
 	_lv = lv
+	_wall_cells.clear()
+	for cell: Vector2i in lv.get("walls", []):
+		_wall_cells[cell] = true
 	_arena = lv.get("arena", {})
 	var stone := {}
 	for cell: Vector2i in lv.get("stone", []):
@@ -94,6 +153,10 @@ func _ready() -> void:
 		ladder.bottom = info.bot * tile
 		ladder.step = info.step
 		add_child(ladder)
+	for cell: Vector2i in lv.get("doors", []):  # the doors between the rooms of the tunnels
+		var door := TunnelDoor.new()
+		door.position = Vector2(cell.x * tile + tile / 2.0, cell.y * tile)
+		add_child(door)
 	if not lv.get("bridges", []).is_empty():  # a rope bridge over a chasm that gives way
 		var bridge := RopeBridge.new()
 		bridge.cells = lv.bridges
@@ -134,6 +197,7 @@ func _ready() -> void:
 		guide_layer.add_child(_guide)
 	for cell: Vector2i in _lv.get("signs", []):  # beside a chasm: the way over is up
 		var sign_post := HintSign.new()
+		sign_post.down = _lv.get("signs_down", []).has(cell)
 		sign_post.position = Vector2(cell.x * tile + tile / 2.0, cell.y * tile + tile / 2.0)
 		add_child(sign_post)
 	Run.quota_reached.connect(_on_quota_reached)
@@ -145,15 +209,6 @@ func _ready() -> void:
 			boss.gate_x = (_arena.entry_col + 0.5) * Block.SIZE
 
 	add_child(PauseMenu.new())
-
-	if ResourceLoader.exists(MUSIC):
-		var music := AudioStreamPlayer.new()
-		music.stream = load(MUSIC)
-		music.volume_db = -12.0
-		add_child(music)
-		music.play()
-	if lv.kind == "start":
-		_choose_bro()
 
 
 ## The HUD for this level; built again when a crate changes the Bro (new hearts, magazines, grenade icons).
@@ -183,6 +238,19 @@ func _on_upgrade_ended(_kind: String) -> void:
 	player.refresh_stats()
 
 
+## The boss fight starts (the Bro crossed into the arena): the whole song, from its beginning.
+func _start_boss_music() -> void:
+	if not ResourceLoader.exists(BOSS_MUSIC):
+		return
+	Volume.ensure()
+	var music := AudioStreamPlayer.new()
+	music.stream = load(BOSS_MUSIC)
+	music.bus = Volume.MUSIC_BUS
+	music.volume_db = -10.0
+	add_child(music)
+	music.play()
+
+
 func _on_boss_engaged(boss: Node) -> void:
 	hud.track_boss(boss)
 
@@ -198,6 +266,7 @@ func _physics_process(delta: float) -> void:
 	_locked_cooldown -= delta
 	if not _arena.is_empty() and not _arena_sealed and not player.dead and player.position.x > (_arena.trigger + 0.5) * Block.SIZE:
 		_close_arena()
+		_start_boss_music()
 	var out := player.is_physics_processing() and (player.position.y > _fall_limit or player.position.x < -32.0 or player.position.x > _level_width + 32.0)  # not while the truck carries him in
 	if not player.dead and out:  # fell through a blasted-out floor, or was blown off the side
 		BloodFountain.start(self, Vector2(clampf(player.position.x, 4.0, _level_width - 4.0), minf(player.position.y, _fall_limit - 40.0)))
@@ -351,7 +420,9 @@ func _wall_anim(x: int, y: int, biome: String) -> String:
 
 ## Grass grows only where GameData.BLOCK.grass_clearance tiles above are all air.
 func _has_sky(rows: Array, x: int, y: int) -> bool:
-	for yy in range(maxi(0, y - GameData.BLOCK.grass_clearance), y):
+	if _wall_cells.has(Vector2i(x, y - 1)):  # the floor of a tunnel, a shaft or a cellar: underground, no grass
+		return false
+	for yy in range(0, y):  # anything solid anywhere above: a roof (tunnels, caves, temples), so it is underground
 		if rows[yy][x] == "#":
 			return false
 	return true
@@ -388,6 +459,10 @@ static func tile_hash(x: int, y: int, salt := 0) -> int:
 
 ## A new run: every Bro is shown, he picks one, and the first fight starts.
 func _choose_bro() -> void:
+	hud.visible = false  # only the cards: no HUD text and no buttons behind them
+	for node in get_children():
+		if node is PauseMenu:
+			node.visible = false
 	var picker := BroPicker.open(self, CharacterCards.ids(), "CHOOSE YOUR BRO")
 	Run.character = await picker.chosen
 	Run.new_run()  # leaves the starting zone: the first fight

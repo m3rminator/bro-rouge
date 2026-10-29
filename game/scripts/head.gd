@@ -47,7 +47,7 @@ func _ready() -> void:
 	add_child(_sprite)
 	_bleed = STATS.trail_time
 	_trail = CPUParticles2D.new()  # blood streaming out of the neck as it flies
-	_trail.amount = 40
+	_trail.amount = Quality.n(40)
 	_trail.lifetime = 0.6
 	_trail.local_coords = false
 	_trail.direction = Vector2.UP

@@ -718,6 +718,7 @@ const ANCHORS := {
 	"shotgun_flash": {"center": Vector2(0.5, 0.0)},
 	"stun": {"center": Vector2(0.0, 0.0)},
 	"touch": {"center": Vector2(0.5, 0.5)},
+	"tunnel_door": {"top": Vector2(0.5, -35.5)},
 	"vest": {"eye": Vector2(1.0, -8.5)},
 }
 
@@ -787,6 +788,7 @@ const SPRITE_SIZES := {
 	"touch": Vector2(56, 56),
 	"trees": Vector2(64, 112),
 	"truck": Vector2(120, 56),
+	"tunnel_door": Vector2(64, 78),
 	"vest": Vector2(47, 34),
 }
 

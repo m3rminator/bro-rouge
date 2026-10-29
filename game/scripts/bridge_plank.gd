@@ -9,6 +9,7 @@ const WOOD := Color("7a5230")
 const WOOD_LIGHT := Color("a0713f")
 const WOOD_DARK := Color("4a301c")
 const THICK := 6
+const BEVEL := 2.0
 
 var index := 0
 var falling := false
@@ -23,10 +24,10 @@ func _init() -> void:
 	collision_mask = 0
 	sync_to_physics = true
 	_shape = CollisionShape2D.new()
-	var rect := RectangleShape2D.new()
-	rect.size = Vector2(Block.SIZE, THICK)
-	_shape.shape = rect
-	_shape.position = Vector2(0, THICK / 2.0)
+	var half := Block.SIZE / 2.0  # the top corners are cut at 45 degrees, so a step of a pixel or two between boards is a slope
+	var board := ConvexPolygonShape2D.new()
+	board.points = PackedVector2Array([Vector2(-half, BEVEL), Vector2(-half + BEVEL, 0), Vector2(half - BEVEL, 0), Vector2(half, BEVEL), Vector2(half, THICK), Vector2(-half, THICK)])
+	_shape.shape = board
 	add_child(_shape)
 
 

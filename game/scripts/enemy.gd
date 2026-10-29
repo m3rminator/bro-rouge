@@ -12,6 +12,7 @@ const FX_FRAMES := preload("res://assets/sprites/fx_frames.tres")
 const WORLD_MASK := 1
 const CORPSE_LAYER := 8  # physics layer 4 "corpses": explosions and the Bro's bullets touch bodies
 const CORPSE := GameData.CORPSE
+const CROWD_REACH := 40.0  # soldiers this close ahead count as standing together
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 
@@ -23,6 +24,8 @@ var hp := 1
 var dead := false
 var death_sound := "enemy_death"
 var _pause := 0.0
+var _crowd_next := 0  # when to look for a crowd ahead again (ms)
+var _crowded := false
 var _pooled := false
 var _air_top := INF  # highest point (smallest y) of the current time in the air; INF while on the ground
 var _pool_x := INF  # where the last pool was left (a new one only after the body moved)
@@ -80,7 +83,27 @@ func _ready() -> void:
 	add_child(_bubble)
 
 
+static var _hero: Node2D
+static var _hero_frame := -1
+static var _wake_range := 760.0
+
+
+## True while the Bro is far away: the enemy just stands there (no thinking, no physics), which saves a lot on a long level.
+func _asleep() -> bool:
+	var frame := Engine.get_process_frames()
+	if frame != _hero_frame:
+		_hero_frame = frame
+		_hero = get_tree().get_first_node_in_group("player")
+		_wake_range = Quality.p("enemy_range")
+	if _hero == null or is_in_group("bosses"):
+		return false
+	var d := global_position - _hero.global_position
+	return absf(d.x) > _wake_range or absf(d.y) > 560.0
+
+
 func _physics_process(delta: float) -> void:
+	if not dead and _asleep():
+		return
 	if _stunned > 0.0:
 		_update_stun(delta)
 	if not is_on_floor():
@@ -374,12 +397,29 @@ func patrol_step(delta: float, speed: float) -> void:
 		_pause -= delta
 		velocity.x = 0.0
 		return
-	if is_on_floor() and (is_on_wall() or not ground_ahead()):
+	if is_on_floor() and (is_on_wall() or not ground_ahead() or crowd_ahead(facing)):
 		facing = -facing
 		_pause = stats.turn_pause
 		velocity.x = 0.0
 		return
 	velocity.x = facing * speed
+
+
+## True when two or more other soldiers already stand just ahead of him on his level (looked at a few times a second): a
+## third would make a crowd of more than three, so he turns away instead of joining them.
+func crowd_ahead(dir: int) -> bool:
+	var now := Time.get_ticks_msec()
+	if now >= _crowd_next:
+		_crowd_next = now + 250
+		var count := 0
+		for e in get_tree().get_nodes_in_group("enemies"):
+			if e == self or e.dead:
+				continue
+			var d: Vector2 = e.global_position - global_position
+			if absf(d.y) < 20.0 and d.x * dir > 0.0 and absf(d.x) < CROWD_REACH:
+				count += 1
+		_crowded = count >= 2
+	return _crowded
 
 
 func ground_ahead() -> bool:
@@ -593,7 +633,7 @@ func _behead(dir: int) -> void:
 	_fountain_side = -1 if sprite.flip_h else 1
 	_fountain = CPUParticles2D.new()
 	_fountain.position = Vector2(CORPSE.neck[0] * _fountain_side, CORPSE.neck[1])
-	_fountain.amount = 45
+	_fountain.amount = Quality.n(45)
 	_fountain.lifetime = 0.9
 	_fountain.local_coords = false
 	_fountain.direction = Vector2(_fountain_side, -0.8)

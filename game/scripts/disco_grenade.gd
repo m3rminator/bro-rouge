@@ -95,7 +95,9 @@ func _start_music() -> void:
 		return
 	var stream: AudioStreamMP3 = load(path).duplicate()
 	stream.loop = true
+	Volume.ensure()
 	_music = AudioStreamPlayer.new()
+	_music.bus = Volume.MUSIC_BUS
 	_music.stream = stream
 	_music.volume_db = -8.0
 	add_child(_music)  # leaves with the grenade, so the loop stops at the burst

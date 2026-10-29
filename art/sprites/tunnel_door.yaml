@@ -1,0 +1,249 @@
+# Tunnel door: the wooden door across the underground corridors (game/scripts/tunnel_door.gd). Shut it is seen
+# edge-on, a narrow plank column 8 px wide and 3 blocks high; it swings round on its hinge (the shut door's right edge)
+# to face the camera, 28 px wide, like the user's reference. Built from scratchpad door/door2.py.
+name: tunnel_door
+description: "Wooden tunnel door with iron straps, square brackets and a brass handle. Shut (edge-on), swinging, and open (facing the camera). Hinged on the right of the shut door, opening to the right; flip it to open to the left."
+palette: tunnel_door
+frame: [64, 78]  # symmetric about the shut door, so a flipped frame opens the other way from the same spot
+anchors:
+  top: [32, 3]  # middle of the shut door's top edge (tunnel_door.gd position)
+
+parts:
+  shut: |
+    .oooooo.
+    oowwwwoo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olIIIido
+    oIIiijIo
+    oiIiijio
+    ojijjjjo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwddo
+    olwwwddo
+    olwwwddo
+    olwwwddo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olIIIido
+    oIIiijIo
+    oiIiijio
+    ojBjjjjo
+    olBwwwdo
+    oluwdwdo
+    olwwdwdo
+    olwwdwdo
+    olwwdwdo
+    olwwdwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwdwwdo
+    olwdwwdo
+    olwdwwdo
+    olwwwwdo
+    olwwwwdo
+    olIIIido
+    oIIiijIo
+    oiIiijio
+    ojijjjjo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    olwwwwdo
+    oowwwwoo
+    .oooooo.
+  half: |
+    .ooooooooooo.
+    oowwwwdDlwwoo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwIIIiwwdo
+    oIIIIIiijIIIo
+    oiiijIiijjiio
+    ojjjjijjjjjjo
+    olwwwwdDlwddo
+    olwwwwdDlwddo
+    olwwwwdDlwddo
+    olwwwwdDlwddo
+    olwwwwdDlwddo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwddDlwwdo
+    olwwwddDlwwdo
+    olwwwddDlwwdo
+    olwwwddDldwdo
+    olwwwwdDldwdo
+    olwwwwdDldwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwIIIiwddo
+    oIIIIIiijIIIo
+    oiiijIiijjiio
+    ojjjjijjjjBjo
+    olwwwwdDlwBdo
+    olwwdwdDlwudo
+    olwwdwdDlwwdo
+    olwwdwdDlwwdo
+    olwwdwdDlwwdo
+    olwwdwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDldwdo
+    olwwwwdDldwdo
+    olwwwwdDldwdo
+    olwwwwdDldwdo
+    olwwwwdDlwwdo
+    olwdwwdDlwwdo
+    olwdwwdDlwwdo
+    olwdwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwIIIiwwdo
+    oIIIIIiijIIIo
+    oiiijIiijjiio
+    ojjjjijjjjjjo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    olwwwwdDlwwdo
+    oowwwwdDlwwoo
+    .ooooooooooo.
+  open: |
+    .ooooooooooooooooooooooooooo.
+    oowwwwwdDlwwwwdDlwwwdDlwwwwoo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwIIIiwwwdDlwwwwdo
+    oIIIIIIIIIIIIIiijIIIIIIIIIIIo
+    oiiijiiiiiijiIiijijiiiiijiiio
+    ojjjjjjjjjjjjijjjjjjjjjjjjjjo
+    olwwwwwdDlwwwddDlwwwdDlwdwwdo
+    olwwwwwdDlwwwddDlwwwdDlwdwwdo
+    olwwwwwdDlwwwddDlwwwdDlwdwwdo
+    olwwwwwdDlwwwddDlwwwdDlwwwwdo
+    olwwwwwdDlwwwddDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwdwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwdwdDlwwwwdo
+    olwwwdwdDlwwwwdDlwdwdDlwwwwdo
+    olwwwdwdDlwwwwdDlwdwdDldwwwdo
+    olwwwdwdDlwwwwdDlwwwdDldwwwdo
+    olwwwdwdDlwwdwdDlwwwdDldwwwdo
+    olwwwwwdDlwwdwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwdwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwddo
+    olwwwwwdDlwwwwdDlwwwdDlwwwddo
+    olwwwwwdDlwdwIIIiwwwdDlwwwddo
+    oIIIIIIIIIIIIIiijIIIIIIIIIIIo
+    oiiijiiiiiijiIiijijiiiiijiiio
+    ojjjjjjjjjjjjijjjjjjjjjjjjBjo
+    olwwwwwdDlwwwwdDlwdwdDlwwwBdo
+    olwdwwwdDlwwwwdDlwdwdDlwwwudo
+    olwdwwwdDlwwwwdDlwdwdDlwwwwdo
+    olwdwwwdDlwwwwdDlwdwdDlwwwwdo
+    olwdwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwdwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwdwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwdwdo
+    olwwwwwdDldwwwdDlwwwdDlwwdwdo
+    olwwwwwdDldwwwdDlwwwdDlwwdwdo
+    olwwwwwdDldwwwdDlwwwdDlwwwwdo
+    olwwwwwdDldwwwdDlwdwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwdwdDlwwwwdo
+    olwwwwddDlwwwwdDlwdwdDlwwwwdo
+    olwwwwddDlwwwwdDlwwwdDlwwwwdo
+    olwwwwddDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwIIIiwwwdDlwwwwdo
+    oIIIIIIIIIIIIIiijIIIIIIIIIIIo
+    oiiijiiiiiijiIiijijiiiiijiiio
+    ojjjjjjjjjjjjijjjjjjjjjjjjjjo
+    olwwwwwdDlwwwwdDlwdwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    olwwwwwdDlwwwwdDlwwwdDlwwwwdo
+    oowwwwwdDlwwwwdDlwwwdDlwwwwoo
+    .ooooooooooooooooooooooooooo.
+
+animations:
+  shut:
+    fps: 1
+    loop: false
+    frames:
+      - [[shut, 28, 3]]
+  opening:  # 0.3 s swing (OPEN_TIME), ends open
+    fps: 10
+    loop: false
+    frames:
+      - [[shut, 28, 3]]
+      - [[half, 35, 3]]
+      - [[open, 35, 3]]
+  open:
+    fps: 1
+    loop: false
+    frames:
+      - [[open, 35, 3]]

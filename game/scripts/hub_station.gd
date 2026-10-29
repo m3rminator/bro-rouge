@@ -20,6 +20,9 @@ const GRAVITY := 800.0
 const OUTLINE := Color("14101e")
 const REACH := Vector2(26, 30)
 
+static var _used_frame := -1
+const SUPPLIES := ["A", "H", "G"]
+
 var kind := "A"
 var _label := PixelText.make(Vector2(0, -42), PixelText.Align.CENTER)
 var _title := PixelText.make(Vector2(0, -30), PixelText.Align.CENTER)
@@ -33,6 +36,7 @@ func _ready() -> void:
 	var info: Dictionary = KINDS[kind]
 	_title.text = info.title
 	_title.color = info.color
+	_label_x = 0.0
 	add_child(_title)
 	add_child(_label)
 	if CRATE_ART.has(kind):
@@ -55,27 +59,66 @@ func _draw() -> void:
 	draw_rect(Rect2(-3, base - 12, 6, 6), OUTLINE)
 
 
+var _grouped := false
+var _label_x := 0.0
+var _row := Vector2.ZERO  # x of the leftmost and rightmost crate of the row
+var _is_lead := true  # the leftmost crate of a row of supplies is the one that talks for all of them
+
+
+## Ammo, hearts and grenades stand side by side: one label for the row, over its middle, on its leftmost crate.
+func _group_labels() -> void:
+	_grouped = true
+	var xs := [position.x]
+	for s: HubStation in get_tree().get_nodes_in_group("hub_stations"):
+		if s != self and SUPPLIES.has(s.kind) and absf(s.position.x - position.x) < 3.0 * Block.SIZE and absf(s.position.y - position.y) < Block.SIZE:
+			xs.append(s.position.x)
+	if xs.size() < 2:
+		return
+	var low: float = xs.min()
+	var high: float = xs.max()
+	_is_lead = position.x <= low
+	_row = Vector2(low, high)
+	_label_x = (low + high) / 2.0 - position.x
+	_title.position.x = _label_x
+	_label.position.x = _label_x
+	_title.text = "SUPPLIES"
+	_title.color = KINDS["A"].color
+
+
 var in_reach := false  # the Bro stands close enough to use it (the touch fire button turns into a hand)
 
 
 func _process(delta: float) -> void:
 	_flash -= delta
 	_fall(delta)
+	if SUPPLIES.has(kind) and not _grouped:
+		_group_labels()
 	var p := get_tree().get_first_node_in_group("player")
 	var near: bool = p != null and not p.dead and absf(p.global_position.x - global_position.x) < REACH.x \
 			and absf(p.global_position.y - global_position.y) < REACH.y
 	in_reach = near
-	if _flash > 0.0:
+	if _is_lead and _grouped and _row != Vector2.ZERO:  # the row's label shows while he is anywhere along it
+		near = p != null and not p.dead and p.global_position.x > _row.x - REACH.x and p.global_position.x < _row.y + REACH.x 				and absf(p.global_position.y - global_position.y) < REACH.y
+	if not _is_lead:
+		_title.text = ""
+		_label.text = ""
+	elif _flash > 0.0:
 		_label.text = "DONE"
 		_label.color = Color("7cc04e")
 	elif near:
-		_label.text = KINDS[kind].prompt
+		_label.text = "E RESTOCK EVERYTHING" if _row != Vector2.ZERO else KINDS[kind].prompt
 		_label.color = Color("f4f2e8")
 	else:
 		_label.text = ""
-	if near and Input.is_action_just_pressed("interact"):
+	if near and Input.is_action_just_pressed("interact") and Engine.get_process_frames() != _used_frame:
+		_used_frame = Engine.get_process_frames()
 		_flash = 1.0
 		used.emit(kind)
+		if SUPPLIES.has(kind):  # ammo, hearts and grenades stand together: one press does all three
+			for s: HubStation in get_tree().get_nodes_in_group("hub_stations"):
+				if s != self and SUPPLIES.has(s.kind) and s.position.distance_to(position) < 3.0 * Block.SIZE:
+					s._flash = 1.0
+					s.used.emit(s.kind)
 
 
 ## The crate stands on the block under it: when that is gone it drops until it lands on something (or leaves the map).

@@ -138,6 +138,10 @@ func _sprite(frames: SpriteFrames, anim: String, at: Vector2, scale_by: float) -
 
 ## Burning sparks in fire colors (master palette: fire_white -> fire_red -> smoke).
 func _fire(amount: int, speed: float) -> void:
+	var got := Quality.take("cpu", Quality.n(amount))
+	if got <= 0:
+		return
+	amount = got
 	var fire := CPUParticles2D.new()
 	fire.one_shot = true
 	fire.amount = amount
@@ -154,6 +158,7 @@ func _fire(amount: int, speed: float) -> void:
 	ramp.offsets = PackedFloat32Array([0.0, 0.25, 0.55, 0.8, 1.0])
 	ramp.colors = PackedColorArray([Color("fff6c8"), Color("ffd23e"), Color("f07c22"), Color("c43a1a"), Color("6c6878")])
 	fire.color_ramp = ramp
+	fire.finished.connect(Quality.give.bind("cpu", got))
 	fire.finished.connect(fire.queue_free)
 	add_child(fire)
 	fire.emitting = true

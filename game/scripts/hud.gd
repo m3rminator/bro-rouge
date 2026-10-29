@@ -157,15 +157,6 @@ func track_boss(boss: Node) -> void:
 
 
 func _process(delta: float) -> void:
-	var names := {"mag": "MAG", "rate": "FIRE", "speed": "SPEED", "damage": "DMG"}
-	var boosts := ""
-	for kind in Run.upgrades:
-		boosts += "%s %d  " % [names[kind], ceili(Run.upgrades[kind])]
-	_boosts.color = GREEN
-	if _fists and _player != null and is_instance_valid(_player) and _player.fury_left() > 0.0:
-		boosts += "FURY %d" % ceili(_player.fury_left())
-		_boosts.color = RED
-	_boosts.text = boosts
 	_note_time -= delta
 	if _note_time <= 0.0 and _note.text != "":
 		_note.text = ""

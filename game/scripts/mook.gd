@@ -141,6 +141,9 @@ func _search_step(delta: float) -> void:
 	if is_on_floor() and (is_on_wall() or not ground_ahead()):
 		velocity.x = 0.0  # the way is blocked: he waits and looks
 		return
+	if crowd_ahead(facing):
+		_search = 0.0  # three are already there: he goes back to his rounds
+		return
 	velocity.x = facing * stats.walk_speed * 2.0
 
 

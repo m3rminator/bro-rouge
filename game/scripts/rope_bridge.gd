@@ -1,14 +1,13 @@
 class_name RopeBridge
 extends Node2D
 ## A rope bridge over a chasm: single boards (BridgePlank) between two posts, with ropes. It hangs a little and sags
-## under whoever stands on it (more when he lands on it from high up). A board he stands on breaks after CRUMBLE_TIME; a
-## board that breaks (by that, a bullet or a blast) starts the rest falling, one after another, away from the break. A
-## drop of HARD_DROP or more onto it breaks the boards under him at once. `cells` are the level's `bridges` (a row of
+## under whoever stands on it (more when he lands on it from high up). Walking or standing on it is safe. A
+## drop of HARD_DROP or more onto it breaks the boards under him at once; a board that breaks (that, a bullet or a blast)
+## starts the rest falling, one after another, away from the break. `cells` are the level's `bridges` (a row of
 ## cells, left to right), `player` the Bro. Add it to the level node (at 0, 0).
 
 const SAG := 3.0  # how much it hangs by itself, in the middle
-const LOAD_SAG := 9.0  # how much further it goes down under his weight
-const CRUMBLE_TIME := 0.55
+const LOAD_SAG := 6.0  # how much further it goes down under his weight
 const CHAIN_STEP := 0.25  # seconds between one board falling and the next one next to it
 const HARD_DROP := 10.0 * Block.SIZE
 const ROPE := Color("8a6a3a")
@@ -19,7 +18,6 @@ var cells: Array = []
 var player: CharacterBody2D
 var _planks: Array[BridgePlank] = []
 var _sag := PackedFloat32Array()
-var _stand := {}  # board index -> seconds his feet have been on it
 var _fall_at := {}  # board index -> clock time it falls
 var _clock := 0.0
 var _load := 0.0  # 0..1: he is on the bridge
@@ -86,21 +84,10 @@ func _physics_process(delta: float) -> void:
 						_planks[i].snap()
 		_at_x = player.position.x
 		_load = move_toward(_load, 1.0, delta * 6.0)
-		for i in range(standing - 1, standing + 2):  # the boards under his feet start to give way
-			if _alive(i) and not _stand.has(i):
-				_stand[i] = 0.0
 	else:
 		_load = move_toward(_load, 0.0, delta * 3.0)
 	_was_floor = on_floor
 	_impact = move_toward(_impact, 0.0, delta * 2.5)
-	for i in _stand.keys():
-		if not _alive(i):
-			_stand.erase(i)
-			continue
-		_stand[i] += delta
-		if _stand[i] >= CRUMBLE_TIME:
-			_planks[i].snap()
-			_stand.erase(i)
 	for i in _fall_at.keys():
 		if _clock >= _fall_at[i]:
 			_fall_at.erase(i)
@@ -113,11 +100,11 @@ func _physics_process(delta: float) -> void:
 		var plank := _planks[i]
 		var t := (i + 0.5) / n
 		var shape := sin(PI * t)
-		var near := (plank.position.x - _at_x) / (2.6 * Block.SIZE)
+		var near := (plank.position.x - _at_x) / (5.0 * Block.SIZE)  # a wide, gentle dip: neighbours differ by a pixel or two
 		var dip := (LOAD_SAG * _load + LOAD_SAG * _impact) * exp(-near * near) * pow(shape, 0.6)
 		_sag[i] = lerpf(_sag[i], SAG * shape + dip, 1.0 - exp(-delta * 14.0))
 		var shake := 0.0
-		if (_stand.has(i) and _stand[i] > 0.1) or (_fall_at.has(i) and _fall_at[i] - _clock < 0.3):
+		if _fall_at.has(i) and _fall_at[i] - _clock < 0.3:
 			shake = randf_range(-1.0, 1.0)
 		plank.position = Vector2((_left + i) * Block.SIZE + Block.SIZE / 2.0 + roundf(shake), _row * Block.SIZE + roundf(_sag[i]))
 	queue_redraw()

@@ -17,6 +17,7 @@ var _hint: PixelText
 
 
 func _ready() -> void:
+	Screen.relayout_on_resize(self)
 	var back := Sprite2D.new()
 	back.texture = BACKDROP
 	back.centered = false

@@ -7,12 +7,17 @@ extends Node2D
 const GRAVITY := 500.0
 const BOUNCE := 0.3
 
+var _budget := 0
 var _crumbs: Array[Dictionary] = []  # {p, v, s, c, rest (time lying), life (time left once resting)}
 
 
 ## Bursts `amount` crumbs of `color` from `at` (in `parent`'s space).
 static func burst(parent: Node, at: Vector2, color: Color, amount: int) -> void:
+	amount = Quality.take("crumbs", Quality.n(amount))
+	if amount <= 0:
+		return
 	var d := DirtDebris.new()
+	d._budget = amount
 	d.position = at
 	d.z_index = 2
 	for i in amount:
@@ -27,6 +32,10 @@ static func burst(parent: Node, at: Vector2, color: Color, amount: int) -> void:
 			"life": randf_range(1.5, 3.5),
 		})
 	parent.add_child(d)
+
+
+func _exit_tree() -> void:
+	Quality.give("crumbs", _budget)
 
 
 func _physics_process(delta: float) -> void:

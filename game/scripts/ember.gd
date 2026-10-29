@@ -15,6 +15,7 @@ var _age := 0.0
 
 
 static func scatter(parent: Node, at: Vector2, count: int, speed: float) -> void:
+	count = Quality.take("embers", Quality.n(count))
 	for i in count:
 		var e := Ember.new()
 		e.position = at + Vector2(randf_range(-6, 6), randf_range(-6, 4))
@@ -53,3 +54,7 @@ func _physics_process(delta: float) -> void:
 
 func _draw() -> void:
 	draw_rect(Rect2(-size / 2.0, -size / 2.0, size, size), _color)
+
+
+func _exit_tree() -> void:
+	Quality.give("embers", 1)

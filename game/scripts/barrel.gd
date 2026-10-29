@@ -124,7 +124,7 @@ func _flame_puff() -> void:
 	fire.position = spot
 	fire.z_index = 2  # in front of the drum
 	fire.one_shot = true
-	fire.amount = maxi(2, int(STATS.fire_particles * randf_range(0.5, 1.2)))
+	fire.amount = Quality.n(maxi(2, int(STATS.fire_particles * randf_range(0.5, 1.2))))
 	fire.explosiveness = 0.6
 	fire.lifetime = randf_range(0.35, 0.75)
 	fire.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE

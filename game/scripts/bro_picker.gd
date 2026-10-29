@@ -57,11 +57,13 @@ func _ready() -> void:
 			tag.text = "YOUR BRO"
 			tag.color = Color("6fd06f")
 			card.add_child(tag)
-	_index = _ids.size() / 2
+	_index = -1  # nobody is picked until a card is tapped
+	TouchControls.visible = false  # no walk and shoot buttons over the cards
 	_refresh()
 
 
 func _exit_tree() -> void:
+	TouchControls.visible = true
 	if not _done:
 		get_tree().paused = false
 
@@ -75,12 +77,12 @@ func _process(delta: float) -> void:
 	if _done or _age < 0.25:
 		return
 	if Input.is_action_just_pressed("move_left"):
-		_index = (_index - 1 + _ids.size()) % _ids.size()
+		_index = _ids.size() - 1 if _index < 0 else (_index - 1 + _ids.size()) % _ids.size()
 		_refresh()
 	elif Input.is_action_just_pressed("move_right"):
-		_index = (_index + 1) % _ids.size()
+		_index = 0 if _index < 0 else (_index + 1) % _ids.size()
 		_refresh()
-	elif Input.is_action_just_pressed("shoot") or Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("interact") or Input.is_key_pressed(KEY_ENTER):
+	elif _index >= 0 and (Input.is_action_just_pressed("shoot") or Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("interact") or Input.is_key_pressed(KEY_ENTER)):
 		_take(_index)
 
 
@@ -91,7 +93,11 @@ func _input(event: InputEvent) -> void:
 	for i in _cards.size():
 		if _card_rect(i).has_point(event.position):
 			var viewport := get_viewport()
-			_take(i)
+			if i == _index:  # the second tap on the same card takes it
+				_take(i)
+			else:
+				_index = i
+				_refresh()
 			viewport.set_input_as_handled()
 			return
 
@@ -107,4 +113,4 @@ func _refresh() -> void:
 	for i in _cards.size():
 		var picked := i == _index
 		_cards[i].get_node("Frame").color = CharacterCards.YELLOW if picked else CharacterCards.OUTLINE
-		_cards[i].modulate = Color.WHITE if picked else Color(0.62, 0.62, 0.68)
+		_cards[i].modulate = Color.WHITE if picked or _index < 0 else Color(0.62, 0.62, 0.68)

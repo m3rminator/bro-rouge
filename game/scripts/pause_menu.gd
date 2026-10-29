@@ -5,7 +5,7 @@ extends CanvasLayer
 
 var VIEW := Screen.view()
 var BUTTON := Rect2(Screen.view().x - 34.0, 4, 28, 20)
-const ITEMS := ["RESUME", "RESTART RUN", "TITLE SCREEN"]
+const ITEMS := ["RESUME", "RESTART RUN", "SETTINGS", "TITLE SCREEN"]
 const ITEM_SIZE := Vector2(160, 22)
 const YELLOW := Color("ffd23e")
 const PANEL := Color("23202f")
@@ -15,6 +15,7 @@ var _index := 0
 var _canvas: Control
 var _title: PixelText
 var _labels: Array[PixelText] = []
+var _settings: CanvasLayer  # the SETTINGS screen while it is open on top of this menu
 
 
 func _ready() -> void:
@@ -59,6 +60,8 @@ func _set_open(open: bool) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if _settings != null and is_instance_valid(_settings):
+		return  # the settings screen has the input
 	if event is InputEventKey and event.pressed and not event.echo:
 		var key: Key = event.physical_keycode
 		if key == KEY_ESCAPE or key == KEY_P:
@@ -98,6 +101,9 @@ func _choose(i: int) -> void:
 	if i == 0:
 		_set_open(false)
 		return
+	if i == 2:
+		_open_settings()
+		return
 	_open = false
 	tree.paused = false
 	if i == 1:
@@ -105,6 +111,16 @@ func _choose(i: int) -> void:
 		tree.reload_current_scene()
 	else:
 		tree.change_scene_to_file("res://scenes/title.tscn")
+
+
+func _open_settings() -> void:
+	_settings = CanvasLayer.new()
+	_settings.layer = 102
+	_settings.process_mode = Node.PROCESS_MODE_ALWAYS
+	var screen: Node2D = load("res://scenes/settings.tscn").instantiate()
+	screen.overlay = true
+	_settings.add_child(screen)
+	add_child(_settings)
 
 
 func _refresh() -> void:

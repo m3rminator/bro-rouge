@@ -1,0 +1,12 @@
+# Palette set for tunnel_door: the colours game/scripts/tunnel_door.gd drew it with, plus outline, seam and shade tones. "." is always transparent.
+symbols:
+  B: td_brass
+  D: td_seam
+  I: td_iron_light
+  d: td_wood_dark
+  i: td_iron
+  j: td_iron_dark
+  l: td_wood_light
+  o: td_outline
+  u: td_brass_dark
+  w: td_wood
